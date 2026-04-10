@@ -1,0 +1,24 @@
+import type { Achievement } from '@/types';
+
+export const mockAchievements: Achievement[] = [
+  { id: 'ach-01', athleteId: 'ath-01', challengeId: 'cha-02', title: 'Improve benchmark WOD', status: 'approved', achievementDate: '2026-04-02', pointsAwarded: 10 },
+  { id: 'ach-02', athleteId: 'ath-01', challengeId: 'cha-07', title: 'Three-week consistency', status: 'approved', achievementDate: '2026-04-19', pointsAwarded: 11 },
+  { id: 'ach-03', athleteId: 'ath-02', challengeId: 'cha-01', title: 'Attend 5 classes', status: 'approved', achievementDate: '2026-04-07', pointsAwarded: 5 },
+  { id: 'ach-04', athleteId: 'ath-02', challengeId: 'cha-06', title: 'Snatch quality day', status: 'approved', achievementDate: '2026-04-21', pointsAwarded: 9 },
+  { id: 'ach-05', athleteId: 'ath-03', challengeId: 'cha-03', title: 'New gymnastics skill', status: 'approved', achievementDate: '2026-04-10', pointsAwarded: 8 },
+  { id: 'ach-06', athleteId: 'ath-03', challengeId: 'cha-05', title: 'Double under streak', status: 'approved', achievementDate: '2026-04-12', pointsAwarded: 6 },
+  { id: 'ach-07', athleteId: 'ath-04', challengeId: 'cha-04', title: 'Deadlift milestone', status: 'approved', achievementDate: '2026-04-16', pointsAwarded: 7 },
+  { id: 'ach-08', athleteId: 'ath-04', challengeId: 'cha-08', title: 'Engine builder interval', status: 'approved', achievementDate: '2026-04-25', pointsAwarded: 7 },
+  { id: 'ach-09', athleteId: 'ath-05', challengeId: 'cha-01', title: 'Attend 5 classes', status: 'approved', achievementDate: '2026-04-08', pointsAwarded: 5 },
+  { id: 'ach-10', athleteId: 'ath-05', challengeId: 'cha-03', title: 'New gymnastics skill', status: 'submitted', achievementDate: '2026-04-22', pointsAwarded: 0 },
+  { id: 'ach-11', athleteId: 'ath-06', challengeId: 'cha-08', title: 'Engine builder interval', status: 'approved', achievementDate: '2026-04-24', pointsAwarded: 7 },
+  { id: 'ach-12', athleteId: 'ath-06', challengeId: 'cha-02', title: 'Improve benchmark WOD', status: 'submitted', achievementDate: '2026-04-28', pointsAwarded: 0 },
+  { id: 'ach-13', athleteId: 'ath-07', challengeId: 'cha-05', title: 'Double under streak', status: 'approved', achievementDate: '2026-04-09', pointsAwarded: 6 },
+  { id: 'ach-14', athleteId: 'ath-07', challengeId: 'cha-01', title: 'Attend 5 classes', status: 'approved', achievementDate: '2026-04-14', pointsAwarded: 5 },
+  { id: 'ach-15', athleteId: 'ath-08', challengeId: 'cha-07', title: 'Three-week consistency', status: 'approved', achievementDate: '2026-04-20', pointsAwarded: 11 },
+  { id: 'ach-16', athleteId: 'ath-08', challengeId: 'cha-04', title: 'Deadlift milestone', status: 'rejected', achievementDate: '2026-04-18', pointsAwarded: 0 },
+  { id: 'ach-17', athleteId: 'ath-09', challengeId: 'cha-02', title: 'Improve benchmark WOD', status: 'approved', achievementDate: '2026-04-17', pointsAwarded: 10 },
+  { id: 'ach-18', athleteId: 'ath-09', challengeId: 'cha-06', title: 'Snatch quality day', status: 'submitted', achievementDate: '2026-04-23', pointsAwarded: 0 },
+  { id: 'ach-19', athleteId: 'ath-10', challengeId: 'cha-01', title: 'Attend 5 classes', status: 'approved', achievementDate: '2026-04-11', pointsAwarded: 5 },
+  { id: 'ach-20', athleteId: 'ath-10', challengeId: 'cha-07', title: 'Three-week consistency', status: 'approved', achievementDate: '2026-04-27', pointsAwarded: 11 },
+];

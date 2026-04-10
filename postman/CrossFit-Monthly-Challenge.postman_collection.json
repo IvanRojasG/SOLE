@@ -1,0 +1,693 @@
+{
+  "info": {
+    "_postman_id": "4c1e27d4-0f7c-4f43-b8a7-4b66e6647d3e",
+    "name": "CrossFit Monthly Challenge API",
+    "description": "Coleccion Postman para probar el MVP del reto mensual de CrossFit.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "athlete_email",
+      "value": "athlete.postman@example.com"
+    },
+    {
+      "key": "athlete_password",
+      "value": "Athlete123!"
+    },
+    {
+      "key": "athlete_token",
+      "value": ""
+    },
+    {
+      "key": "coach_email",
+      "value": "coach1@example.com"
+    },
+    {
+      "key": "coach_password",
+      "value": "Coach1234!"
+    },
+    {
+      "key": "coach_token",
+      "value": ""
+    },
+    {
+      "key": "athlete_id",
+      "value": ""
+    },
+    {
+      "key": "movement_id",
+      "value": ""
+    },
+    {
+      "key": "skill_id",
+      "value": ""
+    },
+    {
+      "key": "challenge_id",
+      "value": ""
+    },
+    {
+      "key": "achievement_id",
+      "value": ""
+    },
+    {
+      "key": "attendance_session_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Athlete",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{athlete_email}}\",\n  \"password\": \"{{athlete_password}}\",\n  \"full_name\": \"Athlete Postman\",\n  \"level\": \"scaled\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Athlete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('athlete_token', data.access_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{athlete_email}}\",\n  \"password\": \"{{athlete_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Coach",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('coach_token', data.access_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{coach_email}}\",\n  \"password\": \"{{coach_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Auth Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Athletes",
+      "item": [
+        {
+          "name": "Get My Athlete Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('athlete_id', data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/athletes/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "athletes",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update My Athlete Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Athlete Postman Updated\",\n  \"level\": \"intermediate\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/athletes/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "athletes",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Athletes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/athletes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "athletes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Baseline",
+      "item": [
+        {
+          "name": "Add Baseline PR",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"movement_id\": \"{{movement_id}}\",\n  \"weight\": 100\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/baseline/prs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "baseline",
+                "prs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Baseline Skill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"skill_id\": \"{{skill_id}}\",\n  \"status\": \"can_do\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/baseline/skills",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "baseline",
+                "skills"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lock Baseline",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/baseline/lock/{{athlete_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "baseline",
+                "lock",
+                "{{athlete_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Baseline",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/baseline/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "baseline",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "Create Attendance Session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set('attendance_session_id', data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"session_date\": \"2026-04-06\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/attendance/session",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "attendance",
+                "session"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check In Athlete",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"athlete_id\": \"{{athlete_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/attendance/session/{{attendance_session_id}}/checkin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "attendance",
+                "session",
+                "{{attendance_session_id}}",
+                "checkin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/attendance/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "attendance",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Achievements",
+      "item": [
+        {
+          "name": "Create Achievement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"challenge_id\": \"{{challenge_id}}\",\n  \"achievement_date\": \"2026-04-06\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/achievements",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "achievements"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Achievements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{athlete_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/achievements/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "achievements",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pending Achievements",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (Array.isArray(data) && data.length > 0) {",
+                  "  pm.collectionVariables.set('achievement_id', data[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/achievements/pending",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "achievements",
+                "pending"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Achievement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/achievements/{{achievement_id}}/approve",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "achievements",
+                "{{achievement_id}}",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Achievement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{coach_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/achievements/{{achievement_id}}/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "achievements",
+                "{{achievement_id}}",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ranking",
+      "item": [
+        {
+          "name": "Get Ranking",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/ranking",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ranking"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/dashboard",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
