@@ -5,10 +5,10 @@ import { getAthleteDashboard } from '@/services/repository/dashboardRepository';
 import { getCurrentAthleteAttendance } from '@/services/repository/athleteRepository';
 
 export default async function AthleteAttendancePage() {
-  await requireSession('athlete', '/athlete/attendance');
+  const session = await requireSession('athlete', '/athlete/attendance');
   const [attendance, dashboard] = await Promise.all([
-    getCurrentAthleteAttendance(),
-    getAthleteDashboard(),
+    getCurrentAthleteAttendance(session),
+    getAthleteDashboard(session),
   ]);
 
   return (

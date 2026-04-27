@@ -3,10 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
+import { BaselineEntryBoard } from '@/components/athlete/BaselineEntryBoard';
 import { BaselineSummaryCard } from '@/components/athlete/BaselineSummaryCard';
 import { LockBaselineButton } from '@/components/athlete/LockBaselineButton';
-import { PRInputTable } from '@/components/athlete/PRInputTable';
-import { SkillStatusGrid } from '@/components/athlete/SkillStatusGrid';
 import { lockBaselineAction, saveBaselineAction } from '@/services/actions';
 import type { AthleteBaseline } from '@/types';
 
@@ -22,15 +21,10 @@ export function AthleteBaselineView({ baseline }: AthleteBaselineViewProps) {
   return (
     <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
       <div className="space-y-6">
-        <PRInputTable
-          prs={baselineState.prs}
+        <BaselineEntryBoard
+          entries={baselineState.entries}
           locked={baselineState.locked}
-          onChange={(prs) => setBaselineState((current) => ({ ...current, prs }))}
-        />
-        <SkillStatusGrid
-          skills={baselineState.skills}
-          locked={baselineState.locked}
-          onChange={(skills) => setBaselineState((current) => ({ ...current, skills }))}
+          onChange={(entries) => setBaselineState((current) => ({ ...current, entries }))}
         />
       </div>
       <div className="space-y-6">

@@ -92,11 +92,35 @@ export type BaselineSkill = {
   status: 'not_started' | 'developing' | 'consistent' | 'mastered';
 };
 
+export type BaselineEntry = {
+  id: string | null;
+  itemId: string;
+  name: string;
+  category: 'weightlifting' | 'wod' | 'gymnastics' | 'skill' | 'strength' | 'conditioning' | 'other';
+  metricType: 'weight' | 'time' | 'reps' | 'distance' | 'score' | 'status';
+  unit: 'lb' | 'kg' | 'seconds' | 'reps' | 'meters' | 'points' | 'status';
+  description: string;
+  value: number | null;
+  status: BaselineSkill['status'];
+  notes: string;
+};
+
+export type BaselineCatalogItem = {
+  id: string;
+  name: string;
+  category: BaselineEntry['category'];
+  metricType: BaselineEntry['metricType'];
+  unit: BaselineEntry['unit'];
+  description: string;
+  isActive: boolean;
+};
+
 export type AthleteBaseline = {
   athleteId: string;
   locked: boolean;
   prs: BaselinePR[];
   skills: BaselineSkill[];
+  entries: BaselineEntry[];
 };
 
 export type DashboardKPI = {

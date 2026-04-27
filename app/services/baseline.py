@@ -3,17 +3,88 @@ from sqlmodel import Session, select
 
 from app.models.all_models import (
     Athlete,
+    AthleteBaselineEntry,
     AthleteBaselinePR,
     AthleteBaselineSkill,
+    BaselineCatalogItem,
+    Coach,
     MovementCatalog,
     SkillCatalog,
 )
-from app.schemas.baseline import BaselinePRCreate, BaselineSkillCreate
+from app.schemas.baseline import BaselineCatalogItemCreate, BaselineEntryUpsert, BaselinePRCreate, BaselineSkillCreate
+
+
+NUMERIC_METRIC_TYPES = {"weight", "time", "reps", "distance", "score"}
+STATUS_METRIC_TYPES = {"status"}
 
 
 def ensure_baseline_editable(athlete: Athlete) -> None:
     if athlete.baseline_locked:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Baseline is locked")
+
+
+def create_catalog_item(
+    session: Session,
+    coach: Coach,
+    payload: BaselineCatalogItemCreate,
+) -> BaselineCatalogItem:
+    normalized_metric_type = payload.metric_type.strip().lower()
+    normalized_category = payload.category.strip().lower()
+    normalized_unit = payload.unit.strip().lower()
+
+    if normalized_metric_type not in NUMERIC_METRIC_TYPES | STATUS_METRIC_TYPES:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported baseline metric type")
+
+    existing_item = session.exec(
+        select(BaselineCatalogItem).where(BaselineCatalogItem.name == payload.name.strip())
+    ).first()
+    if existing_item:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Baseline catalog item already exists")
+
+    item = BaselineCatalogItem(
+        name=payload.name.strip(),
+        category=normalized_category,
+        metric_type=normalized_metric_type,
+        unit=normalized_unit,
+        description=payload.description.strip(),
+        is_active=payload.is_active,
+        created_by=coach.id,
+    )
+    session.add(item)
+    session.commit()
+    session.refresh(item)
+    return item
+
+
+def upsert_entry(session: Session, athlete: Athlete, payload: BaselineEntryUpsert) -> AthleteBaselineEntry:
+    ensure_baseline_editable(athlete)
+    item = session.get(BaselineCatalogItem, payload.item_id)
+    if not item or not item.is_active:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Baseline item not found")
+
+    if item.metric_type in NUMERIC_METRIC_TYPES and payload.value_number is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Numeric baseline value is required")
+
+    if item.metric_type in STATUS_METRIC_TYPES and not payload.status:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Status baseline value is required")
+
+    entry = session.exec(
+        select(AthleteBaselineEntry).where(
+            AthleteBaselineEntry.athlete_id == athlete.id,
+            AthleteBaselineEntry.item_id == payload.item_id,
+        )
+    ).first()
+
+    if not entry:
+        entry = AthleteBaselineEntry(athlete_id=athlete.id, item_id=payload.item_id)
+
+    entry.value_number = payload.value_number if item.metric_type in NUMERIC_METRIC_TYPES else None
+    entry.status = payload.status if item.metric_type in STATUS_METRIC_TYPES else None
+    entry.notes = payload.notes.strip()
+    session.add(entry)
+    session.commit()
+    session.refresh(entry)
+    return entry
 
 
 def create_pr(session: Session, athlete: Athlete, payload: BaselinePRCreate) -> AthleteBaselinePR:

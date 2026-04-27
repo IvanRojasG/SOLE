@@ -1,6 +1,6 @@
 import { dataSource } from '@/lib/config/dataSource';
 import { backendRequest } from '@/services/api/backend';
-import { getSession } from '@/services/auth/session';
+import { getSession, type AuthSession } from '@/services/auth/session';
 import { mockAchievements } from '@/services/mocks/achievements';
 import { mockAthletes } from '@/services/mocks/athletes';
 import { mockAttendance } from '@/services/mocks/attendance';
@@ -17,24 +17,24 @@ import type {
   PendingAchievementReview,
 } from '@/types';
 
-async function getCoachDashboardFromApi(): Promise<CoachDashboard> {
-  const session = await getSession();
+async function getCoachDashboardFromApi(session?: AuthSession): Promise<CoachDashboard> {
+  const authSession = session ?? await getSession();
   const [dashboard, pending, sessions, ranking] = await Promise.all([
     backendRequest<{
       total_athletes: number;
       pending_achievements: number;
       approved_achievements: number;
-    }>('/dashboard', { role: 'coach' }),
-    getPendingAchievementReviewsFromApi(),
-    getCoachSessionsFromApi(),
+    }>('/dashboard', { role: 'coach', session: authSession ?? undefined }),
+    getPendingAchievementReviewsFromApi(authSession ?? undefined),
+    getCoachSessionsFromApi(authSession ?? undefined),
     getRanking(),
   ]);
 
   return {
     coach: {
-      id: session?.user.id ?? 'coach-api',
+      id: authSession?.user.id ?? 'coach-api',
       fullName: 'Coach SOLE',
-      email: session?.user.email ?? 'coach@example.com',
+      email: authSession?.user.email ?? 'coach@example.com',
       boxName: 'SOLE Fitness',
     },
     kpis: [
@@ -49,10 +49,10 @@ async function getCoachDashboardFromApi(): Promise<CoachDashboard> {
   };
 }
 
-async function getCoachAthletesFromApi(): Promise<Athlete[]> {
+async function getCoachAthletesFromApi(session?: AuthSession): Promise<Athlete[]> {
   const payload = await backendRequest<
     Array<{ id: string; full_name: string; level: string; baseline_locked: boolean }>
-  >('/athletes', { role: 'coach' });
+  >('/athletes', { role: 'coach', session });
   const publicAthletes = await getAthletesFromPublicApi();
 
   return payload.map((athlete, index) => {
@@ -73,8 +73,8 @@ async function getCoachAthletesFromApi(): Promise<Athlete[]> {
   });
 }
 
-async function getCoachAttendanceFromApi(): Promise<Attendance[]> {
-  const athletes = await getCoachAthletesFromApi();
+async function getCoachAttendanceFromApi(session?: AuthSession): Promise<Attendance[]> {
+  const athletes = await getCoachAthletesFromApi(session);
   return athletes.map((athlete, index) => ({
     id: `api-att-${athlete.id}`,
     athleteId: athlete.id,
@@ -83,10 +83,10 @@ async function getCoachAttendanceFromApi(): Promise<Attendance[]> {
   }));
 }
 
-async function getCoachSessionsFromApi(): Promise<AttendanceSessionRecord[]> {
+async function getCoachSessionsFromApi(session?: AuthSession): Promise<AttendanceSessionRecord[]> {
   const payload = await backendRequest<
     Array<{ id: string; session_date: string; checked_in_count: number }>
-  >('/attendance/sessions', { role: 'coach' });
+  >('/attendance/sessions', { role: 'coach', session });
 
   return payload.map((item, index) => ({
     id: item.id,
@@ -97,7 +97,7 @@ async function getCoachSessionsFromApi(): Promise<AttendanceSessionRecord[]> {
   }));
 }
 
-async function getPendingAchievementReviewsFromApi(): Promise<PendingAchievementReview[]> {
+async function getPendingAchievementReviewsFromApi(session?: AuthSession): Promise<PendingAchievementReview[]> {
   const payload = await backendRequest<
     Array<{
       id: string;
@@ -109,7 +109,7 @@ async function getPendingAchievementReviewsFromApi(): Promise<PendingAchievement
       status: PendingAchievementReview['status'];
       points_awarded: number;
     }>
-  >('/achievements/pending/detailed', { role: 'coach' });
+  >('/achievements/pending/detailed', { role: 'coach', session });
 
   return payload.map((item) => ({
     id: item.id,
@@ -124,7 +124,7 @@ async function getPendingAchievementReviewsFromApi(): Promise<PendingAchievement
   }));
 }
 
-async function getChallengeManagementItemsFromApi(): Promise<ChallengeManagementItem[]> {
+async function getChallengeManagementItemsFromApi(session?: AuthSession): Promise<ChallengeManagementItem[]> {
   const payload = await backendRequest<
     Array<{
       id: string;
@@ -136,7 +136,7 @@ async function getChallengeManagementItemsFromApi(): Promise<ChallengeManagement
       is_active: boolean;
       points: number;
     }>
-  >('/challenges', { role: 'coach' });
+  >('/challenges', { role: 'coach', session });
 
   return payload.map((challenge) => ({
     id: challenge.id,
@@ -150,41 +150,41 @@ async function getChallengeManagementItemsFromApi(): Promise<ChallengeManagement
   }));
 }
 
-export async function getCoachDashboard(): Promise<CoachDashboard> {
+export async function getCoachDashboard(session?: AuthSession): Promise<CoachDashboard> {
   if (dataSource === 'api') {
-    return getCoachDashboardFromApi();
+    return getCoachDashboardFromApi(session);
   }
 
   return structuredClone(mockCoachDashboard);
 }
 
-export async function getCoachAthletes(): Promise<Athlete[]> {
+export async function getCoachAthletes(session?: AuthSession): Promise<Athlete[]> {
   if (dataSource === 'api') {
-    return getCoachAthletesFromApi();
+    return getCoachAthletesFromApi(session);
   }
 
   return [...mockAthletes].sort((left, right) => right.points - left.points);
 }
 
-export async function getCoachAttendanceRecords(): Promise<Attendance[]> {
+export async function getCoachAttendanceRecords(session?: AuthSession): Promise<Attendance[]> {
   if (dataSource === 'api') {
-    return getCoachAttendanceFromApi();
+    return getCoachAttendanceFromApi(session);
   }
 
   return [...mockAttendance].sort((left, right) => right.sessionDate.localeCompare(left.sessionDate));
 }
 
-export async function getCoachAttendanceSessions(): Promise<AttendanceSessionRecord[]> {
+export async function getCoachAttendanceSessions(session?: AuthSession): Promise<AttendanceSessionRecord[]> {
   if (dataSource === 'api') {
-    return getCoachSessionsFromApi();
+    return getCoachSessionsFromApi(session);
   }
 
   return structuredClone(mockCoachDashboard.todayAttendance);
 }
 
-export async function getPendingAchievementReviews(): Promise<PendingAchievementReview[]> {
+export async function getPendingAchievementReviews(session?: AuthSession): Promise<PendingAchievementReview[]> {
   if (dataSource === 'api') {
-    return getPendingAchievementReviewsFromApi();
+    return getPendingAchievementReviewsFromApi(session);
   }
 
   return mockAchievements
@@ -197,9 +197,9 @@ export async function getPendingAchievementReviews(): Promise<PendingAchievement
     }));
 }
 
-export async function getChallengeManagementItems(): Promise<ChallengeManagementItem[]> {
+export async function getChallengeManagementItems(session?: AuthSession): Promise<ChallengeManagementItem[]> {
   if (dataSource === 'api') {
-    return getChallengeManagementItemsFromApi();
+    return getChallengeManagementItemsFromApi(session);
   }
 
   return mockChallenges.map((challenge, index) => ({

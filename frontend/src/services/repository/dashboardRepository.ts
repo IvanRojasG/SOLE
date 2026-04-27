@@ -1,4 +1,5 @@
 import { dataSource } from '@/lib/config/dataSource';
+import type { AuthSession } from '@/services/auth/session';
 import { mockAthleteDashboard } from '@/services/mocks/athleteDashboard';
 import { getChallenges } from '@/services/repository/challengeRepository';
 import {
@@ -9,11 +10,11 @@ import {
 import { getRanking } from '@/services/repository/rankingRepository';
 import type { AthleteDashboard } from '@/types';
 
-async function getAthleteDashboardFromApi(): Promise<AthleteDashboard> {
+async function getAthleteDashboardFromApi(session?: AuthSession): Promise<AthleteDashboard> {
   const [profile, achievements, attendance, challenges, ranking] = await Promise.all([
-    getCurrentAthleteProfile(),
-    getCurrentAthleteAchievements(),
-    getCurrentAthleteAttendance(),
+    getCurrentAthleteProfile(session),
+    getCurrentAthleteAchievements(session),
+    getCurrentAthleteAttendance(session),
     getChallenges(),
     getRanking(),
   ]);
@@ -63,9 +64,9 @@ async function getAthleteDashboardFromApi(): Promise<AthleteDashboard> {
   };
 }
 
-export async function getAthleteDashboard(): Promise<AthleteDashboard> {
+export async function getAthleteDashboard(session?: AuthSession): Promise<AthleteDashboard> {
   if (dataSource === 'api') {
-    return getAthleteDashboardFromApi();
+    return getAthleteDashboardFromApi(session);
   }
 
   return structuredClone(mockAthleteDashboard);

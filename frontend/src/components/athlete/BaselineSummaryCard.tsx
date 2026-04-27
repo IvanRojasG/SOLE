@@ -5,8 +5,13 @@ type BaselineSummaryCardProps = {
 };
 
 export function BaselineSummaryCard({ baseline }: BaselineSummaryCardProps) {
-  const masteredCount = baseline.skills.filter((item) => item.status === 'mastered').length;
-  const totalPRValue = baseline.prs.reduce((sum, item) => sum + item.value, 0);
+  const entriesWithValue = baseline.entries.filter(
+    (item) => item.value !== null || item.status !== 'not_started',
+  ).length;
+  const masteredCount = baseline.entries.filter((item) => item.status === 'mastered').length;
+  const totalPRValue = baseline.entries
+    .filter((item) => item.metricType === 'weight' && item.value !== null)
+    .reduce((sum, item) => sum + (item.value ?? 0), 0);
 
   return (
     <article className="rounded-[2rem] border border-white/10 bg-[color:var(--color-surface)] p-6">
@@ -21,7 +26,13 @@ export function BaselineSummaryCard({ baseline }: BaselineSummaryCardProps) {
           </p>
         </div>
         <div className="rounded-[1.5rem] border border-white/10 p-4">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">PRs acumulados</p>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">Entradas registradas</p>
+          <p className="mt-2 text-lg font-semibold text-white">
+            {entriesWithValue}/{baseline.entries.length}
+          </p>
+        </div>
+        <div className="rounded-[1.5rem] border border-white/10 p-4">
+          <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">Carga total RM</p>
           <p className="mt-2 text-lg font-semibold text-white">{totalPRValue}</p>
         </div>
         <div className="rounded-[1.5rem] border border-white/10 p-4">

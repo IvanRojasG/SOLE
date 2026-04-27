@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 
 import { AuthForm } from '@/components/auth/AuthForm';
 import { AppContainer } from '@/components/layout/AppContainer';
@@ -10,10 +9,11 @@ export const dynamic = 'force-dynamic';
 
 export default async function RegisterPage() {
   const session = await getSession();
-
-  if (session) {
-    redirect(session.user.role === 'coach' ? '/coach' : '/athlete/profile');
-  }
+  const initialRedirectTo = session
+    ? session.user.role === 'coach'
+      ? '/coach'
+      : '/athlete/profile'
+    : undefined;
 
   return (
     <section className="py-[--section-spacing]">
@@ -44,7 +44,7 @@ export default async function RegisterPage() {
             </div>
           </div>
           <div className="rounded-[2rem] border border-white/10 bg-[color:var(--color-surface)]/90 p-6 shadow-[var(--shadow-soft)] sm:p-8">
-            <AuthForm mode="register" />
+            <AuthForm mode="register" initialRedirectTo={initialRedirectTo} />
           </div>
         </div>
       </AppContainer>

@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 
 import { AuthForm } from '@/components/auth/AuthForm';
 import { AppContainer } from '@/components/layout/AppContainer';
@@ -14,10 +13,11 @@ type LoginPageProps = {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const session = await getSession();
-
-  if (session) {
-    redirect(session.user.role === 'coach' ? '/coach' : '/athlete/profile');
-  }
+  const initialRedirectTo = session
+    ? session.user.role === 'coach'
+      ? '/coach'
+      : '/athlete/profile'
+    : undefined;
 
   const params = await searchParams;
   const nextTarget = typeof params.next === 'string' ? params.next : undefined;
@@ -51,7 +51,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </div>
           </div>
           <div className="rounded-[2rem] border border-white/10 bg-[color:var(--color-surface)]/90 p-6 shadow-[var(--shadow-soft)] sm:p-8">
-            <AuthForm mode="login" nextTarget={nextTarget} />
+            <AuthForm mode="login" initialRedirectTo={initialRedirectTo} nextTarget={nextTarget} />
           </div>
         </div>
       </AppContainer>

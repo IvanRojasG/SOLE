@@ -5,9 +5,9 @@ import { getChallenges } from '@/services/repository/challengeRepository';
 import { getCurrentAthleteAchievements } from '@/services/repository/athleteRepository';
 
 export default async function AthleteAchievementsPage() {
-  await requireSession('athlete', '/athlete/achievements');
+  const session = await requireSession('athlete', '/athlete/achievements');
   const [achievements, challenges] = await Promise.all([
-    getCurrentAthleteAchievements(),
+    getCurrentAthleteAchievements(session),
     getChallenges(),
   ]);
 

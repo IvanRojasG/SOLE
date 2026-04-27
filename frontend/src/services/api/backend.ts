@@ -9,6 +9,7 @@ type RequestOptions = {
   method?: 'GET' | 'POST' | 'PUT';
   body?: unknown;
   role?: ApiRole;
+  session?: AuthSession;
 };
 
 function getBackendUrl() {
@@ -37,7 +38,7 @@ export async function backendRequest<T>(path: string, options: RequestOptions = 
   };
 
   if (options.role) {
-    const session = await getSession();
+    const session = options.session ?? (await getSession());
 
     if (!session) {
       throw new Error(`Missing authenticated session for ${path}`);

@@ -12,7 +12,11 @@ function getField(formData: FormData, key: string) {
 }
 
 function resolveNextTarget(role: 'athlete' | 'coach', nextTarget: string) {
-  if (nextTarget.startsWith('/')) {
+  if (role === 'coach' && nextTarget.startsWith('/coach')) {
+    return nextTarget;
+  }
+
+  if (role === 'athlete' && nextTarget.startsWith('/athlete')) {
     return nextTarget;
   }
 
@@ -37,7 +41,7 @@ export async function loginAction(
   const nextTarget = getField(formData, 'next');
 
   if (!email || !password) {
-    return { error: 'Correo y contraseña son obligatorios.' };
+    return { error: 'Correo y contraseña son obligatorios.', redirectTo: null };
   }
 
   let session: Awaited<ReturnType<typeof loginWithCredentials>>;
@@ -46,10 +50,10 @@ export async function loginAction(
     session = await loginWithCredentials({ email, password });
     await persistSession(session);
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    return { error: getErrorMessage(error), redirectTo: null };
   }
 
-  redirect(resolveNextTarget(session.user.role, nextTarget));
+  return { error: null, redirectTo: resolveNextTarget(session.user.role, nextTarget) };
 }
 
 export async function registerAction(
@@ -63,11 +67,11 @@ export async function registerAction(
   const level = getField(formData, 'level');
 
   if (!fullName || !email || !password || !confirmPassword || !level) {
-    return { error: 'Completa todos los campos para crear tu cuenta.' };
+    return { error: 'Completa todos los campos para crear tu cuenta.', redirectTo: null };
   }
 
   if (password !== confirmPassword) {
-    return { error: 'Las contraseñas no coinciden.' };
+    return { error: 'Las contraseñas no coinciden.', redirectTo: null };
   }
 
   let session: Awaited<ReturnType<typeof loginWithCredentials>>;
@@ -83,10 +87,10 @@ export async function registerAction(
     session = await loginWithCredentials({ email, password });
     await persistSession(session);
   } catch (error) {
-    return { error: getErrorMessage(error) };
+    return { error: getErrorMessage(error), redirectTo: null };
   }
 
-  redirect('/athlete/profile');
+  return { error: null, redirectTo: '/athlete/profile' };
 }
 
 export async function logoutAction() {

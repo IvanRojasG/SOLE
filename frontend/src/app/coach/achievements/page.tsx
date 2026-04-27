@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getPendingAchievementReviews } from '@/services/repository/coachRepository';
 
 export default async function CoachAchievementsPage() {
-  await requireSession('coach', '/coach/achievements');
-  const items = await getPendingAchievementReviews();
+  const session = await requireSession('coach', '/coach/achievements');
+  const items = await getPendingAchievementReviews(session);
 
   return (
     <CoachAreaLayout

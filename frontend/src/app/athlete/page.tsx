@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getAthleteDashboard } from '@/services/repository/dashboardRepository';
 
 export default async function AthleteDashboardPage() {
-  await requireSession('athlete', '/athlete');
-  const dashboard = await getAthleteDashboard();
+  const session = await requireSession('athlete', '/athlete');
+  const dashboard = await getAthleteDashboard(session);
 
   return (
     <AthleteAreaLayout

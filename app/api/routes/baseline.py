@@ -4,17 +4,25 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
 from app.core.db import get_session
-from app.core.deps import get_current_athlete, require_role
+from app.core.deps import get_current_athlete, get_current_coach, require_role
 from app.models.all_models import (
     Athlete,
+    AthleteBaselineEntry,
     AthleteBaselinePR,
     AthleteBaselineSkill,
+    BaselineCatalogItem,
+    Coach,
     MovementCatalog,
     SkillCatalog,
     User,
 )
 from app.schemas.baseline import (
+    BaselineCatalogItemCreate,
+    BaselineCatalogItemResponse,
     BaselineDetailedResponse,
+    BaselineEntryDetailedResponse,
+    BaselineEntryResponse,
+    BaselineEntryUpsert,
     BaselineMeResponse,
     BaselinePRCreate,
     BaselinePRDetailedResponse,
@@ -24,10 +32,45 @@ from app.schemas.baseline import (
     BaselineSkillResponse,
 )
 from app.schemas.common import MessageResponse
-from app.services.baseline import create_pr, create_skill, lock_baseline, update_pr, update_skill
+from app.services.baseline import (
+    create_catalog_item,
+    create_pr,
+    create_skill,
+    lock_baseline,
+    update_pr,
+    update_skill,
+    upsert_entry,
+)
 
 
 router = APIRouter()
+
+
+@router.get("/catalog", response_model=list[BaselineCatalogItemResponse])
+def list_baseline_catalog(session: Session = Depends(get_session)):
+    return session.exec(
+        select(BaselineCatalogItem)
+        .where(BaselineCatalogItem.is_active == True)  # noqa: E712
+        .order_by(BaselineCatalogItem.category, BaselineCatalogItem.name)
+    ).all()
+
+
+@router.post("/catalog", response_model=BaselineCatalogItemResponse)
+def add_baseline_catalog_item(
+    payload: BaselineCatalogItemCreate,
+    coach: Coach = Depends(get_current_coach),
+    session: Session = Depends(get_session),
+):
+    return create_catalog_item(session, coach, payload)
+
+
+@router.post("/entries", response_model=BaselineEntryResponse)
+def save_baseline_entry(
+    payload: BaselineEntryUpsert,
+    athlete: Athlete = Depends(get_current_athlete),
+    session: Session = Depends(get_session),
+):
+    return upsert_entry(session, athlete, payload)
 
 
 @router.post("/prs", response_model=BaselinePRResponse)
@@ -119,6 +162,15 @@ def my_baseline_detailed(
         movement.id: movement.name for movement in session.exec(select(MovementCatalog)).all()
     }
     skill_map = {skill.id: skill.name for skill in session.exec(select(SkillCatalog)).all()}
+    entries = session.exec(
+        select(AthleteBaselineEntry).where(AthleteBaselineEntry.athlete_id == athlete.id)
+    ).all()
+    entry_map = {entry.item_id: entry for entry in entries}
+    catalog_items = session.exec(
+        select(BaselineCatalogItem)
+        .where(BaselineCatalogItem.is_active == True)  # noqa: E712
+        .order_by(BaselineCatalogItem.category, BaselineCatalogItem.name)
+    ).all()
 
     return BaselineDetailedResponse(
         athlete_id=athlete.id,
@@ -140,5 +192,20 @@ def my_baseline_detailed(
                 status=skill.status,
             )
             for skill in skills
+        ],
+        entries=[
+            BaselineEntryDetailedResponse(
+                id=entry_map[item.id].id if item.id in entry_map else None,
+                item_id=item.id,
+                name=item.name,
+                category=item.category,
+                metric_type=item.metric_type,
+                unit=item.unit,
+                description=item.description,
+                value_number=entry_map[item.id].value_number if item.id in entry_map else None,
+                status=entry_map[item.id].status if item.id in entry_map else None,
+                notes=entry_map[item.id].notes if item.id in entry_map else "",
+            )
+            for item in catalog_items
         ],
     )

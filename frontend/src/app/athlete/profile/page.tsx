@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getCurrentAthleteProfile } from '@/services/repository/athleteRepository';
 
 export default async function AthleteProfilePage() {
-  await requireSession('athlete', '/athlete/profile');
-  const profile = await getCurrentAthleteProfile();
+  const session = await requireSession('athlete', '/athlete/profile');
+  const profile = await getCurrentAthleteProfile(session);
 
   return (
     <AthleteAreaLayout

@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getCoachDashboard } from '@/services/repository/coachRepository';
 
 export default async function CoachDashboardPage() {
-  await requireSession('coach', '/coach');
-  const dashboard = await getCoachDashboard();
+  const session = await requireSession('coach', '/coach');
+  const dashboard = await getCoachDashboard(session);
 
   return (
     <CoachAreaLayout

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 
 import { dataSource } from '@/lib/config/dataSource';
 import { backendRequest } from '@/services/api/backend';
-import type { AthleteBaseline, ChallengeManagementItem } from '@/types';
+import type { AthleteBaseline, BaselineCatalogItem, BaselineEntry, ChallengeManagementItem } from '@/types';
 
 export async function saveAthleteProfileAction(payload: {
   fullName: string;
@@ -30,6 +30,32 @@ export async function saveAthleteProfileAction(payload: {
 
 export async function saveBaselineAction(baseline: AthleteBaseline) {
   if (dataSource === 'mock') {
+    return { ok: true };
+  }
+
+  if (baseline.entries.length > 0) {
+    for (const entry of baseline.entries) {
+      const isStatusEntry = entry.metricType === 'status';
+      const hasValue = isStatusEntry ? entry.status !== 'not_started' : entry.value !== null && entry.value > 0;
+
+      if (!hasValue) {
+        continue;
+      }
+
+      await backendRequest('/baseline/entries', {
+        method: 'POST',
+        role: 'athlete',
+        body: {
+          item_id: entry.itemId,
+          value_number: isStatusEntry ? null : entry.value,
+          status: isStatusEntry ? entry.status : null,
+          notes: entry.notes,
+        },
+      });
+    }
+
+    revalidatePath('/athlete/baseline');
+    revalidatePath('/athlete');
     return { ok: true };
   }
 
@@ -93,6 +119,66 @@ export async function lockBaselineAction() {
 
   revalidatePath('/athlete/baseline');
   return { ok: true };
+}
+
+export async function createBaselineCatalogItemAction(payload: {
+  name: string;
+  category: BaselineEntry['category'];
+  metricType: BaselineEntry['metricType'];
+  unit: BaselineEntry['unit'];
+  description: string;
+}): Promise<{ ok: true; item: BaselineCatalogItem }> {
+  if (dataSource === 'mock') {
+    return {
+      ok: true,
+      item: {
+        id: `local-${Date.now()}`,
+        name: payload.name,
+        category: payload.category,
+        metricType: payload.metricType,
+        unit: payload.unit,
+        description: payload.description,
+        isActive: true,
+      },
+    };
+  }
+
+  const item = await backendRequest<{
+    id: string;
+    name: string;
+    category: BaselineEntry['category'];
+    metric_type: BaselineEntry['metricType'];
+    unit: BaselineEntry['unit'];
+    description: string;
+    is_active: boolean;
+  }>('/baseline/catalog', {
+    method: 'POST',
+    role: 'coach',
+    body: {
+      name: payload.name,
+      category: payload.category,
+      metric_type: payload.metricType,
+      unit: payload.unit,
+      description: payload.description,
+      is_active: true,
+    },
+  });
+
+  revalidatePath('/coach/baseline');
+  revalidatePath('/athlete/baseline');
+
+  return {
+    ok: true,
+    item: {
+      id: item.id,
+      name: item.name,
+      category: item.category,
+      metricType: item.metric_type,
+      unit: item.unit,
+      description: item.description,
+      isActive: item.is_active,
+    },
+  };
 }
 
 export async function submitAchievementAction(payload: {

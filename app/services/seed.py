@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 
 from app.core.security import hash_password
-from app.models.all_models import Athlete, Challenge, Coach, MovementCatalog, SkillCatalog, User
+from app.models.all_models import Athlete, BaselineCatalogItem, Challenge, Coach, MovementCatalog, SkillCatalog, User
 
 
 DEFAULT_COACHES = [
@@ -19,6 +19,50 @@ DEFAULT_ATHLETES = [
 
 DEFAULT_MOVEMENTS = ["back squat", "deadlift", "snatch"]
 DEFAULT_SKILLS = ["pull-ups", "double unders", "toes to bar"]
+DEFAULT_BASELINE_ITEMS = [
+    {
+        "name": "Back squat 1RM",
+        "category": "weightlifting",
+        "metric_type": "weight",
+        "unit": "lb",
+        "description": "Carga máxima para una repetición.",
+    },
+    {
+        "name": "Deadlift 1RM",
+        "category": "weightlifting",
+        "metric_type": "weight",
+        "unit": "lb",
+        "description": "Carga máxima para una repetición.",
+    },
+    {
+        "name": "Snatch 1RM",
+        "category": "weightlifting",
+        "metric_type": "weight",
+        "unit": "lb",
+        "description": "Carga máxima técnica para una repetición.",
+    },
+    {
+        "name": "Fran",
+        "category": "wod",
+        "metric_type": "time",
+        "unit": "seconds",
+        "description": "Tiempo total del benchmark en segundos.",
+    },
+    {
+        "name": "Pull-ups unbroken",
+        "category": "gymnastics",
+        "metric_type": "reps",
+        "unit": "reps",
+        "description": "Máximo set continuo.",
+    },
+    {
+        "name": "Double unders",
+        "category": "skill",
+        "metric_type": "status",
+        "unit": "status",
+        "description": "Nivel técnico actual.",
+    },
+]
 DEFAULT_CHALLENGES = [
     {
         "title": "Attend 5 classes",
@@ -88,6 +132,19 @@ def seed_initial_data(session: Session) -> None:
     for skill_name in DEFAULT_SKILLS:
         if not session.exec(select(SkillCatalog).where(SkillCatalog.name == skill_name)).first():
             session.add(SkillCatalog(name=skill_name))
+
+    for item_data in DEFAULT_BASELINE_ITEMS:
+        item = session.exec(select(BaselineCatalogItem).where(BaselineCatalogItem.name == item_data["name"])).first()
+        if not item:
+            session.add(BaselineCatalogItem(**item_data))
+            continue
+
+        item.category = item_data["category"]
+        item.metric_type = item_data["metric_type"]
+        item.unit = item_data["unit"]
+        item.description = item_data["description"]
+        item.is_active = True
+        session.add(item)
 
     for challenge_data in DEFAULT_CHALLENGES:
         challenge = session.exec(select(Challenge).where(Challenge.title == challenge_data["title"])).first()

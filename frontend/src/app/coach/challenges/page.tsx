@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getChallengeManagementItems } from '@/services/repository/coachRepository';
 
 export default async function CoachChallengesPage() {
-  await requireSession('coach', '/coach/challenges');
-  const items = await getChallengeManagementItems();
+  const session = await requireSession('coach', '/coach/challenges');
+  const items = await getChallengeManagementItems(session);
 
   return (
     <CoachAreaLayout

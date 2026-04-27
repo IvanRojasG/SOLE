@@ -52,6 +52,19 @@ class SkillCatalog(SQLModel, table=True):
     name: str = Field(unique=True, max_length=80)
 
 
+class BaselineCatalogItem(SQLModel, table=True):
+    __tablename__ = "baseline_catalog_items"
+
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    name: str = Field(unique=True, max_length=120)
+    category: str = Field(max_length=30)
+    metric_type: str = Field(max_length=20)
+    unit: str = Field(max_length=20)
+    description: str = Field(default="", max_length=500)
+    is_active: bool = Field(default=True)
+    created_by: Optional[UUID] = Field(default=None, foreign_key="coaches.id")
+
+
 class AthleteBaselinePR(SQLModel, table=True):
     __tablename__ = "athlete_baseline_prs"
     __table_args__ = (UniqueConstraint("athlete_id", "movement_id", name="uq_athlete_baseline_prs"),)
@@ -70,6 +83,19 @@ class AthleteBaselineSkill(SQLModel, table=True):
     athlete_id: UUID = Field(foreign_key="athletes.id", nullable=False)
     skill_id: UUID = Field(foreign_key="skill_catalog.id", nullable=False)
     status: str = Field(max_length=20)
+
+
+class AthleteBaselineEntry(SQLModel, table=True):
+    __tablename__ = "athlete_baseline_entries"
+    __table_args__ = (UniqueConstraint("athlete_id", "item_id", name="uq_athlete_baseline_entries"),)
+
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    athlete_id: UUID = Field(foreign_key="athletes.id", nullable=False)
+    item_id: UUID = Field(foreign_key="baseline_catalog_items.id", nullable=False)
+    value_number: Optional[Decimal] = Field(default=None)
+    status: Optional[str] = Field(default=None, max_length=20)
+    notes: str = Field(default="", max_length=300)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
 class AttendanceSession(SQLModel, table=True):

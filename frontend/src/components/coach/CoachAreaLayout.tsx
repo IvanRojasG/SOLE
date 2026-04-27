@@ -9,6 +9,7 @@ const coachNavigation = [
   { href: '/coach/attendance', label: 'Asistencia' },
   { href: '/coach/achievements', label: 'Logros' },
   { href: '/coach/challenges', label: 'Retos' },
+  { href: '/coach/baseline', label: 'Baseline' },
 ] as const;
 
 type CoachAreaLayoutProps = {

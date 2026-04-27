@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import {
@@ -12,6 +13,7 @@ import { authActionInitialState, type AuthActionState } from '@/services/auth/st
 
 type AuthFormProps = {
   mode: 'login' | 'register';
+  initialRedirectTo?: string;
   nextTarget?: string;
 };
 
@@ -44,9 +46,19 @@ function ErrorMessage({ state }: { state: AuthActionState }) {
   );
 }
 
-export function AuthForm({ mode, nextTarget }: AuthFormProps) {
+export function AuthForm({ mode, initialRedirectTo, nextTarget }: AuthFormProps) {
+  const router = useRouter();
   const action = mode === 'login' ? loginAction : registerAction;
   const [state, formAction] = useActionState(action, authActionInitialState);
+  const redirectTo = state.redirectTo ?? initialRedirectTo;
+
+  useEffect(() => {
+    if (!redirectTo) {
+      return;
+    }
+
+    router.replace(redirectTo);
+  }, [redirectTo, router]);
 
   return (
     <form action={formAction} className="space-y-5">

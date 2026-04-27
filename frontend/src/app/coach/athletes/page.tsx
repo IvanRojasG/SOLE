@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getCoachAthletes } from '@/services/repository/coachRepository';
 
 export default async function CoachAthletesPage() {
-  await requireSession('coach', '/coach/athletes');
-  const athletes = await getCoachAthletes();
+  const session = await requireSession('coach', '/coach/athletes');
+  const athletes = await getCoachAthletes(session);
 
   return (
     <CoachAreaLayout

@@ -7,10 +7,10 @@ import {
 } from '@/services/repository/coachRepository';
 
 export default async function CoachAttendancePage() {
-  await requireSession('coach', '/coach/attendance');
+  const session = await requireSession('coach', '/coach/attendance');
   const [athletes, sessions] = await Promise.all([
-    getCoachAthletes(),
-    getCoachAttendanceSessions(),
+    getCoachAthletes(session),
+    getCoachAttendanceSessions(session),
   ]);
 
   return (

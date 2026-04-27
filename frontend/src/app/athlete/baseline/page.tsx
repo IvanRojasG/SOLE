@@ -4,8 +4,8 @@ import { requireSession } from '@/services/auth/session';
 import { getCurrentAthleteBaseline } from '@/services/repository/athleteRepository';
 
 export default async function AthleteBaselinePage() {
-  await requireSession('athlete', '/athlete/baseline');
-  const baseline = await getCurrentAthleteBaseline();
+  const session = await requireSession('athlete', '/athlete/baseline');
+  const baseline = await getCurrentAthleteBaseline(session);
 
   return (
     <AthleteAreaLayout
