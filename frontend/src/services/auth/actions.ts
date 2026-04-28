@@ -2,9 +2,15 @@
 
 import { redirect } from 'next/navigation';
 
-import { loginWithCredentials, registerAthleteWithBackend } from '@/services/api/backend';
+import {
+  changePasswordWithBackend,
+  loginWithCredentials,
+  registerAthleteWithBackend,
+  requestPasswordResetWithBackend,
+  resetPasswordWithBackend,
+} from '@/services/api/backend';
 import { clearSession, persistSession } from '@/services/auth/session';
-import type { AuthActionState } from '@/services/auth/state';
+import type { AuthActionState, PasswordActionState } from '@/services/auth/state';
 
 function getField(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -96,4 +102,82 @@ export async function registerAction(
 export async function logoutAction() {
   await clearSession();
   redirect('/');
+}
+
+export async function changePasswordAction(
+  _previousState: PasswordActionState,
+  formData: FormData,
+): Promise<PasswordActionState> {
+  const currentPassword = getField(formData, 'currentPassword');
+  const newPassword = getField(formData, 'newPassword');
+  const confirmPassword = getField(formData, 'confirmPassword');
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return { error: 'Completa todos los campos.', message: null };
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { error: 'Las contraseñas nuevas no coinciden.', message: null };
+  }
+
+  try {
+    await changePasswordWithBackend({
+      current_password: currentPassword,
+      new_password: newPassword,
+    });
+  } catch (error) {
+    return { error: getErrorMessage(error), message: null };
+  }
+
+  return { error: null, message: 'Contraseña actualizada correctamente.' };
+}
+
+export async function requestPasswordResetAction(
+  _previousState: PasswordActionState,
+  formData: FormData,
+): Promise<PasswordActionState> {
+  const email = getField(formData, 'email');
+
+  if (!email) {
+    return { error: 'Ingresa tu correo.', message: null };
+  }
+
+  try {
+    const response = await requestPasswordResetWithBackend({ email });
+    return {
+      error: null,
+      message: 'Si el correo existe, se generó una solicitud de recuperación.',
+      resetToken: response.reset_token,
+    };
+  } catch (error) {
+    return { error: getErrorMessage(error), message: null };
+  }
+}
+
+export async function resetPasswordAction(
+  _previousState: PasswordActionState,
+  formData: FormData,
+): Promise<PasswordActionState> {
+  const token = getField(formData, 'token');
+  const newPassword = getField(formData, 'newPassword');
+  const confirmPassword = getField(formData, 'confirmPassword');
+
+  if (!token || !newPassword || !confirmPassword) {
+    return { error: 'Completa todos los campos.', message: null };
+  }
+
+  if (newPassword !== confirmPassword) {
+    return { error: 'Las contraseñas no coinciden.', message: null };
+  }
+
+  try {
+    await resetPasswordWithBackend({
+      token,
+      new_password: newPassword,
+    });
+  } catch (error) {
+    return { error: getErrorMessage(error), message: null };
+  }
+
+  return { error: null, message: 'Contraseña actualizada. Ya puedes iniciar sesión.' };
 }

@@ -127,6 +127,14 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget }: AuthFormProps)
         />
       </label>
 
+      {mode === 'login' ? (
+        <div className="-mt-2 flex justify-end">
+          <Link href="/forgot-password" className="text-sm font-semibold text-[color:var(--color-secondary-soft)]">
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </div>
+      ) : null}
+
       {mode === 'register' ? (
         <label className="block space-y-2">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">

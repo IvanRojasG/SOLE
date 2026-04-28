@@ -3,17 +3,19 @@ export const brand = {
   shortName: 'SOLE',
   tagline: 'Disciplina mensual. Rendimiento visible.',
   description:
-    'SOLE Fitness construye experiencias digitales para retos deportivos con una identidad intensa, clara y enfocada en progreso medible.',
+    'SOLE Fitness presenta Burn the Ships!, un reto de aniversario de cinco semanas construido para activar comunidad, constancia e impacto visible.',
   navigation: [
     { label: 'Inicio', href: '/' },
+    { label: 'Reto', href: '/reto' },
     { label: 'Leaderboard', href: '/leaderboard' },
-    { label: 'Retos', href: '/challenges' },
-    { label: 'Atletas', href: '/athletes' },
-    { label: 'Contacto', href: '/#cta' },
+    { label: 'Proposito', href: '/proposito' },
+    { label: 'Impacto', href: '/impacto' },
+    { label: 'Testimonios', href: '/testimonios' },
+    { label: 'Contacto', href: '/contacto' },
   ],
   cta: {
-    primary: 'Ver el reto del mes',
-    secondary: 'Conocer la dinámica',
+    primary: 'Conocer el reto',
+    secondary: 'Ver el proposito',
   },
   assets: {
     officialBlue: '/brand/sole-logo-blue.png',

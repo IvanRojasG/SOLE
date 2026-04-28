@@ -10,6 +10,7 @@ const coachNavigation = [
   { href: '/coach/achievements', label: 'Logros' },
   { href: '/coach/challenges', label: 'Retos' },
   { href: '/coach/baseline', label: 'Baseline' },
+  { href: '/account/password', label: 'Password' },
 ] as const;
 
 type CoachAreaLayoutProps = {
@@ -26,16 +27,16 @@ export function CoachAreaLayout({
   children,
 }: CoachAreaLayoutProps) {
   return (
-    <div className="py-[--section-spacing]">
+    <div className="sole-dashboard-shell py-[--section-spacing]">
       <AppContainer className="space-y-8">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6">
-          <p className="text-xs uppercase tracking-[0.24em] text-[color:var(--color-secondary-soft)]">
+        <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
             Coach Panel
           </p>
-          <h1 className="mt-4 font-display text-5xl uppercase tracking-[0.08em] text-white md:text-6xl">
+          <h1 className="mt-4 font-display text-5xl uppercase tracking-[0.08em] text-slate-950 md:text-6xl">
             {title}
           </h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-[color:var(--color-text-muted)]">
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
             {description}
           </p>
         </div>
@@ -47,8 +48,8 @@ export function CoachAreaLayout({
               className={cn(
                 'rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] whitespace-nowrap transition',
                 activePath === item.href
-                  ? 'bg-[color:var(--color-secondary)] text-[color:var(--color-ink)]'
-                  : 'border border-white/10 bg-white/5 text-white',
+                  ? 'bg-[color:var(--color-primary)] text-white shadow-[0_14px_32px_rgba(0,92,255,0.22)]'
+                  : 'border border-slate-200 bg-white/85 text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]',
               )}
             >
               {item.label}

@@ -108,3 +108,55 @@ export async function registerAthleteWithBackend(payload: {
 
   return parseJsonResponse<UserIdentity>(response, '/auth/register');
 }
+
+export async function changePasswordWithBackend(payload: {
+  current_password: string;
+  new_password: string;
+}) {
+  const session = await getSession();
+
+  if (!session) {
+    throw new Error('Missing authenticated session for /auth/change-password');
+  }
+
+  const response = await fetch(`${getBackendUrl()}/auth/change-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify(payload),
+    cache: 'no-store',
+  });
+
+  return parseJsonResponse<{ message: string }>(response, '/auth/change-password');
+}
+
+export async function requestPasswordResetWithBackend(payload: { email: string }) {
+  const response = await fetch(`${getBackendUrl()}/auth/forgot-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    cache: 'no-store',
+  });
+
+  return parseJsonResponse<{ message: string; reset_token: string | null }>(response, '/auth/forgot-password');
+}
+
+export async function resetPasswordWithBackend(payload: {
+  token: string;
+  new_password: string;
+}) {
+  const response = await fetch(`${getBackendUrl()}/auth/reset-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    cache: 'no-store',
+  });
+
+  return parseJsonResponse<{ message: string }>(response, '/auth/reset-password');
+}

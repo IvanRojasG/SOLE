@@ -6,19 +6,19 @@ import { AppContainer } from './AppContainer';
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[color:var(--color-surface)]">
+    <footer className="border-t border-slate-200 bg-white">
       <AppContainer className="grid gap-10 py-10 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="font-display text-4xl uppercase tracking-[0.16em] text-white">
+          <p className="font-display text-4xl uppercase tracking-[0.16em] text-slate-950">
             {brand.name}
           </p>
-          <p className="mt-4 max-w-md text-sm leading-7 text-[color:var(--color-text-muted)]">
-            Plataforma visual base para retos deportivos, progreso medible y comunicación clara
-            entre box, coaches y atletas.
+          <p className="mt-4 max-w-md text-sm leading-7 text-slate-600">
+            Landing y paginas de informacion alineadas con Burn the Ships!, usando base blanca,
+            azules mas suaves y una arquitectura lista para fotos y videos.
           </p>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary-soft)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
             Navegación
           </p>
           <div className="mt-4 flex flex-col gap-3">
@@ -26,7 +26,7 @@ export function PublicFooter() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm text-[color:var(--color-text-muted)] transition hover:text-white"
+                className="text-sm text-slate-600 transition hover:text-[color:var(--color-primary)]"
               >
                 {item.label}
               </Link>
@@ -34,12 +34,12 @@ export function PublicFooter() {
           </div>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary-soft)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
             Estado
           </p>
-          <p className="mt-4 text-sm leading-7 text-[color:var(--color-text-muted)]">
-            Fase actual: branding, layout, navegación y home pública listas. Sin conexión a datos ni
-            lógica de negocio todavía.
+          <p className="mt-4 text-sm leading-7 text-slate-600">
+            Carrusel conectado a `public/challenge-gallery` y seccion de testimonios preparada para
+            incrustar links de YouTube reales sin tocar la estructura.
           </p>
         </div>
       </AppContainer>

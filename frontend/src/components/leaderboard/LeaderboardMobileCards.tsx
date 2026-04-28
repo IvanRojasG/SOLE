@@ -6,41 +6,52 @@ type LeaderboardMobileCardsProps = {
 
 export function LeaderboardMobileCards({ entries }: LeaderboardMobileCardsProps) {
   return (
-    <div className="grid gap-4 lg:hidden">
-      {entries.map((entry) => (
-        <article key={entry.athleteId} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {entries.map((entry, index) => {
+        const accents = [
+          'border-amber-200 bg-[linear-gradient(135deg,#fff7ed,#fef3c7_48%,#ffffff)]',
+          'border-cyan-200 bg-[linear-gradient(135deg,#ecfeff,#dbeafe_52%,#ffffff)]',
+          'border-lime-200 bg-[linear-gradient(135deg,#f7fee7,#ccfbf1_52%,#ffffff)]',
+          'border-rose-200 bg-[linear-gradient(135deg,#fff1f2,#ffe4e6_45%,#ffffff)]',
+          'border-indigo-200 bg-[linear-gradient(135deg,#eef2ff,#e0e7ff_45%,#ffffff)]',
+        ];
+        const accent = accents[index % accents.length];
+
+        return (
+        <article key={entry.athleteId} className={`rounded-[1.75rem] border p-5 shadow-[0_20px_52px_rgba(15,23,42,0.1)] ${accent}`}>
           <div className="flex items-start justify-between">
             <div>
-              <p className="font-display text-4xl uppercase tracking-[0.08em] text-white">
+              <p className="font-display text-4xl uppercase tracking-[0.08em] text-slate-950">
                 {entry.rank}
               </p>
-              <h3 className="mt-3 text-lg font-semibold text-white">{entry.athleteName}</h3>
-              <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+              <h3 className="mt-3 text-lg font-semibold text-slate-950">{entry.athleteName}</h3>
+              <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
                 {entry.level}
               </p>
             </div>
-            <div className="rounded-full bg-[color:var(--color-primary)] px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]">
+            <div className="rounded-full bg-slate-950 px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white">
               {entry.points} pts
             </div>
           </div>
           <div className="mt-5 grid grid-cols-3 gap-3">
-            <div className="rounded-2xl border border-white/10 p-3">
-              <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">Asistencia</p>
-              <p className="mt-2 text-lg font-semibold text-white">{entry.attendanceRate}%</p>
+            <div className="rounded-2xl border border-white/70 bg-white/70 p-3">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Asistencia</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{entry.attendanceRate}%</p>
             </div>
-            <div className="rounded-2xl border border-white/10 p-3">
-              <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">Logros</p>
-              <p className="mt-2 text-lg font-semibold text-white">{entry.approvedAchievements}</p>
+            <div className="rounded-2xl border border-white/70 bg-white/70 p-3">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Logros</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{entry.approvedAchievements}</p>
             </div>
-            <div className="rounded-2xl border border-white/10 p-3">
-              <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">Delta</p>
+            <div className="rounded-2xl border border-white/70 bg-white/70 p-3">
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Delta</p>
               <p className={`mt-2 text-lg font-semibold ${entry.delta >= 0 ? 'text-[color:var(--color-success)]' : 'text-[color:var(--color-danger)]'}`}>
                 {entry.delta >= 0 ? `+${entry.delta}` : entry.delta}
               </p>
             </div>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }

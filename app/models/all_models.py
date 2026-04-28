@@ -19,6 +19,17 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
+class PasswordResetToken(SQLModel, table=True):
+    __tablename__ = "password_reset_tokens"
+
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    user_id: UUID = Field(foreign_key="users.id", nullable=False, index=True)
+    token_hash: str = Field(max_length=64, unique=True, index=True)
+    expires_at: datetime = Field(nullable=False)
+    used_at: Optional[datetime] = Field(default=None)
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+
+
 class Athlete(SQLModel, table=True):
     __tablename__ = "athletes"
 

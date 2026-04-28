@@ -6,7 +6,6 @@ import { AppContainer } from '@/components/layout/AppContainer';
 import { Section } from '@/components/layout/Section';
 import { LeaderboardFilters } from '@/components/leaderboard/LeaderboardFilters';
 import { LeaderboardMobileCards } from '@/components/leaderboard/LeaderboardMobileCards';
-import { LeaderboardTable } from '@/components/leaderboard/LeaderboardTable';
 import { TopThreePodium } from '@/components/leaderboard/TopThreePodium';
 import type { AthleteLevel, RankingEntry } from '@/types';
 
@@ -46,17 +45,16 @@ export function LeaderboardView({ entries }: LeaderboardViewProps) {
         />
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--color-text-muted)]">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--color-primary)]">
               Podio actual
             </p>
-            <h2 className="mt-2 text-2xl font-semibold text-white">Top atletas del mes</h2>
+            <h2 className="mt-2 text-2xl font-semibold text-slate-950">Top atletas del mes</h2>
           </div>
-          <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white">
+          <div className="rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-sm font-semibold text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.06)]">
             {filteredEntries.length} atletas visibles
           </div>
         </div>
         <TopThreePodium entries={filteredEntries.slice(0, 3)} />
-        <LeaderboardTable entries={filteredEntries} />
         <LeaderboardMobileCards entries={filteredEntries} />
       </AppContainer>
     </Section>
