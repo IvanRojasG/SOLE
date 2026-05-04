@@ -19,8 +19,7 @@ export const publicSite = {
   },
   intro: {
     title: 'Un reto de 5 semanas que te llevaran al limite',
-    body:
-      'Esta dirigido a todos nuestros clientes internos que quieren poner a prueba su fitness a traves de workouts semanales iniciando la primera semana de Mayo del 04 al 10 y finalizando la semana del 01 al 07 de Junio. La gran final con el top 10 sera el proximo 12 de Junio.',
+    body: 'Esta dirigido a todos nuestros clientes internos que quieren poner a prueba su fitness a traves de workouts semanales iniciando la primera semana de Mayo del 04 al 10 y finalizando la semana del 01 al 07 de Junio. La gran final con el top 10 sera el proximo 12 de Junio.',
     caption: '5 semanas de workouts increibles',
   },
   schedule: [
@@ -41,23 +40,19 @@ export const publicSite = {
   ],
   mission: {
     title: 'Mision',
-    body:
-      'Convertir el aniversario de SOLE en una experiencia competitiva clara, cercana y bien guiada, donde cada semana suba el nivel de compromiso sin perder la energia colectiva del box.',
+    body: 'Convertir el aniversario de SOLE en una experiencia competitiva clara, cercana y bien guiada, donde cada semana suba el nivel de compromiso sin perder la energia colectiva del box.',
   },
   vision: {
     title: 'Vision',
-    body:
-      'Diseñar una experiencia memorable que haga visible el progreso de cada atleta y proyecte a SOLE como una comunidad que entrena con metodo, intensidad y identidad propia.',
+    body: 'Diseñar una experiencia memorable que haga visible el progreso de cada atleta y proyecte a SOLE como una comunidad que entrena con metodo, intensidad y identidad propia.',
   },
   coach: {
     name: 'Coach Mau',
-    body:
-      'La propuesta posiciona al coach como la voz que acompaña, reta y da contexto al proceso completo: del primer workout a la final.',
+    body: 'La propuesta posiciona al coach como la voz que acompaña, reta y da contexto al proceso completo: del primer workout a la final.',
   },
   impact: {
     title: 'Impacto',
-    body:
-      'El reto esta pensado para elevar adherencia, conversación y sentido de logro. No es solo una serie de workouts; es una narrativa de progreso de cinco semanas.',
+    body: 'El reto esta pensado para elevar adherencia, conversación y sentido de logro. No es solo una serie de workouts; es una narrativa de progreso de cinco semanas.',
     points: [
       'Rutina semanal con foco claro y expectativa sostenida.',
       'Lectura inmediata del avance del atleta y del momentum del reto.',
@@ -66,19 +61,22 @@ export const publicSite = {
     ],
   },
   testimonials: {
-    title: 'Testimonials',
-    body:
-      'La seccion queda lista para incrustar videos de YouTube dentro de la pagina. Solo hay que reemplazar los links de ejemplo por los enlaces reales del box.',
+    title: 'Testimonios',
+    body: 'Historias reales de atletas que viven el proceso dentro de SOLE y comparten lo que el entrenamiento ha construido en ellos.',
     videos: [
-      { title: 'Testimonio 01', youtubeUrl: '' },
-      { title: 'Testimonio 02', youtubeUrl: '' },
-      { title: 'Testimonio 03', youtubeUrl: '' },
+      {
+        title: 'Testimonio 01',
+        youtubeUrl: 'https://www.youtube.com/watch?v=8sNchaX9Auc',
+      },
+      {
+        title: 'Testimonio 02',
+        youtubeUrl: 'https://www.youtube.com/watch?v=GFUImejEQ2s',
+      },
     ],
   },
   contact: {
     title: 'Contacto',
-    body:
-      'Si quieres activar esta experiencia para el aniversario, la pagina ya queda estructurada para presentar el reto, sumar testimonios y centralizar el siguiente paso comercial o interno.',
+    body: 'Si quieres activar esta experiencia para el aniversario, la pagina ya queda estructurada para presentar el reto, sumar testimonios y centralizar el siguiente paso comercial o interno.',
     primaryCta: { label: 'Ir a contacto', href: '/contacto' },
   },
   gallery: [

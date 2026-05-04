@@ -27,7 +27,7 @@ function extractYoutubeEmbedUrl(youtubeUrl: string) {
 
 export function VideoTestimonialsGrid({ videos }: VideoTestimonialsGridProps) {
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2">
       {videos.map((video) => {
         const embedUrl = extractYoutubeEmbedUrl(video.youtubeUrl);
 
@@ -51,19 +51,23 @@ export function VideoTestimonialsGrid({ videos }: VideoTestimonialsGridProps) {
             ) : (
               <div className="flex aspect-video items-center justify-center bg-[linear-gradient(135deg,#e8f1ff,#f8fbff_56%,#dbe9ff)] p-8 text-center">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[color:var(--color-primary)]">
+                  <p className="text-xs font-semibold tracking-[0.22em] text-[color:var(--color-primary)] uppercase">
                     YouTube embed
                   </p>
                   <p className="mt-3 text-sm leading-7 text-slate-600">
                     Reemplaza el link vacio en{' '}
-                    <span className="font-semibold text-slate-900">`src/content/publicSite.ts`</span>{' '}
+                    <span className="font-semibold text-slate-900">
+                      `src/content/publicSite.ts`
+                    </span>{' '}
                     para mostrar el video.
                   </p>
                 </div>
               </div>
             )}
             <div className="px-5 py-4">
-              <h3 className="text-lg font-semibold text-slate-900">{video.title}</h3>
+              <h3 className="text-lg font-semibold text-slate-900">
+                {video.title}
+              </h3>
             </div>
           </article>
         );
