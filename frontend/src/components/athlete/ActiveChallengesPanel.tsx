@@ -33,12 +33,15 @@ export function ActiveChallengesPanel({ challenges }: ActiveChallengesPanelProps
                   </p>
                   <h4 className="mt-2 text-lg font-semibold text-white">{challenge.title}</h4>
                 </div>
-                <div className="rounded-full bg-[color:var(--color-primary)] px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]">
-                  {challenge.points} pts
-                </div>
+                <span className="rounded-full bg-[color:var(--color-primary)] px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]">
+                  {challenge.category === 'power_lifting' ? 'Power' : 'Metcon'}
+                </span>
               </div>
               <p className="mt-3 text-sm leading-7 text-[color:var(--color-text-muted)]">
                 {challenge.summary}
+              </p>
+              <p className="mt-3 text-xs tracking-[0.16em] text-[color:var(--color-text-muted)] uppercase">
+                {challenge.startDate} · {challenge.endDate}
               </p>
             </div>
           ))}

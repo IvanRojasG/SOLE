@@ -31,10 +31,9 @@ export function ChallengeManagementGrid({ items, onEdit, onCreate }: ChallengeMa
           <p className="text-xs uppercase tracking-[0.2em] text-[color:var(--color-text-muted)]">
             Biblioteca de retos
           </p>
-          <h2 className="mt-2 text-2xl font-semibold text-white">Gestiona y crea nuevos challenges</h2>
+          <h2 className="mt-2 text-2xl font-semibold text-white">Gestiona y crea WODs</h2>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-[color:var(--color-text-muted)]">
-            Los cards ahora priorizan lectura y selección. La creación persiste `title` y `points`;
-            el resto del contenido sigue siendo visual mientras el backend se expande.
+            Cada WOD tiene categoría, ventana real de registro y video explicativo.
           </p>
         </div>
         <button
@@ -75,15 +74,17 @@ export function ChallengeManagementGrid({ items, onEdit, onCreate }: ChallengeMa
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/10 p-3">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-                  Puntos
+                  Categoría
                 </p>
-                <p className="mt-2 text-lg font-semibold text-white">{item.points}</p>
+                <p className="mt-2 text-sm font-semibold text-white">
+                  {item.category === 'power_lifting' ? 'Power Lifting' : 'Custom Metcon (Reps)'}
+                </p>
               </div>
               <div className="rounded-2xl border border-white/10 p-3">
                 <p className="text-[11px] uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
                   Ventana
                 </p>
-                <p className="mt-2 text-sm font-semibold text-white">{item.windowLabel}</p>
+                <p className="mt-2 text-sm font-semibold text-white">{item.startDate} · {item.endDate}</p>
               </div>
             </div>
             <button

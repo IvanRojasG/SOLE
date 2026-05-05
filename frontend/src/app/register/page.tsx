@@ -39,7 +39,7 @@ export default async function RegisterPage() {
               </p>
               <p className="mt-3 text-sm leading-7 text-slate-600">
                 La cuenta creada entra al flujo del atleta y queda lista para baseline, logros y
-                asistencia desde el primer acceso.
+                workouts desde el primer acceso.
               </p>
             </div>
           </div>

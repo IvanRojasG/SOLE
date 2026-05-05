@@ -54,7 +54,6 @@ BACKEND_API_URL=http://host.docker.internal:8000
 - `app/api/routes/catalogs.py`
 - `app/api/routes/public.py`
 - `app/api/routes/baseline.py`
-- `app/api/routes/attendance.py`
 - `app/api/routes/achievements.py`
 
 ## Endpoints usados por el frontend
@@ -80,16 +79,12 @@ BACKEND_API_URL=http://host.docker.internal:8000
 - `POST /baseline/lock/me`
 - `GET /achievements/me/detailed`
 - `POST /achievements`
-- `GET /attendance/me/detailed`
 
 ### Coach
 
 - `POST /auth/login`
 - `GET /dashboard`
 - `GET /athletes`
-- `GET /attendance/sessions`
-- `POST /attendance/session`
-- `POST /attendance/session/{id}/checkin`
 - `GET /achievements/pending/detailed`
 - `POST /achievements/{id}/approve`
 - `POST /achievements/{id}/reject`

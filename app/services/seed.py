@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 
 from app.core.security import hash_password
-from app.models.all_models import Athlete, BaselineCatalogItem, Challenge, Coach, MovementCatalog, SkillCatalog, User
+from app.models.all_models import Athlete, BaselineCatalogItem, Coach, MovementCatalog, SkillCatalog, User
 
 
 DEFAULT_COACHES = [
@@ -63,35 +63,6 @@ DEFAULT_BASELINE_ITEMS = [
         "description": "Nivel técnico actual.",
     },
 ]
-DEFAULT_CHALLENGES = [
-    {
-        "title": "Attend 5 classes",
-        "category": "consistency",
-        "difficulty": "starter",
-        "summary": "Completa cinco asistencias validadas dentro del mismo ciclo mensual.",
-        "window_label": "Semana 1-2",
-        "is_active": True,
-        "points": 5,
-    },
-    {
-        "title": "Improve benchmark WOD",
-        "category": "conditioning",
-        "difficulty": "beast",
-        "summary": "Mejora tu tiempo o score frente a un benchmark definido por el box.",
-        "window_label": "Todo el mes",
-        "is_active": True,
-        "points": 10,
-    },
-    {
-        "title": "New gymnastics skill",
-        "category": "gymnastics",
-        "difficulty": "builder",
-        "summary": "Consigue una nueva skill técnica validada por coach.",
-        "window_label": "Todo el mes",
-        "is_active": True,
-        "points": 8,
-    },
-]
 
 
 def seed_initial_data(session: Session) -> None:
@@ -145,19 +116,5 @@ def seed_initial_data(session: Session) -> None:
         item.description = item_data["description"]
         item.is_active = True
         session.add(item)
-
-    for challenge_data in DEFAULT_CHALLENGES:
-        challenge = session.exec(select(Challenge).where(Challenge.title == challenge_data["title"])).first()
-        if not challenge:
-            session.add(Challenge(**challenge_data))
-            continue
-
-        challenge.category = challenge_data["category"]
-        challenge.difficulty = challenge_data["difficulty"]
-        challenge.summary = challenge_data["summary"]
-        challenge.window_label = challenge_data["window_label"]
-        challenge.is_active = challenge_data["is_active"]
-        challenge.points = challenge_data["points"]
-        session.add(challenge)
 
     session.commit()

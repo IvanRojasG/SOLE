@@ -43,7 +43,7 @@ Guarda el perfil de negocio del atleta, separado de las credenciales del usuario
 
 **Descripción resumida**
 
-Guarda el perfil de negocio de los coaches que validan logros y registran asistencia.
+Guarda el perfil de negocio de los coaches que validan logros.
 
 | Columna | Tipo | Descripción |
 |---|---|---|
@@ -107,38 +107,6 @@ Guarda el estado inicial de skills del atleta dentro de su baseline.
 
 - Un atleta solo puede tener una entrada baseline por skill: `UNIQUE (athlete_id, skill_id)`.
 
-## Tabla `attendance_sessions`
-
-**Descripción resumida**
-
-Representa una sesión de asistencia creada por un coach para una fecha determinada.
-
-| Columna | Tipo | Descripción |
-|---|---|---|
-| `id` | `UUID` | Identificador único de la sesión de asistencia. |
-| `session_date` | `DATE` | Fecha de la sesión registrada. |
-| `coach_id` | `UUID` | Coach responsable que creó o controla la sesión. |
-
-**Restricción relevante**
-
-- Un mismo coach no puede crear dos sesiones para la misma fecha: `UNIQUE (session_date, coach_id)`.
-
-## Tabla `attendance_records`
-
-**Descripción resumida**
-
-Registra qué atletas asistieron a una sesión específica.
-
-| Columna | Tipo | Descripción |
-|---|---|---|
-| `id` | `UUID` | Identificador único del check-in de asistencia. |
-| `session_id` | `UUID` | Referencia a la sesión de asistencia. |
-| `athlete_id` | `UUID` | Referencia al atleta marcado como asistente. |
-
-**Restricción relevante**
-
-- Un atleta no puede ser registrado dos veces en la misma sesión: `UNIQUE (session_id, athlete_id)`.
-
 ## Tabla `challenges`
 
 **Descripción resumida**
@@ -195,9 +163,6 @@ Libro mayor de puntos del sistema. Es la fuente de verdad para el ranking genera
 | `athletes.id` | `athlete_baseline_skills.athlete_id` | 1 a N | Un atleta puede registrar varias skills baseline. |
 | `movement_catalog.id` | `athlete_baseline_prs.movement_id` | 1 a N | Un movimiento puede ser usado por muchos atletas. |
 | `skill_catalog.id` | `athlete_baseline_skills.skill_id` | 1 a N | Una skill puede ser usada por muchos atletas. |
-| `coaches.id` | `attendance_sessions.coach_id` | 1 a N | Un coach puede crear varias sesiones. |
-| `attendance_sessions.id` | `attendance_records.session_id` | 1 a N | Una sesión puede tener muchos registros de asistencia. |
-| `athletes.id` | `attendance_records.athlete_id` | 1 a N | Un atleta puede asistir a varias sesiones. |
 | `challenges.id` | `achievements.challenge_id` | 1 a N | Un reto puede ser reportado por varios atletas. |
 | `athletes.id` | `achievements.athlete_id` | 1 a N | Un atleta puede registrar varios logros. |
 | `athletes.id` | `points_ledger.athlete_id` | 1 a N | Un atleta puede tener múltiples movimientos de puntos. |

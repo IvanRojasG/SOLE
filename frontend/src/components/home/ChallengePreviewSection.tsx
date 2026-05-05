@@ -20,7 +20,7 @@ export function ChallengePreviewSection() {
         <div className="grid gap-5 md:grid-cols-3">
           {[
             ['01', 'Baseline', 'Carga inicial de marcas y skills.'],
-            ['02', 'Validación', 'Coaches controlan asistencia y aprobaciones.'],
+            ['02', 'Validación', 'Coaches validan resultados y aprobaciones.'],
             ['03', 'Ranking', 'El progreso se vuelve visible y competitivo.'],
           ].map(([step, title, copy]) => (
             <article

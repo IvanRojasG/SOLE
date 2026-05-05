@@ -11,6 +11,7 @@ class RankingItem(BaseModel):
     athlete_id: UUID
     athlete_name: str
     points: int
+    result_format: str
 
 
 class DashboardResponse(BaseModel):

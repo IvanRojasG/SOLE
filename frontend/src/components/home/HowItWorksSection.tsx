@@ -12,7 +12,7 @@ const steps = [
   },
   {
     title: 'Acciones validadas',
-    copy: 'Asistencia y logros pasan por control de coach antes de impactar el ranking.',
+    copy: 'Resultados y logros pasan por control de coach antes de impactar el ranking.',
   },
   {
     title: 'Progreso visible',

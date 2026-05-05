@@ -4,7 +4,13 @@ import { revalidatePath } from 'next/cache';
 
 import { dataSource } from '@/lib/config/dataSource';
 import { backendRequest } from '@/services/api/backend';
-import type { AthleteBaseline, BaselineCatalogItem, BaselineEntry, ChallengeManagementItem } from '@/types';
+import type {
+  AthleteBaseline,
+  BaselineCatalogItem,
+  BaselineEntry,
+  ChallengeManagementItem,
+  ResultFormat,
+} from '@/types';
 
 export async function saveAthleteProfileAction(payload: {
   fullName: string;
@@ -36,7 +42,9 @@ export async function saveBaselineAction(baseline: AthleteBaseline) {
   if (baseline.entries.length > 0) {
     for (const entry of baseline.entries) {
       const isStatusEntry = entry.metricType === 'status';
-      const hasValue = isStatusEntry ? entry.status !== 'not_started' : entry.value !== null && entry.value > 0;
+      const hasValue = isStatusEntry
+        ? entry.status !== 'not_started'
+        : entry.value !== null && entry.value > 0;
 
       if (!hasValue) {
         continue;
@@ -184,61 +192,66 @@ export async function createBaselineCatalogItemAction(payload: {
 export async function submitAchievementAction(payload: {
   challengeId: string;
   achievementDate: string;
-}) {
+  completed: boolean;
+  resultFormat: ResultFormat;
+  timeSeconds: number | null;
+  repsCompleted: number | null;
+  weightLbs: number | null;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
   if (dataSource === 'mock') {
     return { ok: true };
   }
 
-  await backendRequest('/achievements', {
-    method: 'POST',
-    role: 'athlete',
-    body: {
-      challenge_id: payload.challengeId,
-      achievement_date: payload.achievementDate,
-    },
-  });
+  try {
+    await backendRequest('/achievements', {
+      method: 'POST',
+      role: 'athlete',
+      body: {
+        challenge_id: payload.challengeId,
+        achievement_date: payload.achievementDate,
+        completed: payload.completed,
+        result_format: payload.resultFormat,
+        time_seconds: payload.timeSeconds,
+        reps_completed: payload.repsCompleted,
+        weight_lbs: payload.weightLbs,
+      },
+    });
+  } catch (caught) {
+    if (
+      caught instanceof Error &&
+      caught.message.includes('Duplicate achievement is not allowed')
+    ) {
+      return {
+        ok: false,
+        error:
+          'No se puede registrar este logro porque ya existe para ese WOD y esa fecha.',
+      };
+    }
+
+    return {
+      ok: false,
+      error:
+        caught instanceof Error
+          ? caught.message
+          : 'No se pudo registrar el logro.',
+    };
+  }
 
   revalidatePath('/athlete/achievements');
   revalidatePath('/athlete');
   return { ok: true };
 }
 
-export async function createAttendanceSessionAction(payload: { sessionDate: string }) {
-  if (dataSource === 'mock') {
-    return { ok: true };
-  }
-
-  await backendRequest('/attendance/session', {
-    method: 'POST',
-    role: 'coach',
-    body: {
-      session_date: payload.sessionDate,
-    },
-  });
-
-  revalidatePath('/coach/attendance');
-  revalidatePath('/coach');
-  return { ok: true };
-}
-
-export async function checkInAthleteAction(payload: { sessionId: string; athleteId: string }) {
-  if (dataSource === 'mock') {
-    return { ok: true };
-  }
-
-  await backendRequest(`/attendance/session/${payload.sessionId}/checkin`, {
-    method: 'POST',
-    role: 'coach',
-    body: {
-      athlete_id: payload.athleteId,
-    },
-  });
-
-  revalidatePath('/coach/attendance');
-  return { ok: true };
-}
-
-export async function approveAchievementAction(achievementId: string) {
+export async function approveAchievementAction(
+  achievementId: string,
+  result?: {
+    completed: boolean;
+    resultFormat: ResultFormat;
+    timeSeconds: number | null;
+    repsCompleted: number | null;
+    weightLbs: number | null;
+  },
+) {
   if (dataSource === 'mock') {
     return { ok: true };
   }
@@ -246,12 +259,55 @@ export async function approveAchievementAction(achievementId: string) {
   await backendRequest(`/achievements/${achievementId}/approve`, {
     method: 'POST',
     role: 'coach',
+    body: result
+      ? {
+          completed: result.completed,
+          result_format: result.resultFormat,
+          time_seconds: result.timeSeconds,
+          reps_completed: result.repsCompleted,
+          weight_lbs: result.weightLbs,
+        }
+      : undefined,
   });
 
   revalidatePath('/coach/achievements');
   revalidatePath('/coach');
   revalidatePath('/leaderboard');
   revalidatePath('/athletes');
+  return { ok: true };
+}
+
+export async function updateAchievementResultAction(
+  achievementId: string,
+  result: {
+    completed: boolean;
+    resultFormat: ResultFormat;
+    timeSeconds: number | null;
+    repsCompleted: number | null;
+    weightLbs: number | null;
+  },
+) {
+  if (dataSource === 'mock') {
+    return { ok: true };
+  }
+
+  await backendRequest(`/achievements/${achievementId}/result`, {
+    method: 'PUT',
+    role: 'coach',
+    body: {
+      completed: result.completed,
+      result_format: result.resultFormat,
+      time_seconds: result.timeSeconds,
+      reps_completed: result.repsCompleted,
+      weight_lbs: result.weightLbs,
+    },
+  });
+
+  revalidatePath('/coach/achievements');
+  revalidatePath('/coach');
+  revalidatePath('/leaderboard');
+  revalidatePath('/athletes');
+  revalidatePath('/athlete/achievements');
   return { ok: true };
 }
 
@@ -270,6 +326,29 @@ export async function rejectAchievementAction(achievementId: string) {
   return { ok: true };
 }
 
+export async function updateAchievementTieBreakAction(
+  achievementId: string,
+  tieBreakOrder: number,
+) {
+  if (dataSource === 'mock') {
+    return { ok: true };
+  }
+
+  await backendRequest(`/achievements/${achievementId}/tie-break`, {
+    method: 'PUT',
+    role: 'coach',
+    body: {
+      tie_break_order: tieBreakOrder,
+    },
+  });
+
+  revalidatePath('/coach/achievements');
+  revalidatePath('/coach');
+  revalidatePath('/leaderboard');
+  revalidatePath('/athletes');
+  return { ok: true };
+}
+
 export async function updateChallengeAction(item: ChallengeManagementItem) {
   if (dataSource === 'mock') {
     return { ok: true };
@@ -281,11 +360,12 @@ export async function updateChallengeAction(item: ChallengeManagementItem) {
     body: {
       title: item.title,
       category: item.category,
-      difficulty: item.difficulty,
       summary: item.summary,
-      window_label: item.windowLabel,
+      start_date: item.startDate,
+      end_date: item.endDate,
+      youtube_url: item.youtubeUrl,
+      total_reps: item.totalReps,
       is_active: item.isActive,
-      points: item.points,
     },
   });
 
@@ -296,24 +376,48 @@ export async function updateChallengeAction(item: ChallengeManagementItem) {
 
 export async function createChallengeAction(payload: ChallengeManagementItem) {
   if (dataSource === 'mock') {
-    return { ok: true };
+    return { ok: true, item: payload };
   }
 
-  await backendRequest('/challenges', {
+  const created = await backendRequest<{
+    id: string;
+    title: string;
+    category: ChallengeManagementItem['category'];
+    summary: string;
+    start_date: string;
+    end_date: string;
+    youtube_url: string;
+    total_reps: number;
+    is_active: boolean;
+  }>('/challenges', {
     method: 'POST',
     role: 'coach',
     body: {
       title: payload.title,
       category: payload.category,
-      difficulty: payload.difficulty,
       summary: payload.summary,
-      window_label: payload.windowLabel,
+      start_date: payload.startDate,
+      end_date: payload.endDate,
+      youtube_url: payload.youtubeUrl,
+      total_reps: payload.totalReps,
       is_active: payload.isActive,
-      points: payload.points,
     },
   });
 
   revalidatePath('/coach/challenges');
   revalidatePath('/challenges');
-  return { ok: true };
+  return {
+    ok: true,
+    item: {
+      id: created.id,
+      title: created.title,
+      category: created.category,
+      summary: created.summary,
+      startDate: created.start_date,
+      endDate: created.end_date,
+      youtubeUrl: created.youtube_url,
+      totalReps: created.total_reps,
+      isActive: created.is_active,
+    },
+  };
 }

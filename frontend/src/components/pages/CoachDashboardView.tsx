@@ -1,6 +1,5 @@
 import { KPIStatRow } from '@/components/coach/KPIStatRow';
 import { PendingApprovalsCard } from '@/components/coach/PendingApprovalsCard';
-import { TodayAttendanceCard } from '@/components/coach/TodayAttendanceCard';
 import { TopAthletesPanel } from '@/components/coach/TopAthletesPanel';
 import type { CoachDashboard } from '@/types';
 
@@ -14,9 +13,8 @@ export function CoachDashboardView({ dashboard }: CoachDashboardViewProps) {
       <KPIStatRow items={dashboard.kpis} />
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:gap-8">
         <PendingApprovalsCard items={dashboard.pendingApprovals} />
-        <TodayAttendanceCard sessions={dashboard.todayAttendance} />
+        <TopAthletesPanel athletes={dashboard.topAthletes} />
       </div>
-      <TopAthletesPanel athletes={dashboard.topAthletes} />
     </div>
   );
 }

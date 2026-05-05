@@ -109,35 +109,18 @@ class AthleteBaselineEntry(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 
-class AttendanceSession(SQLModel, table=True):
-    __tablename__ = "attendance_sessions"
-    __table_args__ = (UniqueConstraint("session_date", "coach_id", name="uq_attendance_session_date_coach"),)
-
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    session_date: date
-    coach_id: UUID = Field(foreign_key="coaches.id", nullable=False)
-
-
-class AttendanceRecord(SQLModel, table=True):
-    __tablename__ = "attendance_records"
-    __table_args__ = (UniqueConstraint("session_id", "athlete_id", name="uq_attendance_records"),)
-
-    id: UUID = Field(default_factory=uuid4, primary_key=True)
-    session_id: UUID = Field(foreign_key="attendance_sessions.id", nullable=False)
-    athlete_id: UUID = Field(foreign_key="athletes.id", nullable=False)
-
-
 class Challenge(SQLModel, table=True):
     __tablename__ = "challenges"
 
     id: UUID = Field(default_factory=uuid4, primary_key=True)
     title: str = Field(max_length=120, unique=True)
     category: str = Field(max_length=30, default="consistency")
-    difficulty: str = Field(max_length=20, default="starter")
     summary: str = Field(max_length=500, default="")
-    window_label: str = Field(max_length=80, default="Todo el mes")
+    start_date: date
+    end_date: date
+    total_reps: int = Field(default=0)
+    youtube_url: str = Field(default="", max_length=300)
     is_active: bool = Field(default=True)
-    points: int
 
 
 class Achievement(SQLModel, table=True):
@@ -151,6 +134,13 @@ class Achievement(SQLModel, table=True):
     challenge_id: UUID = Field(foreign_key="challenges.id", nullable=False)
     achievement_date: date
     status: str = Field(default="submitted", max_length=20)
+    completed: bool = Field(default=False)
+    result_format: str = Field(default="scaled", max_length=20)
+    time_seconds: Optional[int] = Field(default=None)
+    reps_completed: Optional[int] = Field(default=None)
+    weight_lbs: Optional[Decimal] = Field(default=None)
+    tie_break_order: Optional[int] = Field(default=None)
+    rank_points: Optional[int] = Field(default=None)
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
 
 

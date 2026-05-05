@@ -47,9 +47,8 @@ export function ChallengeEditorForm({ item, onSave }: ChallengeEditorFormProps) 
           </h3>
         </div>
         <p className="max-w-md text-sm leading-7 text-[color:var(--color-text-muted)]">
-          {isNew
-            ? 'La creación persiste título y puntos. Categoría, ventana y resumen se conservan como apoyo visual.'
-            : 'La edición persistente actual cubre título y puntos; los demás campos siguen siendo de presentación.'}
+          Configura la ventana real del WOD. Los atletas solo pueden registrar
+          resultados entre las fechas de inicio y cierre.
         </p>
       </div>
       <div className="mt-6 grid gap-5">
@@ -77,19 +76,7 @@ export function ChallengeEditorForm({ item, onSave }: ChallengeEditorFormProps) 
         <div className="grid gap-4 lg:grid-cols-2">
           <label className="block">
             <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-              Puntos
-            </span>
-            <input
-              type="number"
-              min={1}
-              value={state.points}
-              onChange={(event) => setState((current) => (current ? { ...current, points: Number(event.target.value) } : current))}
-              className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
-            />
-          </label>
-          <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-              Categoría visual
+              Categoría
             </span>
             <select
               value={state.category}
@@ -100,39 +87,57 @@ export function ChallengeEditorForm({ item, onSave }: ChallengeEditorFormProps) 
               }
               className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
             >
-              <option value="strength">Strength</option>
-              <option value="gymnastics">Gymnastics</option>
-              <option value="conditioning">Conditioning</option>
-              <option value="consistency">Consistency</option>
+              <option value="custom_metcon_reps">Custom Metcon (Reps)</option>
+              <option value="power_lifting">Power Lifting</option>
             </select>
+          </label>
+          <label className="block">
+            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+              Total reps
+            </span>
+            <input
+              type="number"
+              min={0}
+              value={state.totalReps || ''}
+              onChange={(event) =>
+                setState((current) =>
+                  current ? { ...current, totalReps: Number(event.target.value) } : current,
+                )
+              }
+              className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+              YouTube URL
+            </span>
+            <input
+              value={state.youtubeUrl}
+              onChange={(event) => setState((current) => (current ? { ...current, youtubeUrl: event.target.value } : current))}
+              className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+            />
           </label>
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
           <label className="block">
             <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-              Dificultad visual
+              Inicio
             </span>
-            <select
-              value={state.difficulty}
-              onChange={(event) =>
-                setState((current) =>
-                  current ? { ...current, difficulty: event.target.value as ChallengeManagementItem['difficulty'] } : current,
-                )
-              }
+            <input
+              type="date"
+              value={state.startDate}
+              onChange={(event) => setState((current) => (current ? { ...current, startDate: event.target.value } : current))}
               className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
-            >
-              <option value="starter">Starter</option>
-              <option value="builder">Builder</option>
-              <option value="beast">Beast</option>
-            </select>
+            />
           </label>
           <label className="block">
             <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-              Ventana visual
+              Fin
             </span>
             <input
-              value={state.windowLabel}
-              onChange={(event) => setState((current) => (current ? { ...current, windowLabel: event.target.value } : current))}
+              type="date"
+              value={state.endDate}
+              onChange={(event) => setState((current) => (current ? { ...current, endDate: event.target.value } : current))}
               className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
             />
           </label>

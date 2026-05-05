@@ -1,11 +1,13 @@
 'use client';
 
-import type { AthleteLevel } from '@/types';
+import type { AthleteLevel, ResultFormat } from '@/types';
 
 type LeaderboardFiltersProps = {
   levels: AthleteLevel[];
   selectedLevel: AthleteLevel | 'all';
   onLevelChange: (value: AthleteLevel | 'all') => void;
+  selectedFormat: ResultFormat | 'all';
+  onFormatChange: (value: ResultFormat | 'all') => void;
   query: string;
   onQueryChange: (value: string) => void;
 };
@@ -14,6 +16,8 @@ export function LeaderboardFilters({
   levels,
   selectedLevel,
   onLevelChange,
+  selectedFormat,
+  onFormatChange,
   query,
   onQueryChange,
 }: LeaderboardFiltersProps) {
@@ -43,7 +47,8 @@ export function LeaderboardFilters({
           />
         </label>
       </div>
-      <div className="flex flex-wrap gap-2 lg:max-w-sm lg:justify-end">
+      <div className="grid gap-3 lg:max-w-sm">
+        <div className="flex flex-wrap gap-2 lg:justify-end">
         <button
           type="button"
           onClick={() => onLevelChange('all')}
@@ -69,6 +74,23 @@ export function LeaderboardFilters({
             {level}
           </button>
         ))}
+        </div>
+        <div className="flex flex-wrap gap-2 lg:justify-end">
+          {(['all', 'rx', 'scaled'] as Array<ResultFormat | 'all'>).map((format) => (
+            <button
+              key={format}
+              type="button"
+              onClick={() => onFormatChange(format)}
+              className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                selectedFormat === format
+                  ? 'bg-[color:var(--color-secondary)] text-white shadow-[0_14px_32px_rgba(31,182,170,0.18)]'
+                  : 'border border-slate-200 bg-white text-slate-700 hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]'
+              }`}
+            >
+              {format === 'all' ? 'Todos' : format}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

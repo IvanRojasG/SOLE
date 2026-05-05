@@ -41,25 +41,21 @@ def upgrade() -> None:
         """
         UPDATE challenges
         SET category = CASE title
-            WHEN 'Attend 5 classes' THEN 'consistency'
             WHEN 'Improve benchmark WOD' THEN 'conditioning'
             WHEN 'New gymnastics skill' THEN 'gymnastics'
             ELSE 'consistency'
         END,
         difficulty = CASE title
-            WHEN 'Attend 5 classes' THEN 'starter'
             WHEN 'Improve benchmark WOD' THEN 'beast'
             WHEN 'New gymnastics skill' THEN 'builder'
             ELSE 'starter'
         END,
         summary = CASE title
-            WHEN 'Attend 5 classes' THEN 'Completa cinco asistencias validadas dentro del mismo ciclo mensual.'
             WHEN 'Improve benchmark WOD' THEN 'Mejora tu tiempo o score frente a un benchmark definido por el box.'
             WHEN 'New gymnastics skill' THEN 'Consigue una nueva skill técnica validada por coach.'
             ELSE 'Reto mensual SOLE.'
         END,
         window_label = CASE title
-            WHEN 'Attend 5 classes' THEN 'Semana 1-2'
             WHEN 'Improve benchmark WOD' THEN 'Todo el mes'
             WHEN 'New gymnastics skill' THEN 'Todo el mes'
             ELSE 'Todo el mes'

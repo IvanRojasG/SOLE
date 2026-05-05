@@ -8,7 +8,6 @@ const athleteNavigation = [
   { href: '/athlete/profile', label: 'Perfil' },
   { href: '/athlete/baseline', label: 'Baseline' },
   { href: '/athlete/achievements', label: 'Logros' },
-  { href: '/athlete/attendance', label: 'Asistencia' },
   { href: '/account/password', label: 'Password' },
 ] as const;
 

@@ -18,20 +18,32 @@ export function AchievementList({ achievements }: AchievementListProps) {
   return (
     <div className="grid gap-4">
       {achievements.map((achievement) => (
-        <article key={achievement.id} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+        <article
+          key={achievement.id}
+          className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5"
+        >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h3 className="text-lg font-semibold text-white">{achievement.title}</h3>
-              <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+              <h3 className="text-lg font-semibold text-white">
+                {achievement.title}
+              </h3>
+              <p className="mt-2 text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
                 {achievement.achievementDate}
               </p>
             </div>
             <StatusBadge status={achievement.status} />
           </div>
           <p className="mt-4 text-sm text-[color:var(--color-text-muted)]">
-            {achievement.pointsAwarded > 0
-              ? `${achievement.pointsAwarded} puntos acreditados.`
-              : 'Pendiente de validación o sin puntos acreditados.'}
+            {achievement.resultFormat.toUpperCase()} ·{' '}
+            {achievement.completed
+              ? `Completado en ${achievement.timeSeconds ?? 0}s · ${achievement.repsCompleted ?? 0} reps.`
+              : `${achievement.repsCompleted ?? 0} reps.`}
+            {achievement.weightLbs ? ` · ${achievement.weightLbs} lb.` : ''}
+          </p>
+          <p className="mt-2 text-sm text-[color:var(--color-text-muted)]">
+            {achievement.rankPoints
+              ? `${achievement.rankPoints} puntos de ranking.`
+              : 'Pendiente de validación para leaderboard.'}
           </p>
         </article>
       ))}

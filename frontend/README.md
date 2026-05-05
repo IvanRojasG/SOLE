@@ -128,8 +128,6 @@ Mutaciones ya conectadas:
 - actualizar perfil atleta
 - guardar y bloquear baseline
 - registrar logro
-- crear sesión de asistencia
-- registrar check-in
 - aprobar o rechazar logro
 - actualizar reto
 

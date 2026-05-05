@@ -61,12 +61,6 @@ También se insertan automáticamente:
 - `POST /baseline/lock/{athlete_id}`
 - `GET /baseline/me`
 
-### Attendance
-
-- `POST /attendance/session`
-- `POST /attendance/session/{id}/checkin`
-- `GET /attendance/me`
-
 ### Achievements
 
 - `POST /achievements`
@@ -111,7 +105,7 @@ Flujo recomendado en Postman:
 
 - El atleta solo puede registrar baseline mientras `baseline_locked = false`
 - El baseline se bloquea explícitamente con `POST /baseline/lock/{athlete_id}`
-- Solo coaches pueden aprobar/rechazar logros y registrar asistencia
+- Solo coaches pueden aprobar/rechazar logros
 - Los puntos se insertan únicamente al aprobar un logro
 - No se permiten logros duplicados por atleta + challenge + fecha
 - El ranking sale de `points_ledger`, no de recálculo en memoria

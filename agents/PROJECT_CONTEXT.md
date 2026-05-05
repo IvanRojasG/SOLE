@@ -7,7 +7,6 @@ Backend MVP para gestionar un reto mensual de CrossFit con:
 - registro y autenticación de atletas
 - baseline inicial de PRs y skills
 - bloqueo de baseline
-- registro de asistencia por coach
 - registro y validación de logros
 - puntos en `points_ledger`
 - ranking general
@@ -55,7 +54,6 @@ agents/
 - `coaches`: perfil del coach
 - `movement_catalog`, `skill_catalog`: catálogos base
 - `athlete_baseline_prs`, `athlete_baseline_skills`: baseline inicial
-- `attendance_sessions`, `attendance_records`: asistencia
 - `challenges`: catálogo de retos con puntos
 - `achievements`: logros enviados por atletas
 - `points_ledger`: fuente de verdad para puntos y ranking
@@ -66,8 +64,6 @@ agents/
 - El baseline se bloquea con `POST /baseline/lock/{athlete_id}`.
 - Solo coaches pueden:
   - bloquear baseline
-  - crear asistencia
-  - registrar check-in
   - aprobar logros
   - rechazar logros
 - Los puntos se insertan solo cuando un coach aprueba un logro.
@@ -106,7 +102,6 @@ Skills:
 
 Challenges:
 
-- `Attend 5 classes`
 - `Improve benchmark WOD`
 - `New gymnastics skill`
 
@@ -130,12 +125,6 @@ Challenges:
 - `POST /baseline/skills`
 - `POST /baseline/lock/{athlete_id}`
 - `GET /baseline/me`
-
-### Attendance
-
-- `POST /attendance/session`
-- `POST /attendance/session/{id}/checkin`
-- `GET /attendance/me`
 
 ### Achievements
 

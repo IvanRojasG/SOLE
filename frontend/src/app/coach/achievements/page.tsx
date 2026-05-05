@@ -10,8 +10,8 @@ export default async function CoachAchievementsPage() {
   return (
     <CoachAreaLayout
       activePath="/coach/achievements"
-      title="Revisión de logros"
-      description="Cola visual de validación con drawer de revisión y acciones locales de aprobación o rechazo."
+      title="Resultados WOD"
+      description="Validación y corrección de resultados que alimentan el leaderboard tipo Open."
     >
       <CoachAchievementsView items={items} />
     </CoachAreaLayout>

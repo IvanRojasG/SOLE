@@ -10,11 +10,19 @@ from app.schemas.catalog import ChallengeResponse, ChallengeUpsertRequest
 
 
 router = APIRouter()
+VALID_CHALLENGE_CATEGORIES = {"custom_metcon_reps", "power_lifting"}
+
+
+def validate_challenge_payload(payload: ChallengeUpsertRequest) -> None:
+    if payload.category not in VALID_CHALLENGE_CATEGORIES:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid challenge category")
+    if payload.end_date < payload.start_date:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Challenge end date cannot be before start date")
 
 
 @router.get("", response_model=list[ChallengeResponse])
 def list_challenges(session: Session = Depends(get_session)):
-    return session.exec(select(Challenge).order_by(Challenge.title)).all()
+    return session.exec(select(Challenge).order_by(Challenge.start_date.desc(), Challenge.title)).all()
 
 
 @router.post("", response_model=ChallengeResponse, status_code=status.HTTP_201_CREATED)
@@ -23,6 +31,7 @@ def create_challenge(
     _: User = Depends(require_role("coach")),
     session: Session = Depends(get_session),
 ):
+    validate_challenge_payload(payload)
     existing = session.exec(select(Challenge).where(Challenge.title == payload.title)).first()
     if existing:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Challenge already exists")
@@ -30,11 +39,12 @@ def create_challenge(
     challenge = Challenge(
         title=payload.title,
         category=payload.category,
-        difficulty=payload.difficulty,
         summary=payload.summary,
-        window_label=payload.window_label,
+        start_date=payload.start_date,
+        end_date=payload.end_date,
+        total_reps=payload.total_reps,
+        youtube_url=payload.youtube_url,
         is_active=payload.is_active,
-        points=payload.points,
     )
     session.add(challenge)
     session.commit()
@@ -49,6 +59,7 @@ def update_challenge(
     _: User = Depends(require_role("coach")),
     session: Session = Depends(get_session),
 ):
+    validate_challenge_payload(payload)
     challenge = session.get(Challenge, challenge_id)
     if not challenge:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found")
@@ -61,11 +72,12 @@ def update_challenge(
 
     challenge.title = payload.title
     challenge.category = payload.category
-    challenge.difficulty = payload.difficulty
     challenge.summary = payload.summary
-    challenge.window_label = payload.window_label
+    challenge.start_date = payload.start_date
+    challenge.end_date = payload.end_date
+    challenge.total_reps = payload.total_reps
+    challenge.youtube_url = payload.youtube_url
     challenge.is_active = payload.is_active
-    challenge.points = payload.points
     session.add(challenge)
     session.commit()
     session.refresh(challenge)

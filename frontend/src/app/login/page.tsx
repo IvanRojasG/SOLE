@@ -45,7 +45,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 Acceso seguro
               </p>
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                Inicia sesión para operar el reto mensual con asistencia, logros, ranking y paneles
+                Inicia sesión para operar el reto mensual con workouts, logros, ranking y paneles
                 diferenciados por rol.
               </p>
             </div>

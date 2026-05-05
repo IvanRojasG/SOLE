@@ -47,7 +47,7 @@ export function TopAthletesPreview() {
                 </div>
               </div>
               <div className="mt-12 grid grid-cols-3 gap-3">
-                {['PR', 'Skill', 'Attendance'].map((label, metricIndex) => (
+                {['PR', 'Skill', 'WODs'].map((label, metricIndex) => (
                   <div key={label} className="rounded-2xl border border-white/10 bg-black/10 p-4">
                     <p className="font-display text-3xl uppercase tracking-[0.08em] text-white">
                       {92 - index * 7 - metricIndex * 4}

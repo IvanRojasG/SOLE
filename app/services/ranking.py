@@ -1,18 +1,28 @@
+from datetime import date
+
 from sqlmodel import Session, func, select
 
-from app.models.all_models import Athlete, PointsLedger
+from app.models.all_models import Achievement, Athlete, Challenge
 
 
 def get_ranking(session: Session):
+    points_sum = func.coalesce(func.sum(Achievement.rank_points), 0)
     statement = (
         select(
             Athlete.id,
             Athlete.full_name,
-            func.coalesce(func.sum(PointsLedger.points), 0).label("points"),
+            points_sum.label("points"),
+            Achievement.result_format,
         )
         .select_from(Athlete)
-        .join(PointsLedger, PointsLedger.athlete_id == Athlete.id, isouter=True)
-        .group_by(Athlete.id, Athlete.full_name)
-        .order_by(func.coalesce(func.sum(PointsLedger.points), 0).desc(), Athlete.full_name.asc())
+        .join(Achievement, Achievement.athlete_id == Athlete.id)
+        .join(Challenge, Challenge.id == Achievement.challenge_id)
+        .where(
+            Achievement.status == "approved",
+            Achievement.rank_points.is_not(None),
+            Challenge.end_date < date.today(),
+        )
+        .group_by(Athlete.id, Athlete.full_name, Achievement.result_format)
+        .order_by(points_sum.asc(), Athlete.full_name.asc())
     )
     return session.exec(statement).all()

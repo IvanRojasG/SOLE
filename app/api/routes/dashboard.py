@@ -22,5 +22,8 @@ def dashboard(session: Session = Depends(get_session)):
         total_coaches=total_coaches,
         pending_achievements=pending,
         approved_achievements=approved,
-        ranking_preview=[RankingItem(athlete_id=row[0], athlete_name=row[1], points=row[2]) for row in ranking_rows],
+        ranking_preview=[
+            RankingItem(athlete_id=row[0], athlete_name=row[1], points=row[2], result_format=row[3])
+            for row in ranking_rows
+        ],
     )

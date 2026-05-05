@@ -4,10 +4,14 @@ import { adaptAthletes } from '@/services/adapters/athleteAdapter';
 import type { AuthSession } from '@/services/auth/session';
 import { mockAchievements } from '@/services/mocks/achievements';
 import { mockAthletes } from '@/services/mocks/athletes';
-import { mockAttendance } from '@/services/mocks/attendance';
 import { mockBaseline } from '@/services/mocks/baseline';
 import type { Athlete } from '@/types';
-import type { Achievement, AthleteBaseline, AthleteProfile, Attendance, BaselineEntry } from '@/types';
+import type {
+  Achievement,
+  AthleteBaseline,
+  AthleteProfile,
+  BaselineEntry,
+} from '@/types';
 
 export const currentAthleteId = 'ath-03';
 
@@ -29,9 +33,7 @@ async function getAthletesFromApi(): Promise<Athlete[]> {
     city: 'SOLE Box',
     favoriteFocus: 'General fitness',
     points: athlete.points,
-    attendanceRate: 0,
     achievementsApproved: 0,
-    streakDays: 0,
     avatarColor: ['#f75c03', '#1fb6aa', '#f2c230', '#ff6b6b'][index % 4],
     tagline: athlete.baseline_locked
       ? 'Baseline completado y listo para progresar.'
@@ -39,7 +41,9 @@ async function getAthletesFromApi(): Promise<Athlete[]> {
   }));
 }
 
-async function getAthleteProfileFromApi(session?: AuthSession): Promise<AthleteProfile> {
+async function getAthleteProfileFromApi(
+  session?: AuthSession,
+): Promise<AthleteProfile> {
   const [user, athlete] = await Promise.all([
     backendRequest<{ email: string }>('/auth/me', { role: 'athlete', session }),
     backendRequest<{
@@ -55,21 +59,33 @@ async function getAthleteProfileFromApi(session?: AuthSession): Promise<AthleteP
     fullName: athlete.full_name,
     email: user.email,
     level: athlete.level as AthleteProfile['level'],
-    city: 'SOLE Box',
-    boxName: 'SOLE Fitness',
-    favoriteFocus: 'General fitness',
-    goals: 'Objetivos conectados a backend pendientes de campo dedicado.',
-    bio: 'Perfil sincronizado desde backend. Campos extendidos siguen siendo de presentación.',
+    city: '',
+    boxName: '',
+    favoriteFocus: '',
+    goals: '',
+    bio: '',
     joinedAt: athlete.created_at,
   };
 }
 
-async function getAthleteBaselineFromApi(session?: AuthSession): Promise<AthleteBaseline> {
+async function getAthleteBaselineFromApi(
+  session?: AuthSession,
+): Promise<AthleteBaseline> {
   const payload = await backendRequest<{
     athlete_id: string;
     baseline_locked: boolean;
-    prs: Array<{ id: string; movement_id: string; movement_name: string; weight: number }>;
-    skills: Array<{ id: string; skill_id: string; skill_name: string; status: string }>;
+    prs: Array<{
+      id: string;
+      movement_id: string;
+      movement_name: string;
+      weight: number;
+    }>;
+    skills: Array<{
+      id: string;
+      skill_id: string;
+      skill_name: string;
+      status: string;
+    }>;
     entries?: Array<{
       id: string | null;
       item_id: string;
@@ -99,7 +115,9 @@ async function getAthleteBaselineFromApi(session?: AuthSession): Promise<Athlete
       skillId: item.skill_id,
       name: item.skill_name,
       status:
-        item.status === 'mastered' || item.status === 'consistent' || item.status === 'developing'
+        item.status === 'mastered' ||
+        item.status === 'consistent' ||
+        item.status === 'developing'
           ? item.status
           : 'not_started',
     })),
@@ -133,7 +151,9 @@ function normalizeBaselineCategory(value: string): BaselineEntry['category'] {
   return 'other';
 }
 
-function normalizeBaselineMetricType(value: string): BaselineEntry['metricType'] {
+function normalizeBaselineMetricType(
+  value: string,
+): BaselineEntry['metricType'] {
   if (
     value === 'weight' ||
     value === 'time' ||
@@ -164,15 +184,23 @@ function normalizeBaselineUnit(value: string): BaselineEntry['unit'] {
   return 'points';
 }
 
-function normalizeBaselineStatus(value: string | null): BaselineEntry['status'] {
-  if (value === 'developing' || value === 'consistent' || value === 'mastered') {
+function normalizeBaselineStatus(
+  value: string | null,
+): BaselineEntry['status'] {
+  if (
+    value === 'developing' ||
+    value === 'consistent' ||
+    value === 'mastered'
+  ) {
     return value;
   }
 
   return 'not_started';
 }
 
-async function getAthleteAchievementsFromApi(session?: AuthSession): Promise<Achievement[]> {
+async function getAthleteAchievementsFromApi(
+  session?: AuthSession,
+): Promise<Achievement[]> {
   const payload = await backendRequest<
     Array<{
       id: string;
@@ -182,6 +210,13 @@ async function getAthleteAchievementsFromApi(session?: AuthSession): Promise<Ach
       achievement_date: string;
       status: Achievement['status'];
       points_awarded: number;
+      completed: boolean;
+      result_format: Achievement['resultFormat'];
+      time_seconds: number | null;
+      reps_completed: number | null;
+      weight_lbs: number | null;
+      tie_break_order: number | null;
+      rank_points: number | null;
     }>
   >('/achievements/me/detailed', { role: 'athlete', session });
 
@@ -193,19 +228,13 @@ async function getAthleteAchievementsFromApi(session?: AuthSession): Promise<Ach
     status: item.status,
     achievementDate: item.achievement_date,
     pointsAwarded: item.points_awarded,
-  }));
-}
-
-async function getAthleteAttendanceFromApi(session?: AuthSession): Promise<Attendance[]> {
-  const payload = await backendRequest<
-    Array<{ id: string; athlete_id: string; session_date: string }>
-  >('/attendance/me/detailed', { role: 'athlete', session });
-
-  return payload.map((item) => ({
-    id: item.id,
-    athleteId: item.athlete_id,
-    sessionDate: item.session_date,
-    checkedIn: true,
+    completed: item.completed,
+    resultFormat: item.result_format,
+    timeSeconds: item.time_seconds,
+    repsCompleted: item.reps_completed,
+    weightLbs: item.weight_lbs,
+    tieBreakOrder: item.tie_break_order,
+    rankPoints: item.rank_points,
   }));
 }
 
@@ -217,7 +246,9 @@ export async function getAthletes(): Promise<Athlete[]> {
   return adaptAthletes(mockAthletes);
 }
 
-export async function getCurrentAthleteProfile(session?: AuthSession): Promise<AthleteProfile> {
+export async function getCurrentAthleteProfile(
+  session?: AuthSession,
+): Promise<AthleteProfile> {
   if (dataSource === 'api') {
     return getAthleteProfileFromApi(session);
   }
@@ -233,16 +264,18 @@ export async function getCurrentAthleteProfile(session?: AuthSession): Promise<A
     fullName: athlete.fullName,
     email: 'camila.rios@example.com',
     level: athlete.level,
-    city: athlete.city,
-    boxName: 'SOLE Box Heredia',
-    favoriteFocus: athlete.favoriteFocus,
-    goals: 'Consolidar toes to bar y mejorar benchmark conditioning.',
-    bio: 'Atleta enfocada en técnica y constancia, con progreso visible durante el reto mensual.',
+    city: '',
+    boxName: '',
+    favoriteFocus: '',
+    goals: '',
+    bio: '',
     joinedAt: '2026-02-01',
   };
 }
 
-export async function getCurrentAthleteBaseline(session?: AuthSession): Promise<AthleteBaseline> {
+export async function getCurrentAthleteBaseline(
+  session?: AuthSession,
+): Promise<AthleteBaseline> {
   if (dataSource === 'api') {
     return getAthleteBaselineFromApi(session);
   }
@@ -250,22 +283,16 @@ export async function getCurrentAthleteBaseline(session?: AuthSession): Promise<
   return structuredClone(mockBaseline);
 }
 
-export async function getCurrentAthleteAchievements(session?: AuthSession): Promise<Achievement[]> {
+export async function getCurrentAthleteAchievements(
+  session?: AuthSession,
+): Promise<Achievement[]> {
   if (dataSource === 'api') {
     return getAthleteAchievementsFromApi(session);
   }
 
   return mockAchievements
     .filter((item) => item.athleteId === currentAthleteId)
-    .sort((left, right) => right.achievementDate.localeCompare(left.achievementDate));
-}
-
-export async function getCurrentAthleteAttendance(session?: AuthSession): Promise<Attendance[]> {
-  if (dataSource === 'api') {
-    return getAthleteAttendanceFromApi(session);
-  }
-
-  return mockAttendance
-    .filter((item) => item.athleteId === currentAthleteId)
-    .sort((left, right) => right.sessionDate.localeCompare(left.sessionDate));
+    .sort((left, right) =>
+      right.achievementDate.localeCompare(left.achievementDate),
+    );
 }

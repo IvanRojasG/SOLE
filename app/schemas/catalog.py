@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from pydantic import BaseModel, Field
+from datetime import date
 
 
 class CatalogItemResponse(BaseModel):
@@ -12,18 +13,20 @@ class ChallengeResponse(BaseModel):
     id: UUID
     title: str
     category: str
-    difficulty: str
     summary: str
-    window_label: str
+    start_date: date
+    end_date: date
+    total_reps: int
+    youtube_url: str
     is_active: bool
-    points: int
 
 
 class ChallengeUpsertRequest(BaseModel):
     title: str = Field(min_length=3, max_length=120)
     category: str = Field(min_length=3, max_length=30)
-    difficulty: str = Field(min_length=3, max_length=20)
     summary: str = Field(min_length=3, max_length=500)
-    window_label: str = Field(min_length=3, max_length=80)
+    start_date: date
+    end_date: date
+    total_reps: int = Field(ge=0)
+    youtube_url: str = Field(default="", max_length=300)
     is_active: bool = True
-    points: int = Field(gt=0)

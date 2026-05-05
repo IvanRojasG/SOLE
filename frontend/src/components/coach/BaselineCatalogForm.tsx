@@ -7,9 +7,13 @@ import type { BaselineCatalogItem, BaselineEntry } from '@/types';
 
 type BaselineCatalogFormProps = {
   onCreated: (item: BaselineCatalogItem) => void;
+  onError?: (message: string) => void;
 };
 
-const categoryOptions: Array<{ value: BaselineEntry['category']; label: string }> = [
+const categoryOptions: Array<{
+  value: BaselineEntry['category'];
+  label: string;
+}> = [
   { value: 'weightlifting', label: 'Halterofilia' },
   { value: 'wod', label: 'WOD' },
   { value: 'gymnastics', label: 'Gymnastics' },
@@ -19,7 +23,10 @@ const categoryOptions: Array<{ value: BaselineEntry['category']; label: string }
   { value: 'other', label: 'Otro' },
 ];
 
-const metricOptions: Array<{ value: BaselineEntry['metricType']; label: string }> = [
+const metricOptions: Array<{
+  value: BaselineEntry['metricType'];
+  label: string;
+}> = [
   { value: 'weight', label: 'Peso' },
   { value: 'time', label: 'Tiempo' },
   { value: 'reps', label: 'Repeticiones' },
@@ -46,7 +53,10 @@ const emptyDraft = {
   description: '',
 };
 
-export function BaselineCatalogForm({ onCreated }: BaselineCatalogFormProps) {
+export function BaselineCatalogForm({
+  onCreated,
+  onError,
+}: BaselineCatalogFormProps) {
   const [draft, setDraft] = useState(emptyDraft);
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -64,48 +74,63 @@ export function BaselineCatalogForm({ onCreated }: BaselineCatalogFormProps) {
             onCreated(created.item);
             setDraft(emptyDraft);
           } catch (caught) {
-            setError(caught instanceof Error ? caught.message : 'No se pudo crear el item.');
+            const message =
+              caught instanceof Error
+                ? caught.message
+                : 'No se pudo crear el item.';
+            setError(message);
+            onError?.(message);
           }
         });
       }}
     >
       <div className="border-b border-white/10 pb-5">
-        <p className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-secondary-soft)]">
+        <p className="text-xs tracking-[0.22em] text-[color:var(--color-secondary-soft)] uppercase">
           Catalogo baseline
         </p>
-        <h3 className="mt-3 text-2xl font-semibold text-white">Crear medicion</h3>
+        <h3 className="mt-3 text-2xl font-semibold text-white">
+          Crear medicion
+        </h3>
         <p className="mt-3 text-sm leading-7 text-[color:var(--color-text-muted)]">
-          Cada item activo aparece para que el atleta registre su marca, tiempo, score o estado tecnico.
+          Cada item activo aparece para que el atleta registre su marca, tiempo,
+          score o estado tecnico.
         </p>
       </div>
       <div className="mt-6 grid gap-5">
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+          <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
             Nombre
           </span>
           <input
             required
             value={draft.name}
-            onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
+            onChange={(event) =>
+              setDraft((current) => ({ ...current, name: event.target.value }))
+            }
             placeholder="Ej. Clean and jerk 1RM"
             className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
           />
         </label>
         <label className="block">
-          <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+          <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
             Descripcion
           </span>
           <textarea
             rows={4}
             value={draft.description}
-            onChange={(event) => setDraft((current) => ({ ...current, description: event.target.value }))}
+            onChange={(event) =>
+              setDraft((current) => ({
+                ...current,
+                description: event.target.value,
+              }))
+            }
             placeholder="Ej. Carga maxima tecnica para una repeticion."
             className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
           />
         </label>
         <div className="grid gap-4 lg:grid-cols-3">
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+            <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
               Categoria
             </span>
             <select
@@ -126,17 +151,23 @@ export function BaselineCatalogForm({ onCreated }: BaselineCatalogFormProps) {
             </select>
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+            <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
               Tipo
             </span>
             <select
               value={draft.metricType}
               onChange={(event) => {
-                const metricType = event.target.value as BaselineEntry['metricType'];
+                const metricType = event.target
+                  .value as BaselineEntry['metricType'];
                 setDraft((current) => ({
                   ...current,
                   metricType,
-                  unit: metricType === 'status' ? 'status' : current.unit === 'status' ? 'points' : current.unit,
+                  unit:
+                    metricType === 'status'
+                      ? 'status'
+                      : current.unit === 'status'
+                        ? 'points'
+                        : current.unit,
                 }));
               }}
               className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
@@ -149,13 +180,16 @@ export function BaselineCatalogForm({ onCreated }: BaselineCatalogFormProps) {
             </select>
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+            <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
               Unidad
             </span>
             <select
               value={draft.unit}
               onChange={(event) =>
-                setDraft((current) => ({ ...current, unit: event.target.value as BaselineEntry['unit'] }))
+                setDraft((current) => ({
+                  ...current,
+                  unit: event.target.value as BaselineEntry['unit'],
+                }))
               }
               className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
             >
@@ -171,7 +205,7 @@ export function BaselineCatalogForm({ onCreated }: BaselineCatalogFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)] disabled:opacity-60"
+          className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold tracking-[0.18em] text-[color:var(--color-ink)] uppercase disabled:opacity-60"
         >
           {isPending ? 'Creando...' : 'Crear medicion'}
         </button>

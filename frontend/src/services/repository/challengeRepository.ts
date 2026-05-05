@@ -9,22 +9,25 @@ async function getChallengesFromApi(): Promise<Challenge[]> {
       id: string;
       title: string;
       category: Challenge['category'];
-      difficulty: Challenge['difficulty'];
       summary: string;
-      window_label: string;
+      start_date: string;
+      end_date: string;
+      youtube_url: string;
+      total_reps: number;
       is_active: boolean;
-      points: number;
     }>
   >('/challenges');
 
   return payload.map((challenge) => ({
     id: challenge.id,
     title: challenge.title,
-    points: challenge.points,
     category: challenge.category,
-    difficulty: challenge.difficulty,
     summary: challenge.summary,
-    windowLabel: challenge.window_label,
+    startDate: challenge.start_date,
+    endDate: challenge.end_date,
+    youtubeUrl: challenge.youtube_url,
+    totalReps: challenge.total_reps,
+    isActive: challenge.is_active,
   }));
 }
 

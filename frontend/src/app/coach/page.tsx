@@ -11,7 +11,7 @@ export default async function CoachDashboardPage() {
     <CoachAreaLayout
       activePath="/coach"
       title="Dashboard de coach"
-      description="Panel operativo con visión rápida de aprobaciones, asistencia del día y atletas líderes del reto."
+      description="Panel operativo con visión rápida de aprobaciones, resultados WOD y atletas líderes del reto."
     >
       <CoachDashboardView dashboard={dashboard} />
     </CoachAreaLayout>

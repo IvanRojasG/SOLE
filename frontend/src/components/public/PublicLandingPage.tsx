@@ -3,12 +3,24 @@ import Link from 'next/link';
 import { AppContainer } from '@/components/layout/AppContainer';
 import { Section } from '@/components/layout/Section';
 import { publicSite } from '@/content/publicSite';
+import type { Challenge } from '@/types';
 
 import { MediaCarousel } from './MediaCarousel';
 import { PublicSectionHeading } from './PublicSectionHeading';
 import { VideoTestimonialsGrid } from './VideoTestimonialsGrid';
 
-export function PublicLandingPage() {
+type PublicLandingPageProps = {
+  activeChallenge: Challenge | null;
+};
+
+function getYouTubeEmbedUrl(url: string) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtu\.be\/)([^&?/]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+}
+
+export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
+  const embedUrl = activeChallenge ? getYouTubeEmbedUrl(activeChallenge.youtubeUrl) : '';
+
   return (
     <>
       <Section className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_54%,#ffffff_100%)] pb-20 pt-10 md:pb-28 md:pt-14">
@@ -46,6 +58,53 @@ export function PublicLandingPage() {
           </div>
 
           <MediaCarousel slides={publicSite.gallery} />
+        </AppContainer>
+      </Section>
+
+      <Section className="bg-white py-14 md:py-20">
+        <AppContainer className="grid gap-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
+              WOD actual
+            </p>
+            {activeChallenge ? (
+              <>
+                <h2 className="mt-4 font-display text-5xl uppercase leading-[0.92] tracking-[0.04em] text-slate-950">
+                  {activeChallenge.title}
+                </h2>
+                <p className="mt-4 text-base leading-8 text-slate-600">
+                  {activeChallenge.summary}
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  <span className="rounded-full bg-sky-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-sky-800">
+                    {activeChallenge.category === 'power_lifting' ? 'Power Lifting' : 'Custom Metcon (Reps)'}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700">
+                    {activeChallenge.startDate} · {activeChallenge.endDate}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <p className="mt-4 text-base leading-8 text-slate-600">
+                No hay WOD activo para la fecha actual.
+              </p>
+            )}
+          </div>
+          <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-950">
+            {embedUrl ? (
+              <iframe
+                src={embedUrl}
+                title={`Video ${activeChallenge?.title ?? 'WOD'}`}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center px-6 text-center text-sm font-semibold text-white/70">
+                Espacio reservado para el video explicativo del WOD.
+              </div>
+            )}
+          </div>
         </AppContainer>
       </Section>
 

@@ -4,10 +4,11 @@ import type { Athlete } from '@/types';
 
 type AthleteManagementTableProps = {
   athletes: Athlete[];
-  onSelect: (athlete: Athlete) => void;
 };
 
-export function AthleteManagementTable({ athletes, onSelect }: AthleteManagementTableProps) {
+export function AthleteManagementTable({
+  athletes,
+}: AthleteManagementTableProps) {
   if (athletes.length === 0) {
     return (
       <div className="rounded-[2rem] border border-dashed border-white/15 bg-white/5 p-6 text-sm text-[color:var(--color-text-muted)]">
@@ -18,37 +19,47 @@ export function AthleteManagementTable({ athletes, onSelect }: AthleteManagement
 
   return (
     <>
-      <div className="hidden overflow-hidden rounded-[2rem] border border-white/10 lg:block">
-        <table className="min-w-full bg-[color:var(--color-surface)]">
-          <thead className="bg-white/5">
-            <tr className="text-left text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+      <div className="hidden overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.08)] lg:block">
+        <table className="min-w-full">
+          <thead className="bg-slate-950">
+            <tr className="text-left text-xs tracking-[0.18em] text-white/70 uppercase">
               <th className="px-5 py-4">Atleta</th>
               <th className="px-5 py-4">Nivel</th>
               <th className="px-5 py-4">Puntos</th>
-              <th className="px-5 py-4">Asistencia</th>
-              <th className="px-5 py-4">Acción</th>
+              <th className="px-5 py-4">Logros</th>
+              <th className="px-5 py-4">Baseline</th>
+              <th className="px-5 py-4">Enfoque</th>
             </tr>
           </thead>
           <tbody>
             {athletes.map((athlete) => (
-              <tr key={athlete.id} className="border-t border-white/6 text-sm text-white">
+              <tr
+                key={athlete.id}
+                className="border-t border-slate-200 text-sm text-slate-800"
+              >
                 <td className="px-5 py-4">
-                  <p className="font-semibold">{athlete.fullName}</p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-                    {athlete.city}
-                  </p>
+                  <p className="font-semibold text-slate-950">{athlete.fullName}</p>
                 </td>
-                <td className="px-5 py-4 uppercase">{athlete.level}</td>
-                <td className="px-5 py-4">{athlete.points}</td>
-                <td className="px-5 py-4">{athlete.attendanceRate}%</td>
                 <td className="px-5 py-4">
-                  <button
-                    type="button"
-                    onClick={() => onSelect(athlete)}
-                    className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]"
-                  >
-                    Ver detalle
-                  </button>
+                  <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-bold tracking-[0.14em] text-cyan-800 uppercase">
+                    {athlete.level}
+                  </span>
+                </td>
+                <td className="px-5 py-4 font-semibold text-slate-950">
+                  {athlete.points}
+                </td>
+                <td className="px-5 py-4">
+                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                    {athlete.achievementsApproved}
+                  </span>
+                </td>
+                <td className="px-5 py-4 text-slate-600">
+                  {athlete.tagline}
+                </td>
+                <td className="px-5 py-4">
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900">
+                    {athlete.favoriteFocus}
+                  </span>
                 </td>
               </tr>
             ))}
@@ -57,24 +68,30 @@ export function AthleteManagementTable({ athletes, onSelect }: AthleteManagement
       </div>
       <div className="grid gap-4 lg:hidden">
         {athletes.map((athlete) => (
-          <article key={athlete.id} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
-            <p className="text-lg font-semibold text-white">{athlete.fullName}</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-              {athlete.level} • {athlete.city}
+          <article
+            key={athlete.id}
+            className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-[0_20px_52px_rgba(15,23,42,0.1)]"
+          >
+            <p className="text-lg font-semibold text-slate-950">
+              {athlete.fullName}
+            </p>
+            <p className="mt-1 text-xs tracking-[0.18em] text-cyan-700 uppercase">
+              {athlete.level}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-white/10 p-3 text-sm text-white">{athlete.points} pts</div>
-              <div className="rounded-2xl border border-white/10 p-3 text-sm text-white">
-                {athlete.attendanceRate}% asistencia
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 p-3 text-sm font-semibold text-blue-900">
+                {athlete.points} puntos
+              </div>
+              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-sm font-semibold text-emerald-900">
+                {athlete.achievementsApproved} logros
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+                {athlete.tagline}
+              </div>
+              <div className="rounded-2xl border border-amber-100 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
+                {athlete.favoriteFocus}
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => onSelect(athlete)}
-              className="mt-4 rounded-full bg-[color:var(--color-primary)] px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]"
-            >
-              Ver detalle
-            </button>
           </article>
         ))}
       </div>

@@ -2,7 +2,11 @@ export type AthleteLevel = 'beginner' | 'intermediate' | 'scaled' | 'rx';
 
 export type AchievementStatus = 'submitted' | 'approved' | 'rejected';
 
-export type ChallengeCategory = 'strength' | 'gymnastics' | 'conditioning' | 'consistency';
+export type ChallengeCategory =
+  | 'custom_metcon_reps'
+  | 'power_lifting';
+
+export type ResultFormat = 'rx' | 'scaled';
 
 export type Athlete = {
   id: string;
@@ -11,9 +15,7 @@ export type Athlete = {
   city: string;
   favoriteFocus: string;
   points: number;
-  attendanceRate: number;
   achievementsApproved: number;
-  streakDays: number;
   avatarColor: string;
   tagline: string;
 };
@@ -22,10 +24,12 @@ export type Challenge = {
   id: string;
   title: string;
   category: ChallengeCategory;
-  points: number;
-  difficulty: 'starter' | 'builder' | 'beast';
   summary: string;
-  windowLabel: string;
+  startDate: string;
+  endDate: string;
+  youtubeUrl: string;
+  totalReps: number;
+  isActive: boolean;
 };
 
 export type RankingEntry = {
@@ -34,8 +38,8 @@ export type RankingEntry = {
   level: AthleteLevel;
   rank: number;
   points: number;
+  resultFormat: ResultFormat;
   delta: number;
-  attendanceRate: number;
   approvedAchievements: number;
 };
 
@@ -47,20 +51,19 @@ export type Achievement = {
   status: AchievementStatus;
   achievementDate: string;
   pointsAwarded: number;
-};
-
-export type Attendance = {
-  id: string;
-  athleteId: string;
-  sessionDate: string;
-  checkedIn: boolean;
+  completed: boolean;
+  resultFormat: ResultFormat;
+  timeSeconds: number | null;
+  repsCompleted: number | null;
+  weightLbs?: number | null;
+  tieBreakOrder?: number | null;
+  rankPoints: number | null;
 };
 
 export type DashboardSummary = {
   totalAthletes: number;
   totalChallenges: number;
   totalAchievements: number;
-  totalAttendanceRecords: number;
   leaderboardLeader: string;
 };
 
@@ -96,7 +99,14 @@ export type BaselineEntry = {
   id: string | null;
   itemId: string;
   name: string;
-  category: 'weightlifting' | 'wod' | 'gymnastics' | 'skill' | 'strength' | 'conditioning' | 'other';
+  category:
+    | 'weightlifting'
+    | 'wod'
+    | 'gymnastics'
+    | 'skill'
+    | 'strength'
+    | 'conditioning'
+    | 'other';
   metricType: 'weight' | 'time' | 'reps' | 'distance' | 'score' | 'status';
   unit: 'lb' | 'kg' | 'seconds' | 'reps' | 'meters' | 'points' | 'status';
   description: string;
@@ -149,16 +159,7 @@ export type CoachDashboard = {
   coach: CoachProfile;
   kpis: DashboardKPI[];
   pendingApprovals: PendingAchievementReview[];
-  todayAttendance: AttendanceSessionRecord[];
   topAthletes: RankingEntry[];
-};
-
-export type AttendanceSessionRecord = {
-  id: string;
-  sessionDate: string;
-  title: string;
-  checkedInCount: number;
-  totalExpected: number;
 };
 
 export type PendingAchievementReview = Achievement & {
@@ -166,9 +167,7 @@ export type PendingAchievementReview = Achievement & {
   notes: string;
 };
 
-export type ChallengeManagementItem = Challenge & {
-  isActive: boolean;
-};
+export type ChallengeManagementItem = Challenge;
 
 export type NavItem = {
   label: string;

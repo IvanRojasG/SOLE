@@ -3,7 +3,6 @@
 import { useDeferredValue, useMemo, useState } from 'react';
 
 import { AthleteManagementTable } from '@/components/coach/AthleteManagementTable';
-import { AthleteQuickViewDrawer } from '@/components/coach/AthleteQuickViewDrawer';
 import type { Athlete } from '@/types';
 
 type CoachAthletesViewProps = {
@@ -13,7 +12,6 @@ type CoachAthletesViewProps = {
 export function CoachAthletesView({ athletes }: CoachAthletesViewProps) {
   const [query, setQuery] = useState('');
   const deferredQuery = useDeferredValue(query);
-  const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null);
 
   const filteredAthletes = useMemo(() => {
     const normalizedQuery = deferredQuery.trim().toLowerCase();
@@ -22,7 +20,7 @@ export function CoachAthletesView({ athletes }: CoachAthletesViewProps) {
     }
 
     return athletes.filter((athlete) =>
-      [athlete.fullName, athlete.city, athlete.level, athlete.favoriteFocus]
+      [athlete.fullName, athlete.level, athlete.favoriteFocus, athlete.tagline]
         .join(' ')
         .toLowerCase()
         .includes(normalizedQuery),
@@ -32,6 +30,18 @@ export function CoachAthletesView({ athletes }: CoachAthletesViewProps) {
   return (
     <div className="space-y-6">
       <div className="rounded-[2rem] border border-white/10 bg-white/5 p-5">
+        <div className="mb-4 flex flex-col gap-2 text-sm text-[color:var(--color-text-muted)] sm:flex-row sm:items-center sm:justify-between">
+          <span>{athletes.length} atletas cargados</span>
+          {query ? (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="w-fit rounded-full border border-white/15 px-3 py-2 text-xs font-semibold tracking-[0.16em] text-white uppercase"
+            >
+              Limpiar búsqueda
+            </button>
+          ) : null}
+        </div>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -39,12 +49,13 @@ export function CoachAthletesView({ athletes }: CoachAthletesViewProps) {
           className="w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
         />
       </div>
-      <AthleteManagementTable athletes={filteredAthletes} onSelect={setSelectedAthlete} />
-      <AthleteQuickViewDrawer
-        athlete={selectedAthlete}
-        open={selectedAthlete !== null}
-        onClose={() => setSelectedAthlete(null)}
-      />
+      {athletes.length > 0 && filteredAthletes.length === 0 ? (
+        <div className="rounded-[2rem] border border-dashed border-white/15 bg-white/5 p-6 text-sm text-[color:var(--color-text-muted)]">
+          No hay atletas que coincidan con la búsqueda actual.
+        </div>
+      ) : (
+        <AthleteManagementTable athletes={filteredAthletes} />
+      )}
     </div>
   );
 }

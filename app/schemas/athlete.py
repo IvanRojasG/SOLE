@@ -23,3 +23,5 @@ class AthleteListResponse(BaseModel):
     full_name: str
     level: str
     baseline_locked: bool
+    points: int = 0
+    approved_achievements: int = 0

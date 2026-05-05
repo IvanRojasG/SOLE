@@ -9,7 +9,6 @@
   Cobertura mínima:
   - registro y login
   - baseline y lock
-  - asistencia
   - aprobación de logros
   - inserción en `points_ledger`
   - ranking
@@ -35,7 +34,6 @@
 - Mejorar `dashboard` con métricas del mes actual.
   Ejemplos:
   - top 10
-  - atletas con más asistencias
   - logros aprobados del mes
 
 ## Prioridad baja

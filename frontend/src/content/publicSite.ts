@@ -66,7 +66,7 @@ export const publicSite = {
     videos: [
       {
         title: 'Testimonio 01',
-        youtubeUrl: 'https://www.youtube.com/watch?v=8sNchaX9Auc',
+        youtubeUrl: 'https://www.youtube.com/shorts/iSH8DDReltM',
       },
       {
         title: 'Testimonio 02',
