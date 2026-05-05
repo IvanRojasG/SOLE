@@ -37,7 +37,7 @@ export function ActiveChallengesPanel({ challenges }: ActiveChallengesPanelProps
                   {challenge.category === 'power_lifting' ? 'Power' : 'Metcon'}
                 </span>
               </div>
-              <p className="mt-3 text-sm leading-7 text-[color:var(--color-text-muted)]">
+              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-[color:var(--color-text-muted)]">
                 {challenge.summary}
               </p>
               <p className="mt-3 text-xs tracking-[0.16em] text-[color:var(--color-text-muted)] uppercase">

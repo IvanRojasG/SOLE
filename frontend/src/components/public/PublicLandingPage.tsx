@@ -72,7 +72,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
                 <h2 className="mt-4 font-display text-5xl uppercase leading-[0.92] tracking-[0.04em] text-slate-950">
                   {activeChallenge.title}
                 </h2>
-                <p className="mt-4 text-base leading-8 text-slate-600">
+                <p className="mt-4 whitespace-pre-line text-base leading-8 text-slate-600">
                   {activeChallenge.summary}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2">

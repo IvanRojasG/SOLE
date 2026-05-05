@@ -15,7 +15,7 @@ export function ChallengeCard({ challenge }: ChallengeCardProps) {
           <h2 className="mt-3 text-2xl font-semibold text-white">{challenge.title}</h2>
         </div>
       </div>
-      <p className="mt-5 text-sm leading-7 text-[color:var(--color-text-muted)]">{challenge.summary}</p>
+      <p className="mt-5 whitespace-pre-line text-sm leading-7 text-[color:var(--color-text-muted)]">{challenge.summary}</p>
       <div className="mt-6 flex flex-wrap gap-2">
         <span className="rounded-full border border-white/10 px-3 py-2 text-[11px] uppercase tracking-[0.18em] text-white">
           {challenge.category === 'power_lifting' ? 'Power Lifting' : 'Custom Metcon (Reps)'}

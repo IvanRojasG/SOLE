@@ -68,7 +68,7 @@ export function ChallengeManagementGrid({ items, onEdit, onCreate }: ChallengeMa
                 {item.isActive ? 'Activo' : 'Inactivo'}
               </span>
             </div>
-            <p className="mt-4 flex-1 text-sm leading-7 text-[color:var(--color-text-muted)]">
+            <p className="mt-4 flex-1 whitespace-pre-line text-sm leading-7 text-[color:var(--color-text-muted)]">
               {item.summary}
             </p>
             <div className="mt-5 grid grid-cols-2 gap-3">
