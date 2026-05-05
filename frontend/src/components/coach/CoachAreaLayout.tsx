@@ -1,8 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { AppContainer } from '@/components/layout/AppContainer';
-import { brand } from '@/lib/config/brand';
 import { cn } from '@/lib/utils/cn';
 
 const coachNavigation = [
@@ -32,20 +30,6 @@ export function CoachAreaLayout({
       <AppContainer className="space-y-8">
         <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
           <div className="flex flex-col gap-5">
-            <Link
-              href="/"
-              aria-label="Ir al inicio de SOLE Fitness"
-              className="w-fit shrink-0 rounded-[1.2rem] border border-slate-200 bg-white px-3 py-2 shadow-[0_16px_40px_rgba(15,23,42,0.06)]"
-            >
-              <Image
-                src={brand.assets.officialBlue}
-                alt={brand.name}
-                width={112}
-                height={48}
-                priority
-                className="h-auto w-auto"
-              />
-            </Link>
             <div>
               <p className="text-xs font-semibold tracking-[0.24em] text-[color:var(--color-primary)] uppercase">
                 Coach Panel

@@ -143,15 +143,8 @@ export function ChallengeEditorForm({ item, onSave }: ChallengeEditorFormProps) 
           </label>
         </div>
         <button
-          type="button"
-          onClick={() => setState((current) => (current ? { ...current, isActive: !current.isActive } : current))}
-          className="rounded-full border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white"
-        >
-          {state.isActive ? 'Marcar inactivo' : 'Marcar activo'}
-        </button>
-        <button
           type="submit"
-          className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]"
+          className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white"
         >
           {isNew ? 'Crear reto' : 'Guardar cambios'}
         </button>

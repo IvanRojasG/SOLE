@@ -15,7 +15,7 @@ export function ChallengeManagementGrid({ items, onEdit, onCreate }: ChallengeMa
           <button
             type="button"
             onClick={onCreate}
-            className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]"
+            className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white"
           >
             Crear reto
           </button>
@@ -39,7 +39,7 @@ export function ChallengeManagementGrid({ items, onEdit, onCreate }: ChallengeMa
         <button
           type="button"
           onClick={onCreate}
-          className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]"
+          className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white"
         >
           Nuevo reto
         </button>
@@ -90,7 +90,7 @@ export function ChallengeManagementGrid({ items, onEdit, onCreate }: ChallengeMa
             <button
               type="button"
               onClick={() => onEdit(item)}
-              className="mt-6 rounded-full bg-[color:var(--color-primary)] px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)]"
+              className="mt-6 rounded-full bg-[color:var(--color-primary)] px-4 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white"
             >
               Editar
             </button>

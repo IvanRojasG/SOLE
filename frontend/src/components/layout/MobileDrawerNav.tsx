@@ -21,7 +21,7 @@ export function MobileDrawerNav({ open, onClose, session }: MobileDrawerNavProps
     <>
       <div
         className={cn(
-          'fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity md:hidden',
+          'fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity lg:hidden',
           open ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
         onClick={onClose}
@@ -31,7 +31,7 @@ export function MobileDrawerNav({ open, onClose, session }: MobileDrawerNavProps
         aria-hidden={!open}
         aria-label="Menu movil"
         className={cn(
-          'fixed right-0 top-0 z-50 flex h-full w-[84vw] max-w-sm flex-col border-l border-slate-200 bg-white px-6 py-6 shadow-[0_32px_90px_rgba(15,23,42,0.18)] transition-transform duration-300 md:hidden',
+          'fixed right-0 top-0 z-50 flex h-full w-[84vw] max-w-sm flex-col border-l border-slate-200 bg-white px-6 py-6 shadow-[0_32px_90px_rgba(15,23,42,0.18)] transition-transform duration-300 lg:hidden',
           open ? 'translate-x-0' : 'translate-x-full',
         )}
       >
