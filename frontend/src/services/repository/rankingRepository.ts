@@ -6,7 +6,15 @@ import type { RankingEntry } from '@/types';
 
 async function getRankingFromApi(): Promise<RankingEntry[]> {
   const [payload, publicAthletes] = await Promise.all([
-    backendRequest<Array<{ athlete_id: string; athlete_name: string; points: number; result_format: RankingEntry['resultFormat'] }>>('/ranking'),
+    backendRequest<
+      Array<{
+        athlete_id: string;
+        athlete_name: string;
+        points: number;
+        result_format: RankingEntry['resultFormat'];
+        approved_achievements: number;
+      }>
+    >('/ranking'),
     backendRequest<Array<{ id: string; level: string }>>('/public/athletes'),
   ]);
 
@@ -21,7 +29,7 @@ async function getRankingFromApi(): Promise<RankingEntry[]> {
       points: entry.points,
       resultFormat: entry.result_format,
       delta: 0,
-      approvedAchievements: 0,
+      approvedAchievements: entry.approved_achievements,
     })),
   );
 }

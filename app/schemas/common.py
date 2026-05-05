@@ -12,6 +12,7 @@ class RankingItem(BaseModel):
     athlete_name: str
     points: int
     result_format: str
+    approved_achievements: int
 
 
 class DashboardResponse(BaseModel):
