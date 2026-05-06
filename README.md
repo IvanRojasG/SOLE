@@ -83,6 +83,28 @@ La coleccion lista para importar está en:
 
 - `postman/CrossFit-Monthly-Challenge.postman_collection.json`
 
+## Importar atletas existentes
+
+Para la carga única de atletas existentes, coloca el archivo JSON en:
+
+- `data/import/athletes.json`
+
+El JSON debe ser una lista de objetos con `name` y `email`:
+
+```json
+[
+  { "name": "Ana Perez", "email": "ana@example.com" }
+]
+```
+
+Con el backend y la base de datos levantados, ejecuta:
+
+```bash
+docker compose exec app python scripts/import_athletes.py data/import/athletes.json
+```
+
+Los atletas importados reciben la contraseña estándar `Sole12345!` y nivel inicial `scaled`. Si un correo ya existe, se omite sin modificar datos actuales.
+
 ## Contexto para agentes
 
 Se agregó una base de contexto operativo en:
