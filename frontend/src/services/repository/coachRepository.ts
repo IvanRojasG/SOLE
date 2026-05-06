@@ -214,13 +214,16 @@ export async function getPendingAchievementReviews(
   }
 
   return mockAchievements
-    .filter((item) => item.status === 'submitted')
+    .filter((item) => item.status === 'submitted' || item.status === 'approved')
     .map((achievement) => ({
       ...achievement,
       athleteName:
         mockAthletes.find((athlete) => athlete.id === achievement.athleteId)
           ?.fullName ?? 'Unknown athlete',
-      notes: 'Pendiente de revisión visual por parte del coach.',
+      notes:
+        achievement.status === 'approved'
+          ? 'Resultado aprobado disponible para corrección del coach.'
+          : 'Pendiente de revisión visual por parte del coach.',
     }));
 }
 

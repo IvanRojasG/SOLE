@@ -4,11 +4,18 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
 import { saveAthleteProfileAction } from '@/services/actions';
-import type { AthleteProfile } from '@/types';
+import type { AthleteLevel, AthleteProfile } from '@/types';
 
 type AthleteProfileFormProps = {
   profile: AthleteProfile;
 };
+
+const levelOptions: Array<{ value: AthleteLevel; label: string }> = [
+  { value: 'beginner', label: 'Beginner' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'scaled', label: 'Scaled' },
+  { value: 'rx', label: 'RX' },
+];
 
 export function AthleteProfileForm({ profile }: AthleteProfileFormProps) {
   const [formState, setFormState] = useState(profile);
@@ -39,55 +46,61 @@ export function AthleteProfileForm({ profile }: AthleteProfileFormProps) {
           <h3 className="mt-3 text-2xl font-semibold text-white">Información personal y deportiva</h3>
         </div>
         <p className="max-w-md text-sm leading-7 text-[color:var(--color-text-muted)]">
-          Ajusta los datos visibles del atleta. El nombre y nivel sí se sincronizan con el backend.
+          Ajusta el nombre visible y el nivel competitivo. El correo se muestra como referencia de acceso.
         </p>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        {[
-          ['fullName', 'Nombre completo', formState.fullName],
-          ['email', 'Email', formState.email],
-          ['city', 'Ciudad', formState.city],
-          ['boxName', 'Box', formState.boxName],
-          ['favoriteFocus', 'Enfoque favorito', formState.favoriteFocus],
-          ['goals', 'Objetivo actual', formState.goals],
-        ].map(([key, label, value]) => (
-          <label key={String(key)} className="block">
-            <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-              {label}
-            </span>
-            <input
-              value={String(value)}
-              onChange={(event) =>
-                setFormState((current) => ({
-                  ...current,
-                  [key]: event.target.value,
-                }))
-              }
-              className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]"
-            />
-          </label>
-        ))}
+        <label className="block">
+          <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+            Nombre completo
+          </span>
+          <input
+            value={formState.fullName}
+            onChange={(event) =>
+              setFormState((current) => ({
+                ...current,
+                fullName: event.target.value,
+              }))
+            }
+            className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]"
+          />
+        </label>
+        <label className="block">
+          <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+            Correo
+          </span>
+          <input
+            value={formState.email}
+            disabled
+            className="mt-3 w-full cursor-not-allowed rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm text-[color:var(--color-text-muted)] outline-none"
+          />
+        </label>
+        <label className="block">
+          <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+            Nivel
+          </span>
+          <select
+            value={formState.level}
+            onChange={(event) =>
+              setFormState((current) => ({
+                ...current,
+                level: event.target.value as AthleteLevel,
+              }))
+            }
+            className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]"
+          >
+            {levelOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
-      <label className="block">
-        <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
-          Bio
-        </span>
-        <textarea
-          rows={5}
-          value={formState.bio}
-          onChange={(event) =>
-            setFormState((current) => ({
-              ...current,
-              bio: event.target.value,
-            }))
-          }
-          className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]"
-        />
-      </label>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-[color:var(--color-text-muted)]">
-          Estado visual. No persiste todavía en backend.
+          Estos cambios se sincronizan con tu perfil del reto.
         </p>
         <div className="flex items-center gap-3">
           {saved && (

@@ -63,7 +63,7 @@ export const mockCoachDashboard: CoachDashboard = {
       notes: 'Pide validación técnica del bloque de levantamiento.',
     },
   ],
-  topAthletes: [
+  topAthletes: ([
     {
       athleteId: 'ath-01',
       athleteName: 'Valeria Stone',
@@ -94,5 +94,14 @@ export const mockCoachDashboard: CoachDashboard = {
       delta: 3,
       approvedAchievements: 7,
     },
-  ],
+  ] satisfies CoachDashboard['topAthletes']).map((entry) => ({
+    ...entry,
+    challengeId: null,
+    challengeTitle: null,
+    challengeEndDate: null,
+    completed: false,
+    timeSeconds: null,
+    repsCompleted: null,
+    isFinalized: true,
+  })),
 };

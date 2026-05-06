@@ -1,4 +1,5 @@
 import type { RankingEntry } from '@/types';
+import { getScoreLabel, getStatusLabel } from '@/components/leaderboard/scoreFormat';
 
 type TopThreePodiumProps = {
   entries: RankingEntry[];
@@ -54,10 +55,10 @@ export function TopThreePodium({ entries }: TopThreePodiumProps) {
               {entry.level} · {entry.resultFormat}
             </p>
             <p className="font-display mt-6 text-6xl tracking-[0.08em] text-slate-950 uppercase">
-              {entry.points}
+              {getScoreLabel(entry)}
             </p>
             <p className="text-xs font-semibold tracking-[0.2em] text-slate-500 uppercase">
-              puntos
+              {getStatusLabel(entry)} · {entry.isFinalized ? `${entry.points} puntos` : '0 puntos'}
             </p>
           </article>
         );

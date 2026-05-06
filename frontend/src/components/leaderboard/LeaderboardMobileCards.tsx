@@ -1,4 +1,5 @@
 import type { RankingEntry } from '@/types';
+import { getScoreLabel, getStatusLabel } from '@/components/leaderboard/scoreFormat';
 
 type LeaderboardMobileCardsProps = {
   entries: RankingEntry[];
@@ -37,29 +38,30 @@ export function LeaderboardMobileCards({
                 </p>
               </div>
               <div className="rounded-full bg-slate-950 px-3 py-2 text-xs font-bold tracking-[0.18em] text-white uppercase">
-                {entry.points} puntos
+                {getStatusLabel(entry)}
               </div>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/70 bg-white/70 p-3">
                 <p className="text-xs tracking-[0.18em] text-slate-500 uppercase">
-                  Logros
+                  Resultado
+                </p>
+                <p className="mt-2 text-lg font-semibold text-slate-950">
+                  {getScoreLabel(entry)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/70 bg-white/70 p-3">
+                <p className="text-xs tracking-[0.18em] text-slate-500 uppercase">
+                  Intentos
                 </p>
                 <p className="mt-2 text-lg font-semibold text-slate-950">
                   {entry.approvedAchievements}
                 </p>
               </div>
-              <div className="rounded-2xl border border-white/70 bg-white/70 p-3">
-                <p className="text-xs tracking-[0.18em] text-slate-500 uppercase">
-                  Delta
-                </p>
-                <p
-                  className={`mt-2 text-lg font-semibold ${entry.delta >= 0 ? 'text-[color:var(--color-success)]' : 'text-[color:var(--color-danger)]'}`}
-                >
-                  {entry.delta >= 0 ? `+${entry.delta}` : entry.delta}
-                </p>
-              </div>
             </div>
+            <p className="mt-4 text-xs font-semibold tracking-[0.16em] text-slate-600 uppercase">
+              {entry.isFinalized ? `${entry.points} puntos finales` : '0 puntos hasta el cierre'}
+            </p>
           </article>
         );
       })}

@@ -1,10 +1,22 @@
 import { AppContainer } from '@/components/layout/AppContainer';
 import { Section } from '@/components/layout/Section';
 import { LeaderboardView } from '@/components/pages/LeaderboardView';
+import { getChallenges } from '@/services/repository/challengeRepository';
 import { getRanking } from '@/services/repository/rankingRepository';
 
 export default async function LeaderboardPage() {
-  const entries = await getRanking();
+  const [entries, challenges] = await Promise.all([
+    getRanking({ view: 'event' }),
+    getChallenges(),
+  ]);
+  const challengeRankings = Object.fromEntries(
+    await Promise.all(
+      challenges.map(async (challenge) => [
+        challenge.id,
+        await getRanking({ view: 'challenge', challengeId: challenge.id }),
+      ]),
+    ),
+  );
 
   return (
     <div className="bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_45%,#ffffff_100%)] text-slate-950">
@@ -24,7 +36,11 @@ export default async function LeaderboardPage() {
           </div>
         </AppContainer>
       </Section>
-      <LeaderboardView entries={entries} />
+      <LeaderboardView
+        entries={entries}
+        challenges={challenges}
+        challengeRankings={challengeRankings}
+      />
     </div>
   );
 }

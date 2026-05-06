@@ -5,7 +5,7 @@ from app.core.db import get_session
 from app.core.deps import get_current_athlete, require_role
 from app.models.all_models import Achievement, Athlete, User
 from app.schemas.athlete import AthleteListResponse, AthleteMeResponse, AthleteUpdateRequest
-from app.services.ranking import get_ranking
+from app.services.ranking import get_final_points_ranking
 
 
 router = APIRouter()
@@ -40,7 +40,7 @@ def list_athletes(
 ):
     athletes = session.exec(select(Athlete).order_by(Athlete.full_name)).all()
     points_by_athlete: dict[str, int] = {}
-    for row in get_ranking(session):
+    for row in get_final_points_ranking(session):
         points_by_athlete[str(row[0])] = points_by_athlete.get(str(row[0]), 0) + int(row[2])
     achievement_rows = session.exec(
         select(Achievement.athlete_id, func.count(Achievement.id))

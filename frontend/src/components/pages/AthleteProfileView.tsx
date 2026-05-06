@@ -11,8 +11,7 @@ type AthleteProfileViewProps = {
 export function AthleteProfileView({ profile }: AthleteProfileViewProps) {
   const summaryFields = [
     ['Correo', profile.email],
-    ['Ciudad', profile.city],
-    ['Enfoque', profile.favoriteFocus],
+    ['Nivel', profile.level],
     ['Ingreso', new Date(profile.joinedAt).toLocaleDateString('es-CR')],
   ].filter(([, value]) => value);
 
@@ -36,9 +35,7 @@ export function AthleteProfileView({ profile }: AthleteProfileViewProps) {
             {profile.fullName}
           </h2>
           <p className="mt-2 text-sm tracking-[0.18em] text-[color:var(--color-primary-soft)] uppercase">
-            {profile.boxName
-              ? `${profile.level} · ${profile.boxName}`
-              : profile.level}
+            Nivel {profile.level}
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
@@ -59,9 +56,8 @@ export function AthleteProfileView({ profile }: AthleteProfileViewProps) {
             Nota
           </p>
           <p className="mt-3 text-sm leading-7 text-[color:var(--color-text-muted)]">
-            Esta vista prioriza edición rápida de identidad y contexto
-            deportivo. Los campos extendidos siguen siendo de presentación hasta
-            que el backend los modele por completo.
+            Desde aquí puedes mantener actualizado tu nombre visible y nivel
+            competitivo para el reto.
           </p>
         </div>
       </aside>

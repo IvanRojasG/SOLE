@@ -5,6 +5,7 @@ from sqlmodel import Session, select
 
 from app.models.all_models import Achievement, Athlete, Challenge
 from app.schemas.achievement import AchievementCreate, AchievementResultUpdate
+from app.services.ranking import finalize_challenge_rank_points
 
 
 WOD_RANK_SOURCE_TYPE = "wod_rank"
@@ -29,35 +30,11 @@ def _ensure_result_is_complete(challenge: Challenge, achievement: Achievement) -
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Power Lifting result requires weight_lbs")
 
 
-def _result_sort_key(challenge: Challenge, achievement: Achievement) -> tuple[int, int, int, str]:
-    tie_break_order = achievement.tie_break_order if achievement.tie_break_order is not None else 999_999
-    if challenge.category == POWER_LIFTING_CATEGORY:
-        return (-(achievement.reps_completed or 0), -int(achievement.weight_lbs or 0), tie_break_order, str(achievement.athlete_id))
-
-    time_sort = achievement.time_seconds if achievement.time_seconds is not None else 999_999
-    return (-(achievement.reps_completed or 0), time_sort, tie_break_order, str(achievement.athlete_id))
-
-
 def recalculate_wod_rank_points(session: Session, challenge_id, result_format: str) -> None:
     challenge = session.get(Challenge, challenge_id)
     if not challenge:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found")
-
-    approved = [
-        achievement
-        for achievement in session.exec(
-            select(Achievement).where(
-                Achievement.challenge_id == challenge_id,
-                Achievement.status == "approved",
-                Achievement.result_format == result_format,
-            )
-        ).all()
-    ]
-    approved.sort(key=lambda achievement: _result_sort_key(challenge, achievement))
-
-    for index, achievement in enumerate(approved, start=1):
-        achievement.rank_points = index
-        session.add(achievement)
+    finalize_challenge_rank_points(session, challenge)
 
 
 def submit_achievement(session: Session, athlete: Athlete, payload: AchievementCreate) -> Achievement:
@@ -116,8 +93,8 @@ def approve_achievement(session: Session, achievement_id, payload: AchievementRe
         achievement.reps_completed = challenge.total_reps
     _ensure_result_is_complete(challenge, achievement)
     achievement.status = "approved"
+    achievement.rank_points = None
     session.add(achievement)
-    recalculate_wod_rank_points(session, achievement.challenge_id, achievement.result_format)
     session.commit()
     session.refresh(achievement)
     return achievement
@@ -135,9 +112,8 @@ def update_achievement_result(session: Session, achievement_id, payload: Achieve
     if achievement.completed:
         achievement.reps_completed = challenge.total_reps
     _ensure_result_is_complete(challenge, achievement)
+    achievement.rank_points = None
     session.add(achievement)
-    if achievement.status == "approved":
-        recalculate_wod_rank_points(session, achievement.challenge_id, achievement.result_format)
 
     session.commit()
     session.refresh(achievement)
@@ -152,8 +128,8 @@ def update_achievement_tie_break(session: Session, achievement_id, tie_break_ord
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Only approved achievements can be reordered")
 
     achievement.tie_break_order = tie_break_order
+    achievement.rank_points = None
     session.add(achievement)
-    recalculate_wod_rank_points(session, achievement.challenge_id, achievement.result_format)
     session.commit()
     session.refresh(achievement)
     return achievement

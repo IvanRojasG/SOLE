@@ -10,6 +10,7 @@ type LeaderboardFiltersProps = {
   onFormatChange: (value: ResultFormat | 'all') => void;
   query: string;
   onQueryChange: (value: string) => void;
+  showFormatFilter?: boolean;
 };
 
 export function LeaderboardFilters({
@@ -20,6 +21,7 @@ export function LeaderboardFilters({
   onFormatChange,
   query,
   onQueryChange,
+  showFormatFilter = true,
 }: LeaderboardFiltersProps) {
   return (
     <div className="grid gap-5 rounded-[1.9rem] border border-slate-200/90 bg-white/90 p-5 shadow-[0_22px_62px_rgba(15,23,42,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
@@ -75,22 +77,24 @@ export function LeaderboardFilters({
           </button>
         ))}
         </div>
-        <div className="flex flex-wrap gap-2 lg:justify-end">
-          {(['all', 'rx', 'scaled'] as Array<ResultFormat | 'all'>).map((format) => (
-            <button
-              key={format}
-              type="button"
-              onClick={() => onFormatChange(format)}
-              className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition ${
-                selectedFormat === format
-                  ? 'bg-[color:var(--color-secondary)] text-white shadow-[0_14px_32px_rgba(31,182,170,0.18)]'
-                  : 'border border-slate-200 bg-white text-slate-700 hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]'
-              }`}
-            >
-              {format === 'all' ? 'Todos' : format}
-            </button>
-          ))}
-        </div>
+        {showFormatFilter ? (
+          <div className="flex flex-wrap gap-2 lg:justify-end">
+            {(['all', 'rx', 'scaled'] as Array<ResultFormat | 'all'>).map((format) => (
+              <button
+                key={format}
+                type="button"
+                onClick={() => onFormatChange(format)}
+                className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition ${
+                  selectedFormat === format
+                    ? 'bg-[color:var(--color-secondary)] text-white shadow-[0_14px_32px_rgba(31,182,170,0.18)]'
+                    : 'border border-slate-200 bg-white text-slate-700 hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]'
+                }`}
+              >
+                {format === 'all' ? 'Todos' : format}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   );

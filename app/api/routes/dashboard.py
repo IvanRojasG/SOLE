@@ -4,7 +4,7 @@ from sqlmodel import Session, func, select
 from app.core.db import get_session
 from app.models.all_models import Achievement, Athlete, Coach
 from app.schemas.common import DashboardResponse, RankingItem
-from app.services.ranking import get_ranking
+from app.services.ranking import get_final_points_ranking
 
 
 router = APIRouter()
@@ -16,7 +16,7 @@ def dashboard(session: Session = Depends(get_session)):
     total_coaches = len(session.exec(select(Coach.id)).all())
     pending = session.exec(select(func.count()).select_from(Achievement).where(Achievement.status == "submitted")).one()
     approved = session.exec(select(func.count()).select_from(Achievement).where(Achievement.status == "approved")).one()
-    ranking_rows = get_ranking(session)[:10]
+    ranking_rows = get_final_points_ranking(session)[:10]
     return DashboardResponse(
         total_athletes=total_athletes,
         total_coaches=total_coaches,

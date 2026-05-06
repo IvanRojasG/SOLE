@@ -7,6 +7,7 @@ export type ChallengeCategory =
   | 'power_lifting';
 
 export type ResultFormat = 'rx' | 'scaled';
+export type RankingResultFormat = ResultFormat | 'mixed';
 
 export type Athlete = {
   id: string;
@@ -38,9 +39,18 @@ export type RankingEntry = {
   level: AthleteLevel;
   rank: number;
   points: number;
-  resultFormat: ResultFormat;
+  resultFormat: RankingResultFormat;
   delta: number;
   approvedAchievements: number;
+  challengeId?: string | null;
+  challengeTitle?: string | null;
+  challengeEndDate?: string | null;
+  completed?: boolean;
+  timeSeconds?: number | null;
+  repsCompleted?: number | null;
+  isFinalized?: boolean;
+  rankingView?: 'event' | 'challenge';
+  wodsScored?: number;
 };
 
 export type Achievement = {

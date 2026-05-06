@@ -1,6 +1,6 @@
 import type { RankingEntry } from '@/types';
 
-export const mockRanking: RankingEntry[] = [
+export const mockRanking: RankingEntry[] = ([
   {
     athleteId: 'ath-01',
     athleteName: 'Valeria Stone',
@@ -121,4 +121,14 @@ export const mockRanking: RankingEntry[] = [
     delta: 0,
     approvedAchievements: 2,
   },
-];
+] satisfies RankingEntry[]).map((entry, index) => ({
+  ...entry,
+  points: 0,
+  challengeId: 'challenge-current',
+  challengeTitle: 'WOD activo',
+  challengeEndDate: '2026-05-11',
+  completed: index < 6,
+  timeSeconds: index < 6 ? 560 + index * 34 : null,
+  repsCompleted: index < 6 ? 270 : 220 - index * 8,
+  isFinalized: false,
+}));
