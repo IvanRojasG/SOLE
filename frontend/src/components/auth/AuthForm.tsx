@@ -15,6 +15,7 @@ type AuthFormProps = {
   mode: 'login' | 'register';
   initialRedirectTo?: string;
   nextTarget?: string;
+  sessionExpired?: boolean;
 };
 
 function SubmitButton({ children }: { children: React.ReactNode }) {
@@ -46,7 +47,7 @@ function ErrorMessage({ state }: { state: AuthActionState }) {
   );
 }
 
-export function AuthForm({ mode, initialRedirectTo, nextTarget }: AuthFormProps) {
+export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }: AuthFormProps) {
   const router = useRouter();
   const action = mode === 'login' ? loginAction : registerAction;
   const [state, formAction] = useActionState(action, authActionInitialState);
@@ -63,6 +64,14 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget }: AuthFormProps)
   return (
     <form action={formAction} className="space-y-5">
       {nextTarget ? <input type="hidden" name="next" value={nextTarget} /> : null}
+      {mode === 'login' && sessionExpired ? (
+        <div
+          role="status"
+          className="rounded-2xl border border-amber-300/50 bg-amber-300/10 px-4 py-3 text-sm leading-6 text-amber-100"
+        >
+          Tu sesión caducó. Inicia sesión nuevamente para continuar.
+        </div>
+      ) : null}
       <ErrorMessage state={state} />
 
       {mode === 'register' ? (

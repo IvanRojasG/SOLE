@@ -1,7 +1,9 @@
 import 'server-only';
 
+import { redirect } from 'next/navigation';
+
 import type { AuthSession } from '@/services/auth/session';
-import { getSession } from '@/services/auth/session';
+import { expiredSessionPath, getSession, safeNextTarget } from '@/services/auth/session';
 
 type ApiRole = AuthSession['user']['role'];
 
@@ -10,6 +12,7 @@ type RequestOptions = {
   body?: unknown;
   role?: ApiRole;
   session?: AuthSession;
+  nextTarget?: string;
 };
 
 function getBackendUrl() {
@@ -32,6 +35,15 @@ async function parseJsonResponse<T>(response: Response, path: string): Promise<T
   return response.json() as Promise<T>;
 }
 
+function loginPath(nextTarget?: string) {
+  const nextParam = safeNextTarget(nextTarget);
+  return nextParam ? `/login?next=${encodeURIComponent(nextParam)}` : '/login';
+}
+
+function redirectToExpiredSession(nextTarget?: string): never {
+  redirect(expiredSessionPath(nextTarget));
+}
+
 export async function backendRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -41,7 +53,7 @@ export async function backendRequest<T>(path: string, options: RequestOptions = 
     const session = options.session ?? (await getSession());
 
     if (!session) {
-      throw new Error(`Missing authenticated session for ${path}`);
+      redirect(loginPath(options.nextTarget));
     }
 
     if (session.user.role !== options.role) {
@@ -57,6 +69,10 @@ export async function backendRequest<T>(path: string, options: RequestOptions = 
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
     cache: 'no-store',
   });
+
+  if (options.role && response.status === 401) {
+    redirectToExpiredSession(options.nextTarget);
+  }
 
   return parseJsonResponse<T>(response, path);
 }
@@ -112,11 +128,11 @@ export async function registerAthleteWithBackend(payload: {
 export async function changePasswordWithBackend(payload: {
   current_password: string;
   new_password: string;
-}) {
+}, nextTarget?: string) {
   const session = await getSession();
 
   if (!session) {
-    throw new Error('Missing authenticated session for /auth/change-password');
+    redirect(loginPath(nextTarget));
   }
 
   const response = await fetch(`${getBackendUrl()}/auth/change-password`, {
@@ -128,6 +144,10 @@ export async function changePasswordWithBackend(payload: {
     body: JSON.stringify(payload),
     cache: 'no-store',
   });
+
+  if (response.status === 401) {
+    redirectToExpiredSession(nextTarget);
+  }
 
   return parseJsonResponse<{ message: string }>(response, '/auth/change-password');
 }

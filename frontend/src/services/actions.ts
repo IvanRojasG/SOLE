@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { unstable_rethrow } from 'next/navigation';
 
 import { dataSource } from '@/lib/config/dataSource';
 import { backendRequest } from '@/services/api/backend';
@@ -23,6 +24,7 @@ export async function saveAthleteProfileAction(payload: {
   await backendRequest('/athletes/me', {
     method: 'PUT',
     role: 'athlete',
+    nextTarget: '/athlete/profile',
     body: {
       full_name: payload.fullName,
       level: payload.level,
@@ -53,6 +55,7 @@ export async function saveBaselineAction(baseline: AthleteBaseline) {
       await backendRequest('/baseline/entries', {
         method: 'POST',
         role: 'athlete',
+        nextTarget: '/athlete/baseline',
         body: {
           item_id: entry.itemId,
           value_number: isStatusEntry ? null : entry.value,
@@ -77,6 +80,7 @@ export async function saveBaselineAction(baseline: AthleteBaseline) {
       await backendRequest(`/baseline/prs/${pr.id}`, {
         method: 'PUT',
         role: 'athlete',
+        nextTarget: '/athlete/baseline',
         body: payload,
       });
       continue;
@@ -85,6 +89,7 @@ export async function saveBaselineAction(baseline: AthleteBaseline) {
     await backendRequest('/baseline/prs', {
       method: 'POST',
       role: 'athlete',
+      nextTarget: '/athlete/baseline',
       body: payload,
     });
   }
@@ -99,6 +104,7 @@ export async function saveBaselineAction(baseline: AthleteBaseline) {
       await backendRequest(`/baseline/skills/${skill.id}`, {
         method: 'PUT',
         role: 'athlete',
+        nextTarget: '/athlete/baseline',
         body: payload,
       });
       continue;
@@ -107,6 +113,7 @@ export async function saveBaselineAction(baseline: AthleteBaseline) {
     await backendRequest('/baseline/skills', {
       method: 'POST',
       role: 'athlete',
+      nextTarget: '/athlete/baseline',
       body: payload,
     });
   }
@@ -123,6 +130,7 @@ export async function lockBaselineAction() {
   await backendRequest('/baseline/lock/me', {
     method: 'POST',
     role: 'athlete',
+    nextTarget: '/athlete/baseline',
   });
 
   revalidatePath('/athlete/baseline');
@@ -162,6 +170,7 @@ export async function createBaselineCatalogItemAction(payload: {
   }>('/baseline/catalog', {
     method: 'POST',
     role: 'coach',
+    nextTarget: '/coach/baseline',
     body: {
       name: payload.name,
       category: payload.category,
@@ -206,6 +215,7 @@ export async function submitAchievementAction(payload: {
     await backendRequest('/achievements', {
       method: 'POST',
       role: 'athlete',
+      nextTarget: '/athlete/achievements',
       body: {
         challenge_id: payload.challengeId,
         achievement_date: payload.achievementDate,
@@ -217,6 +227,8 @@ export async function submitAchievementAction(payload: {
       },
     });
   } catch (caught) {
+    unstable_rethrow(caught);
+
     if (
       caught instanceof Error &&
       caught.message.includes('Duplicate achievement is not allowed')
@@ -259,6 +271,7 @@ export async function approveAchievementAction(
   await backendRequest(`/achievements/${achievementId}/approve`, {
     method: 'POST',
     role: 'coach',
+    nextTarget: '/coach/achievements',
     body: result
       ? {
           completed: result.completed,
@@ -294,6 +307,7 @@ export async function updateAchievementResultAction(
   await backendRequest(`/achievements/${achievementId}/result`, {
     method: 'PUT',
     role: 'coach',
+    nextTarget: '/coach/achievements',
     body: {
       completed: result.completed,
       result_format: result.resultFormat,
@@ -319,6 +333,7 @@ export async function rejectAchievementAction(achievementId: string) {
   await backendRequest(`/achievements/${achievementId}/reject`, {
     method: 'POST',
     role: 'coach',
+    nextTarget: '/coach/achievements',
   });
 
   revalidatePath('/coach/achievements');
@@ -337,6 +352,7 @@ export async function updateAchievementTieBreakAction(
   await backendRequest(`/achievements/${achievementId}/tie-break`, {
     method: 'PUT',
     role: 'coach',
+    nextTarget: '/coach/achievements',
     body: {
       tie_break_order: tieBreakOrder,
     },
@@ -357,6 +373,7 @@ export async function updateChallengeAction(item: ChallengeManagementItem) {
   await backendRequest(`/challenges/${item.id}`, {
     method: 'PUT',
     role: 'coach',
+    nextTarget: '/coach/challenges',
     body: {
       title: item.title,
       category: item.category,
@@ -392,6 +409,7 @@ export async function createChallengeAction(payload: ChallengeManagementItem) {
   }>('/challenges', {
     method: 'POST',
     role: 'coach',
+    nextTarget: '/coach/challenges',
     body: {
       title: payload.title,
       category: payload.category,

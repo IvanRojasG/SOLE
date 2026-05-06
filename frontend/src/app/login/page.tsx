@@ -21,6 +21,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   const params = await searchParams;
   const nextTarget = typeof params.next === 'string' ? params.next : undefined;
+  const sessionExpired = params.expired === '1';
 
   return (
     <section className="sole-auth-shell py-[--section-spacing]">
@@ -51,7 +52,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </div>
           </div>
           <div className="rounded-[2rem] border border-slate-200/90 bg-white/95 p-6 shadow-[0_26px_80px_rgba(15,23,42,0.09)] sm:p-8">
-            <AuthForm mode="login" initialRedirectTo={initialRedirectTo} nextTarget={nextTarget} />
+            <AuthForm
+              mode="login"
+              initialRedirectTo={initialRedirectTo}
+              nextTarget={nextTarget}
+              sessionExpired={sessionExpired}
+            />
           </div>
         </div>
       </AppContainer>

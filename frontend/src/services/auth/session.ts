@@ -14,6 +14,11 @@ export type AuthSession = {
   };
 };
 
+type SessionState =
+  | { status: 'active'; session: AuthSession }
+  | { status: 'expired' }
+  | { status: 'missing' };
+
 const ACCESS_TOKEN_COOKIE = 'sole_access_token';
 const USER_ID_COOKIE = 'sole_user_id';
 const USER_EMAIL_COOKIE = 'sole_user_email';
@@ -29,7 +34,30 @@ function cookieConfig() {
   };
 }
 
-export async function getSession(): Promise<AuthSession | null> {
+function isTokenExpired(token: string) {
+  const [, payload] = token.split('.');
+
+  if (!payload) {
+    return true;
+  }
+
+  try {
+    const normalizedPayload = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const decodedPayload = JSON.parse(
+      Buffer.from(normalizedPayload, 'base64').toString('utf-8'),
+    ) as { exp?: unknown };
+
+    if (typeof decodedPayload.exp !== 'number') {
+      return true;
+    }
+
+    return decodedPayload.exp * 1000 <= Date.now();
+  } catch {
+    return true;
+  }
+}
+
+async function getSessionState(): Promise<SessionState> {
   const store = await cookies();
   const accessToken = store.get(ACCESS_TOKEN_COOKIE)?.value;
   const userId = store.get(USER_ID_COOKIE)?.value;
@@ -37,17 +65,29 @@ export async function getSession(): Promise<AuthSession | null> {
   const role = store.get(USER_ROLE_COOKIE)?.value;
 
   if (!accessToken || !userId || !email || (role !== 'athlete' && role !== 'coach')) {
-    return null;
+    return { status: 'missing' };
+  }
+
+  if (isTokenExpired(accessToken)) {
+    return { status: 'expired' };
   }
 
   return {
-    accessToken,
-    user: {
-      id: userId,
-      email,
-      role,
+    status: 'active',
+    session: {
+      accessToken,
+      user: {
+        id: userId,
+        email,
+        role,
+      },
     },
   };
+}
+
+export async function getSession(): Promise<AuthSession | null> {
+  const state = await getSessionState();
+  return state.status === 'active' ? state.session : null;
 }
 
 export async function persistSession(session: AuthSession) {
@@ -68,21 +108,38 @@ export async function clearSession() {
   store.delete(USER_ROLE_COOKIE);
 }
 
-function safeNextTarget(nextTarget?: string) {
+export function safeNextTarget(nextTarget?: string) {
   if (!nextTarget || !nextTarget.startsWith('/')) {
+    return undefined;
+  }
+
+  if (nextTarget.startsWith('//')) {
     return undefined;
   }
 
   return nextTarget;
 }
 
-export async function requireSession(role?: AuthRole, nextTarget?: string) {
-  const session = await getSession();
+export function expiredSessionPath(nextTarget?: string) {
+  const nextParam = safeNextTarget(nextTarget);
+  return nextParam
+    ? `/session-expired?next=${encodeURIComponent(nextParam)}`
+    : '/session-expired';
+}
 
-  if (!session) {
+export async function requireSession(role?: AuthRole, nextTarget?: string) {
+  const state = await getSessionState();
+
+  if (state.status === 'expired') {
+    redirect(expiredSessionPath(nextTarget));
+  }
+
+  if (state.status === 'missing') {
     const nextParam = safeNextTarget(nextTarget);
     redirect(nextParam ? `/login?next=${encodeURIComponent(nextParam)}` : '/login');
   }
+
+  const { session } = state;
 
   if (role && session.user.role !== role) {
     redirect(session.user.role === 'coach' ? '/coach' : '/athlete/profile');

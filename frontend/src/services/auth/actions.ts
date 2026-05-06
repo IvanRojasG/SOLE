@@ -1,6 +1,6 @@
 'use server';
 
-import { redirect } from 'next/navigation';
+import { redirect, unstable_rethrow } from 'next/navigation';
 
 import {
   changePasswordWithBackend,
@@ -56,6 +56,7 @@ export async function loginAction(
     session = await loginWithCredentials({ email, password });
     await persistSession(session);
   } catch (error) {
+    unstable_rethrow(error);
     return { error: getErrorMessage(error), redirectTo: null };
   }
 
@@ -93,6 +94,7 @@ export async function registerAction(
     session = await loginWithCredentials({ email, password });
     await persistSession(session);
   } catch (error) {
+    unstable_rethrow(error);
     return { error: getErrorMessage(error), redirectTo: null };
   }
 
@@ -121,11 +123,15 @@ export async function changePasswordAction(
   }
 
   try {
-    await changePasswordWithBackend({
-      current_password: currentPassword,
-      new_password: newPassword,
-    });
+    await changePasswordWithBackend(
+      {
+        current_password: currentPassword,
+        new_password: newPassword,
+      },
+      '/account/password',
+    );
   } catch (error) {
+    unstable_rethrow(error);
     return { error: getErrorMessage(error), message: null };
   }
 
@@ -150,6 +156,7 @@ export async function requestPasswordResetAction(
       resetToken: response.reset_token,
     };
   } catch (error) {
+    unstable_rethrow(error);
     return { error: getErrorMessage(error), message: null };
   }
 }
@@ -176,6 +183,7 @@ export async function resetPasswordAction(
       new_password: newPassword,
     });
   } catch (error) {
+    unstable_rethrow(error);
     return { error: getErrorMessage(error), message: null };
   }
 
