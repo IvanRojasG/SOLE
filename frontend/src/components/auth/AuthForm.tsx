@@ -47,6 +47,69 @@ function ErrorMessage({ state }: { state: AuthActionState }) {
   );
 }
 
+function FieldIcon({ name }: { name: 'mail' | 'lock' | 'user' }) {
+  if (name === 'mail') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
+        <path
+          d="m4.5 7.5 7.5 5 7.5-5"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M5.5 6h13A2.5 2.5 0 0 1 21 8.5v7a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 15.5v-7A2.5 2.5 0 0 1 5.5 6Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+      </svg>
+    );
+  }
+
+  if (name === 'user') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
+        <path
+          d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M4.5 20a7.5 7.5 0 0 1 15 0"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
+      <path
+        d="M7 10V8a5 5 0 0 1 10 0v2"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M6.5 10h11A1.5 1.5 0 0 1 19 11.5v6A2.5 2.5 0 0 1 16.5 20h-9A2.5 2.5 0 0 1 5 17.5v-6A1.5 1.5 0 0 1 6.5 10Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function InputIcon({ name }: { name: 'mail' | 'lock' | 'user' }) {
+  return (
+    <span className="pointer-events-none absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl bg-blue-50 text-[color:var(--color-primary)]">
+      <FieldIcon name={name} />
+    </span>
+  );
+}
+
 export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }: AuthFormProps) {
   const router = useRouter();
   const action = mode === 'login' ? loginAction : registerAction;
@@ -79,14 +142,17 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
             Nombre completo
           </span>
-          <input
-            name="fullName"
-            type="text"
-            required
-            minLength={3}
-            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-[color:var(--color-text-muted)]"
-            placeholder="Camila Rios"
-          />
+          <span className="relative block">
+            <InputIcon name="user" />
+            <input
+              name="fullName"
+              type="text"
+              required
+              minLength={3}
+              className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+              placeholder="Camila Rios"
+            />
+          </span>
         </label>
       ) : null}
 
@@ -94,13 +160,16 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
           Correo
         </span>
-        <input
-          name="email"
-          type="email"
-          required
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-[color:var(--color-text-muted)]"
-          placeholder="tu@solefitness.com"
-        />
+        <span className="relative block">
+          <InputIcon name="mail" />
+          <input
+            name="email"
+            type="email"
+            required
+            className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+            placeholder="tu@solefitness.com"
+          />
+        </span>
       </label>
 
       {mode === 'register' ? (
@@ -126,14 +195,17 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
           Contraseña
         </span>
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={8}
-          className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-[color:var(--color-text-muted)]"
-          placeholder="Minimo 8 caracteres"
-        />
+        <span className="relative block">
+          <InputIcon name="lock" />
+          <input
+            name="password"
+            type="password"
+            required
+            minLength={8}
+            className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+            placeholder="Minimo 8 caracteres"
+          />
+        </span>
       </label>
 
       {mode === 'login' ? (
@@ -149,14 +221,17 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
             Confirmar contraseña
           </span>
-          <input
-            name="confirmPassword"
-            type="password"
-            required
-            minLength={8}
-            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-[color:var(--color-text-muted)]"
-            placeholder="Repite tu contraseña"
-          />
+          <span className="relative block">
+            <InputIcon name="lock" />
+            <input
+              name="confirmPassword"
+              type="password"
+              required
+              minLength={8}
+              className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+              placeholder="Repite tu contraseña"
+            />
+          </span>
         </label>
       ) : null}
 
