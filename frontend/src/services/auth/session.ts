@@ -123,14 +123,15 @@ export function safeNextTarget(nextTarget?: string) {
 export function expiredSessionPath(nextTarget?: string) {
   const nextParam = safeNextTarget(nextTarget);
   return nextParam
-    ? `/session-expired?next=${encodeURIComponent(nextParam)}`
-    : '/session-expired';
+    ? `/login?expired=1&next=${encodeURIComponent(nextParam)}`
+    : '/login?expired=1';
 }
 
 export async function requireSession(role?: AuthRole, nextTarget?: string) {
   const state = await getSessionState();
 
   if (state.status === 'expired') {
+    await clearSession();
     redirect(expiredSessionPath(nextTarget));
   }
 

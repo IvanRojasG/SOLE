@@ -6,14 +6,11 @@ export async function GET(request: Request) {
   await clearSession();
 
   const requestUrl = new URL(request.url);
-  const redirectUrl = new URL('/login', requestUrl.origin);
   const nextTarget = safeNextTarget(requestUrl.searchParams.get('next') ?? undefined);
+  const redirectPath = nextTarget
+    ? `/login?expired=1&next=${encodeURIComponent(nextTarget)}`
+    : '/login?expired=1';
+  const publicOrigin = requestUrl.origin.replace('://0.0.0.0', '://localhost');
 
-  redirectUrl.searchParams.set('expired', '1');
-
-  if (nextTarget) {
-    redirectUrl.searchParams.set('next', nextTarget);
-  }
-
-  return NextResponse.redirect(redirectUrl);
+  return NextResponse.redirect(new URL(redirectPath, publicOrigin));
 }

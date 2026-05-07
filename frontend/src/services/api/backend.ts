@@ -3,7 +3,12 @@ import 'server-only';
 import { redirect } from 'next/navigation';
 
 import type { AuthSession } from '@/services/auth/session';
-import { expiredSessionPath, getSession, safeNextTarget } from '@/services/auth/session';
+import {
+  clearSession,
+  expiredSessionPath,
+  getSession,
+  safeNextTarget,
+} from '@/services/auth/session';
 
 type ApiRole = AuthSession['user']['role'];
 
@@ -40,7 +45,8 @@ function loginPath(nextTarget?: string) {
   return nextParam ? `/login?next=${encodeURIComponent(nextParam)}` : '/login';
 }
 
-function redirectToExpiredSession(nextTarget?: string): never {
+async function redirectToExpiredSession(nextTarget?: string): Promise<never> {
+  await clearSession();
   redirect(expiredSessionPath(nextTarget));
 }
 
@@ -71,7 +77,7 @@ export async function backendRequest<T>(path: string, options: RequestOptions = 
   });
 
   if (options.role && response.status === 401) {
-    redirectToExpiredSession(options.nextTarget);
+    await redirectToExpiredSession(options.nextTarget);
   }
 
   return parseJsonResponse<T>(response, path);
@@ -146,7 +152,7 @@ export async function changePasswordWithBackend(payload: {
   });
 
   if (response.status === 401) {
-    redirectToExpiredSession(nextTarget);
+    await redirectToExpiredSession(nextTarget);
   }
 
   return parseJsonResponse<{ message: string }>(response, '/auth/change-password');
