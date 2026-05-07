@@ -254,6 +254,66 @@ export async function submitAchievementAction(payload: {
   return { ok: true };
 }
 
+export async function submitCoachAchievementAction(payload: {
+  athleteId: string;
+  challengeId: string;
+  achievementDate: string;
+  completed: boolean;
+  resultFormat: ResultFormat;
+  timeSeconds: number | null;
+  repsCompleted: number | null;
+  weightLbs: number | null;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (dataSource === 'mock') {
+    return { ok: true };
+  }
+
+  try {
+    await backendRequest('/achievements/coach', {
+      method: 'POST',
+      role: 'coach',
+      nextTarget: '/coach/athletes',
+      body: {
+        athlete_id: payload.athleteId,
+        challenge_id: payload.challengeId,
+        achievement_date: payload.achievementDate,
+        completed: payload.completed,
+        result_format: payload.resultFormat,
+        time_seconds: payload.timeSeconds,
+        reps_completed: payload.repsCompleted,
+        weight_lbs: payload.weightLbs,
+      },
+    });
+  } catch (caught) {
+    unstable_rethrow(caught);
+
+    if (
+      caught instanceof Error &&
+      caught.message.includes('Duplicate achievement is not allowed')
+    ) {
+      return {
+        ok: false,
+        error:
+          'Ya existe un registro para ese atleta, WOD y fecha.',
+      };
+    }
+
+    return {
+      ok: false,
+      error:
+        caught instanceof Error
+          ? caught.message
+          : 'No se pudo registrar el WOD para el atleta.',
+    };
+  }
+
+  revalidatePath('/coach/athletes');
+  revalidatePath('/coach/achievements');
+  revalidatePath('/leaderboard');
+  revalidatePath('/athlete/achievements');
+  return { ok: true };
+}
+
 export async function approveAchievementAction(
   achievementId: string,
   result?: {

@@ -23,6 +23,10 @@ class AchievementCreate(BaseModel):
         return self
 
 
+class CoachAchievementCreate(AchievementCreate):
+    athlete_id: UUID
+
+
 class AchievementResultUpdate(BaseModel):
     completed: bool
     result_format: str = Field(pattern="^(rx|scaled)$")

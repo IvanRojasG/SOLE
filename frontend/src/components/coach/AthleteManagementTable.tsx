@@ -4,10 +4,12 @@ import type { Athlete } from '@/types';
 
 type AthleteManagementTableProps = {
   athletes: Athlete[];
+  onRegisterWod?: (athlete: Athlete) => void;
 };
 
 export function AthleteManagementTable({
   athletes,
+  onRegisterWod,
 }: AthleteManagementTableProps) {
   if (athletes.length === 0) {
     return (
@@ -29,6 +31,7 @@ export function AthleteManagementTable({
               <th className="px-5 py-4">Logros</th>
               <th className="px-5 py-4">Baseline</th>
               <th className="px-5 py-4">Enfoque</th>
+              <th className="px-5 py-4">Acción</th>
             </tr>
           </thead>
           <tbody>
@@ -61,6 +64,15 @@ export function AthleteManagementTable({
                     {athlete.favoriteFocus}
                   </span>
                 </td>
+                <td className="px-5 py-4">
+                  <button
+                    type="button"
+                    onClick={() => onRegisterWod?.(athlete)}
+                    className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold tracking-[0.14em] text-white uppercase transition hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-ink)]"
+                  >
+                    Registrar WOD
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -92,6 +104,13 @@ export function AthleteManagementTable({
                 {athlete.favoriteFocus}
               </div>
             </div>
+            <button
+              type="button"
+              onClick={() => onRegisterWod?.(athlete)}
+              className="mt-4 w-full rounded-full bg-slate-950 px-4 py-3 text-xs font-bold tracking-[0.16em] text-white uppercase transition hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-ink)]"
+            >
+              Registrar WOD
+            </button>
           </article>
         ))}
       </div>

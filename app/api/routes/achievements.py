@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, HTTPException, status
 from sqlmodel import Session, select
 
 from app.core.db import get_session
@@ -8,6 +8,7 @@ from app.core.deps import get_current_athlete, require_role
 from app.models.all_models import Achievement, Athlete, Challenge, User
 from app.schemas.achievement import (
     AchievementCreate,
+    CoachAchievementCreate,
     AchievementDetailedResponse,
     AchievementResponse,
     AchievementResultUpdate,
@@ -33,6 +34,20 @@ def create_achievement(
     session: Session = Depends(get_session),
 ):
     return submit_achievement(session, athlete, payload)
+
+
+@router.post("/coach", response_model=AchievementResponse)
+def create_coach_achievement(
+    payload: CoachAchievementCreate,
+    _: User = Depends(require_role("coach")),
+    session: Session = Depends(get_session),
+):
+    athlete = session.get(Athlete, payload.athlete_id)
+    if not athlete:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Athlete not found")
+
+    achievement = submit_achievement(session, athlete, payload, allow_outside_window=True)
+    return approve_achievement(session, achievement.id)
 
 
 @router.get("/me", response_model=list[AchievementResponse])

@@ -37,14 +37,20 @@ def recalculate_wod_rank_points(session: Session, challenge_id, result_format: s
     finalize_challenge_rank_points(session, challenge)
 
 
-def submit_achievement(session: Session, athlete: Athlete, payload: AchievementCreate) -> Achievement:
+def submit_achievement(
+    session: Session,
+    athlete: Athlete,
+    payload: AchievementCreate,
+    *,
+    allow_outside_window: bool = False,
+) -> Achievement:
     challenge = session.get(Challenge, payload.challenge_id)
     if not challenge:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found")
     if not challenge.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Challenge is not active")
     today = date.today()
-    if today < challenge.start_date or today > challenge.end_date:
+    if today < challenge.start_date or (today > challenge.end_date and not allow_outside_window):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Challenge is outside its submission window")
     if challenge.category == METCON_CATEGORY and payload.weight_lbs is not None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Custom Metcon result does not accept weight_lbs")
