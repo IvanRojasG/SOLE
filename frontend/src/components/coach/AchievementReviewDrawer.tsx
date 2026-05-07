@@ -69,11 +69,11 @@ export function AchievementReviewDrawer({
         onClick={onClose}
       />
       <aside
-        className={`fixed top-0 right-0 z-50 h-full w-[92vw] max-w-md border-l border-white/10 bg-[color:var(--color-surface)] p-6 shadow-[var(--shadow-lift)] transition-transform ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 z-50 flex h-dvh w-[92vw] max-w-md flex-col overflow-hidden border-l border-white/10 bg-[color:var(--color-surface)] shadow-[var(--shadow-lift)] transition-transform ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {item ? (
           <>
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 p-6">
               <div>
                 <p className="text-xs tracking-[0.22em] text-[color:var(--color-primary-soft)] uppercase">
                   Review
@@ -85,111 +85,113 @@ export function AchievementReviewDrawer({
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full border border-white/10 px-3 py-2 text-xs tracking-[0.18em] text-white uppercase"
+                className="rounded-full border border-white/20 bg-white px-3 py-2 text-xs font-bold tracking-[0.18em] text-slate-950 uppercase shadow-[0_12px_28px_rgba(0,0,0,0.18)] transition hover:bg-[color:var(--color-secondary)] hover:text-[color:var(--color-ink)]"
               >
                 Cerrar
               </button>
             </div>
-            <div className="mt-8 space-y-4">
-              <div className="rounded-[1.5rem] border border-white/10 p-4">
-                <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                  Atleta
-                </p>
-                <p className="mt-2 text-base font-semibold text-white">
-                  {item.athleteName}
-                </p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/10 p-4">
-                <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                  Notas
-                </p>
-                <p className="mt-2 text-sm leading-7 text-[color:var(--color-text-muted)]">
-                  {item.notes}
-                </p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/10 p-4">
-                <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                  Resultado WOD
-                </p>
-                <div className="mt-4 grid gap-4">
-                  <label className="block">
-                    <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                      Formato
-                    </span>
-                    <select
-                      value={resultFormat}
-                      onChange={(event) =>
-                        setResultFormat(event.target.value as ResultFormat)
-                      }
-                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
-                    >
-                      <option value="scaled">Scaled</option>
-                      <option value="rx">RX</option>
-                    </select>
-                  </label>
-                  <label className="block">
-                    <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                      Estado
-                    </span>
-                    <select
-                      value={completed ? 'completed' : 'partial'}
-                      onChange={(event) =>
-                        setCompleted(event.target.value === 'completed')
-                      }
-                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
-                    >
-                      <option value="completed">Completado</option>
-                      <option value="partial">No completado</option>
-                    </select>
-                  </label>
-                  {completed ? (
+            <div className="flex-1 overflow-y-auto px-6 py-6">
+              <div className="space-y-4">
+                <div className="rounded-[1.5rem] border border-white/10 p-4">
+                  <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                    Atleta
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-white">
+                    {item.athleteName}
+                  </p>
+                </div>
+                <div className="rounded-[1.5rem] border border-white/10 p-4">
+                  <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                    Notas
+                  </p>
+                  <p className="mt-2 text-sm leading-7 text-[color:var(--color-text-muted)]">
+                    {item.notes}
+                  </p>
+                </div>
+                <div className="rounded-[1.5rem] border border-white/10 p-4">
+                  <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                    Resultado WOD
+                  </p>
+                  <div className="mt-4 grid gap-4">
                     <label className="block">
                       <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                        Tiempo total (segundos)
+                        Formato
+                      </span>
+                      <select
+                        value={resultFormat}
+                        onChange={(event) =>
+                          setResultFormat(event.target.value as ResultFormat)
+                        }
+                        className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      >
+                        <option value="scaled">Scaled</option>
+                        <option value="rx">RX</option>
+                      </select>
+                    </label>
+                    <label className="block">
+                      <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                        Estado
+                      </span>
+                      <select
+                        value={completed ? 'completed' : 'partial'}
+                        onChange={(event) =>
+                          setCompleted(event.target.value === 'completed')
+                        }
+                        className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      >
+                        <option value="completed">Completado</option>
+                        <option value="partial">No completado</option>
+                      </select>
+                    </label>
+                    {completed ? (
+                      <label className="block">
+                        <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                          Tiempo total (segundos)
+                        </span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={timeSeconds || ''}
+                          onChange={(event) =>
+                            setTimeSeconds(Number(event.target.value))
+                          }
+                          className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                        />
+                      </label>
+                    ) : null}
+                    <label className="block">
+                      <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                        Repeticiones
                       </span>
                       <input
                         type="number"
-                        min={1}
-                        value={timeSeconds || ''}
+                        min={0}
+                        value={repsCompleted || ''}
                         onChange={(event) =>
-                          setTimeSeconds(Number(event.target.value))
+                          setRepsCompleted(Number(event.target.value))
                         }
                         className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
                       />
                     </label>
-                  ) : null}
-                  <label className="block">
-                    <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                      Repeticiones
-                    </span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={repsCompleted || ''}
-                      onChange={(event) =>
-                        setRepsCompleted(Number(event.target.value))
-                      }
-                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
-                      Peso Power Lifting (lb)
-                    </span>
-                    <input
-                      type="number"
-                      min={0}
-                      value={weightLbs || ''}
-                      onChange={(event) =>
-                        setWeightLbs(Number(event.target.value))
-                      }
-                      className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
-                    />
-                  </label>
+                    <label className="block">
+                      <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                        Peso Power Lifting (lb)
+                      </span>
+                      <input
+                        type="number"
+                        min={0}
+                        value={weightLbs || ''}
+                        onChange={(event) =>
+                          setWeightLbs(Number(event.target.value))
+                        }
+                        className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      />
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="mt-8 flex gap-3">
+            <div className="flex flex-wrap gap-3 border-t border-white/10 bg-[color:var(--color-surface)] p-6">
               {item.status === 'approved' ? (
                 <button
                   type="button"
