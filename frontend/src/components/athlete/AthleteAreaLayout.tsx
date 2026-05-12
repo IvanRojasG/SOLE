@@ -27,7 +27,7 @@ export function AthleteAreaLayout({
   return (
     <div className="sole-dashboard-shell py-[--section-spacing]">
       <AppContainer className="space-y-8">
-        <div className="rounded-[2rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
+        <div className="sole-hatch rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
             Athlete Flow
           </p>
@@ -47,8 +47,8 @@ export function AthleteAreaLayout({
               className={cn(
                 'rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] whitespace-nowrap transition',
                 activePath === item.href
-                  ? 'bg-[color:var(--color-primary)] text-white shadow-[0_14px_32px_rgba(0,92,255,0.22)]'
-                  : 'border border-slate-200 bg-white/85 text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]',
+                  ? 'bg-slate-950 text-white shadow-[0_14px_32px_rgba(15,23,42,0.2)]'
+                  : 'border border-slate-200 bg-white/85 text-slate-700 shadow-[0_12px_30px_rgba(15,23,42,0.05)] hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]',
               )}
             >
               {item.label}

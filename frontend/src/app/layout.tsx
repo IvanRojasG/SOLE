@@ -51,11 +51,11 @@ export default async function RootLayout({
           } as React.CSSProperties
         }
       >
-        <div className="relative min-h-screen bg-[color:var(--color-ink)] text-[color:var(--color-text)]">
+        <div className="sole-page-grid relative min-h-screen bg-[color:var(--color-ink)] text-[color:var(--color-text)]">
           <a href="#main-content" className="skip-link">
             Saltar al contenido
           </a>
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,92,255,0.22),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(250,250,250,0.12),transparent_22%),linear-gradient(180deg,#06152f_0%,#0b2257_52%,#143884_100%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,92,255,0.22),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(20,184,166,0.18),transparent_22%),linear-gradient(180deg,#061326_0%,#0a1f44_52%,#123a7d_100%)]" />
           <div className="relative z-10 flex min-h-screen flex-col">
             <PublicTopNav session={session} />
             <main id="main-content" className="flex-1">

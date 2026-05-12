@@ -9,7 +9,7 @@ export function LeaderboardTable({ entries }: LeaderboardTableProps) {
   const isEventMode = entries.some((entry) => entry.rankingView === 'event');
 
   return (
-    <div className="hidden overflow-hidden rounded-[2rem] border border-slate-200 bg-white/95 shadow-[0_24px_70px_rgba(15,23,42,0.09)] lg:block">
+    <div className="hidden overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white/95 shadow-[0_24px_70px_rgba(15,23,42,0.09)] lg:block">
       <table className="min-w-full">
         <thead className="bg-slate-950">
           <tr className="text-left text-xs tracking-[0.2em] text-white/70 uppercase">
@@ -28,7 +28,7 @@ export function LeaderboardTable({ entries }: LeaderboardTableProps) {
             <tr
               key={`${entry.athleteId}-${entry.resultFormat}`}
               className={`border-t border-slate-200 text-sm text-slate-800 ${
-                index % 2 === 0 ? 'bg-white' : 'bg-sky-50/70'
+                index % 2 === 0 ? 'bg-white' : 'bg-slate-50'
               }`}
             >
               <td className="font-display px-5 py-4 text-3xl tracking-[0.08em]">

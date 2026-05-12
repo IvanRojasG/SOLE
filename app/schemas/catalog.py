@@ -30,3 +30,11 @@ class ChallengeUpsertRequest(BaseModel):
     total_reps: int = Field(ge=0)
     youtube_url: str = Field(default="", max_length=300)
     is_active: bool = True
+
+
+class ChallengeFinalizeRankingResponse(BaseModel):
+    message: str
+    challenge_id: UUID
+    cleared: int
+    ranked: int
+    is_finalized: bool

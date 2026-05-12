@@ -122,7 +122,7 @@ export function CoachAchievementsView({ items }: CoachAchievementsViewProps) {
           onDismiss={() => setToast(null)}
         />
       ) : null}
-      <div className="flex flex-col gap-3 rounded-[2rem] border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="sole-hatch flex flex-col gap-3 rounded-[1.5rem] border border-slate-200 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.07)] sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs tracking-[0.2em] text-[color:var(--color-text-muted)] uppercase">
             Estado de revisión
@@ -155,7 +155,7 @@ export function CoachAchievementsView({ items }: CoachAchievementsViewProps) {
         </div>
       </div>
       {!hasItems ? (
-        <div className="rounded-[2rem] border border-dashed border-white/15 bg-white/5 p-6 text-sm text-[color:var(--color-text-muted)]">
+        <div className="rounded-[1.5rem] border border-dashed border-slate-300 bg-white/80 p-6 text-sm text-slate-600">
           {activeFilter === 'submitted'
             ? 'No hay resultados pendientes de revisión.'
             : 'No hay resultados aprobados para consultar.'}
@@ -270,13 +270,13 @@ export function CoachAchievementsView({ items }: CoachAchievementsViewProps) {
         }}
       />
       {activeFilter === 'approved' ? (
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-5">
-          <div className="flex flex-col gap-3 border-b border-white/10 pb-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="rounded-[1.5rem] border border-slate-200 bg-white/90 p-5 shadow-[0_18px_48px_rgba(15,23,42,0.07)]">
+          <div className="flex flex-col gap-3 border-b border-slate-200 pb-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-xs tracking-[0.2em] text-[color:var(--color-text-muted)] uppercase">
                 Desempate manual
               </p>
-              <h3 className="mt-3 text-xl font-semibold text-white">
+              <h3 className="mt-3 text-xl font-semibold text-slate-950">
                 Ordenar atletas empatados
               </h3>
             </div>
@@ -294,11 +294,11 @@ export function CoachAchievementsView({ items }: CoachAchievementsViewProps) {
               {approvedItems.map((item) => (
                 <article
                   key={item.id}
-                  className="rounded-2xl border border-white/10 bg-[color:var(--color-surface)] p-4"
+                  className="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)]"
                 >
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-white">{item.athleteName}</p>
+                      <p className="text-sm font-semibold text-slate-950">{item.athleteName}</p>
                       <p className="mt-1 text-xs tracking-[0.14em] text-[color:var(--color-text-muted)] uppercase">
                         {item.title} · {item.resultFormat}
                       </p>
@@ -318,13 +318,13 @@ export function CoachAchievementsView({ items }: CoachAchievementsViewProps) {
                             [item.id]: event.target.value,
                           }))
                         }
-                        className="h-11 w-24 rounded-xl border border-white/10 bg-white/10 px-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]"
+                        className="h-11 w-24 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                         aria-label={`Orden de desempate para ${item.athleteName}`}
                       />
                       <button
                         type="button"
                         onClick={() => updateTieBreak(item)}
-                        className="h-11 rounded-xl bg-[color:var(--color-primary)] px-4 text-xs font-bold tracking-[0.16em] text-[color:var(--color-ink)] uppercase"
+                        className="h-11 rounded-xl bg-slate-950 px-4 text-xs font-bold tracking-[0.16em] text-white uppercase transition hover:bg-[color:var(--color-primary)]"
                       >
                         Guardar
                       </button>

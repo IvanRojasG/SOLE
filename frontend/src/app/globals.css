@@ -13,7 +13,8 @@ body {
   font-family: var(--font-body), sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background: var(--color-ink);
+  background: #061326;
+  text-rendering: optimizeLegibility;
 }
 
 a,
@@ -38,6 +39,34 @@ textarea:focus-visible {
   font-family: var(--font-display), sans-serif;
   font-weight: 400;
   letter-spacing: 0.03em;
+}
+
+.sole-page-grid {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.sole-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.06) 0,
+    rgba(15, 23, 42, 0.06) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+}
+
+.sole-card-lift {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.sole-card-lift:hover {
+  transform: translateY(-2px);
 }
 
 .skip-link {
@@ -72,19 +101,21 @@ main {
 
 .sole-dashboard-shell {
   --color-surface: #ffffff;
-  --color-surface-elevated: #f6f9ff;
+  --color-surface-elevated: #f5f8fc;
   --color-card: #ffffff;
   --color-line: rgba(15, 23, 42, 0.12);
   --color-text: #0f172a;
   --color-text-muted: #64748b;
-  --color-secondary: #dbeafe;
-  --color-secondary-soft: #005cff;
+  --color-secondary: #14b8a6;
+  --color-secondary-soft: #0f766e;
   --shadow-soft: 0 20px 58px rgba(15, 23, 42, 0.08);
   --shadow-glow: 0 22px 70px rgba(15, 23, 42, 0.1);
   color: #0f172a;
   background:
     radial-gradient(circle at 12% 8%, rgba(0, 92, 255, 0.12), transparent 30%),
-    linear-gradient(180deg, #ffffff 0%, #f4f8ff 48%, #ffffff 100%);
+    radial-gradient(circle at 85% 2%, rgba(20, 184, 166, 0.14), transparent 26%),
+    linear-gradient(180deg, #ffffff 0%, #f3f7fb 48%, #ffffff 100%);
+  background-blend-mode: normal;
 }
 
 .sole-dashboard-shell [class*='border-white/10'],
@@ -120,15 +151,21 @@ main {
 .sole-auth-shell {
   --color-surface: #ffffff;
   --color-text-muted: #64748b;
-  --color-secondary-soft: #005cff;
+  --color-secondary-soft: #0f766e;
   color: #0f172a;
   background:
-    radial-gradient(circle at 16% 0%, rgba(0, 92, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 16% 0%, rgba(0, 92, 255, 0.13), transparent 28%),
+    radial-gradient(circle at 86% 10%, rgba(20, 184, 166, 0.15), transparent 26%),
     linear-gradient(180deg, #ffffff 0%, #f4f8ff 55%, #ffffff 100%);
 }
 
 .sole-auth-shell form .text-white {
   color: #0f172a;
+}
+
+.sole-auth-shell form .sole-auth-input-icon {
+  background: #0f172a !important;
+  color: #ffffff !important;
 }
 
 .sole-auth-shell form input,
@@ -159,4 +196,15 @@ main {
 .sole-auth-shell form button[type='submit'] {
   color: #ffffff;
   box-shadow: 0 14px 34px rgba(0, 92, 255, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

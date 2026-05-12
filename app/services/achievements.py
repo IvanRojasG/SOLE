@@ -6,6 +6,7 @@ from sqlmodel import Session, select
 from app.models.all_models import Achievement, Athlete, Challenge
 from app.schemas.achievement import AchievementCreate, AchievementResultUpdate
 from app.services.ranking import finalize_challenge_rank_points
+from app.services.wod_finalization import recalculate_challenge_after_result_change
 
 
 WOD_RANK_SOURCE_TYPE = "wod_rank"
@@ -101,6 +102,7 @@ def approve_achievement(session: Session, achievement_id, payload: AchievementRe
     achievement.status = "approved"
     achievement.rank_points = None
     session.add(achievement)
+    recalculate_challenge_after_result_change(session, challenge)
     session.commit()
     session.refresh(achievement)
     return achievement
@@ -120,6 +122,7 @@ def update_achievement_result(session: Session, achievement_id, payload: Achieve
     _ensure_result_is_complete(challenge, achievement)
     achievement.rank_points = None
     session.add(achievement)
+    recalculate_challenge_after_result_change(session, challenge)
 
     session.commit()
     session.refresh(achievement)
@@ -136,6 +139,10 @@ def update_achievement_tie_break(session: Session, achievement_id, tie_break_ord
     achievement.tie_break_order = tie_break_order
     achievement.rank_points = None
     session.add(achievement)
+    challenge = session.get(Challenge, achievement.challenge_id)
+    if not challenge:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found")
+    recalculate_challenge_after_result_change(session, challenge)
     session.commit()
     session.refresh(achievement)
     return achievement

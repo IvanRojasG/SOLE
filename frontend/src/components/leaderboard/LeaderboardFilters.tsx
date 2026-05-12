@@ -24,7 +24,7 @@ export function LeaderboardFilters({
   showFormatFilter = true,
 }: LeaderboardFiltersProps) {
   return (
-    <div className="grid gap-5 rounded-[1.9rem] border border-slate-200/90 bg-white/90 p-5 shadow-[0_22px_62px_rgba(15,23,42,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
+    <div className="grid gap-5 rounded-[1.5rem] border border-slate-200/90 bg-white/90 p-5 shadow-[0_22px_62px_rgba(15,23,42,0.08)] lg:grid-cols-[1fr_auto] lg:items-end">
       <div className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -57,7 +57,7 @@ export function LeaderboardFilters({
           className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition ${
             selectedLevel === 'all'
               ? 'bg-[color:var(--color-primary)] text-white shadow-[0_14px_32px_rgba(0,92,255,0.22)]'
-              : 'border border-slate-200 bg-white text-slate-700 hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]'
+              : 'border border-slate-300 bg-white text-slate-700 hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]'
           }`}
         >
           Todos
@@ -70,7 +70,7 @@ export function LeaderboardFilters({
             className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition ${
               selectedLevel === level
                 ? 'bg-slate-950 text-white shadow-[0_14px_32px_rgba(15,23,42,0.18)]'
-                : 'border border-slate-200 bg-white text-slate-700 hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]'
+                : 'border border-slate-300 bg-white text-slate-700 hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]'
             }`}
           >
             {level}
@@ -86,7 +86,7 @@ export function LeaderboardFilters({
                 onClick={() => onFormatChange(format)}
                 className={`rounded-full px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] transition ${
                   selectedFormat === format
-                    ? 'bg-[color:var(--color-secondary)] text-white shadow-[0_14px_32px_rgba(31,182,170,0.18)]'
+                    ? 'bg-[color:var(--color-secondary)] text-white shadow-[0_14px_32px_rgba(20,184,166,0.18)]'
                     : 'border border-slate-200 bg-white text-slate-700 hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]'
                 }`}
               >

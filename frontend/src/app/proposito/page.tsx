@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import type { ReactNode } from 'react';
 
 import { AppContainer } from '@/components/layout/AppContainer';
 import { Section } from '@/components/layout/Section';
@@ -83,14 +84,28 @@ Creo en el trabajo duro, la fe como guía, y en construir una comunidad donde el
 ] as const;
 
 function CoachIcon({ name }: { name: CoachCardIcon }) {
-  const icons: Record<CoachCardIcon, string> = {
-    spark: '*',
-    target: '+',
-    compass: '^',
+  const icons: Record<CoachCardIcon, ReactNode> = {
+    spark: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
+        <path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+      </svg>
+    ),
+    target: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
+        <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" stroke="currentColor" strokeWidth="1.8" />
+        <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 3v3M12 18v3M3 12h3M18 12h3" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+      </svg>
+    ),
+    compass: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
+        <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" stroke="currentColor" strokeWidth="1.8" />
+        <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" />
+      </svg>
+    ),
   };
 
   return (
-    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--color-primary)] text-lg font-black text-white shadow-[0_14px_34px_rgba(0,92,255,0.2)]">
+    <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-[0_14px_34px_rgba(15,23,42,0.18)]">
       {icons[name]}
     </span>
   );
@@ -100,7 +115,7 @@ export default function PropositoPage() {
   return (
     <Section className="bg-[linear-gradient(180deg,#ffffff_0%,#eef7ff_38%,#fff7ed_72%,#ffffff_100%)]">
       <AppContainer className="space-y-12">
-        <div className="relative overflow-hidden rounded-[2.5rem] border border-slate-200/90 bg-[linear-gradient(135deg,#ffffff_0%,#eef7ff_52%,#fff7ed_100%)] p-7 shadow-[0_28px_90px_rgba(15,23,42,0.1)] sm:p-9">
+        <div className="sole-hatch relative overflow-hidden rounded-[1.5rem] border border-slate-200/90 bg-[linear-gradient(135deg,#ffffff_0%,#eef7ff_52%,#f0fdfa_100%)] p-7 shadow-[0_28px_90px_rgba(15,23,42,0.1)] sm:p-9">
           <div className="relative max-w-5xl">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[color:var(--color-primary)]">
             Propósito
@@ -129,7 +144,7 @@ export default function PropositoPage() {
           {coaches.map((coach, index) => (
             <article
               key={coach.name}
-              className="grid overflow-hidden rounded-[2.25rem] border border-slate-200/90 bg-white/95 shadow-[0_28px_90px_rgba(15,23,42,0.1)] lg:grid-cols-[0.9fr_1.1fr]"
+              className="grid overflow-hidden rounded-[1.5rem] border border-slate-200/90 bg-white/95 shadow-[0_28px_90px_rgba(15,23,42,0.1)] lg:grid-cols-[0.9fr_1.1fr]"
             >
               <div
                 className={`relative min-h-[24rem] bg-gradient-to-br ${coach.accent} ${
@@ -166,7 +181,7 @@ export default function PropositoPage() {
               </div>
 
               <div className="grid gap-5 bg-[linear-gradient(135deg,#ffffff_0%,#f8fbff_52%,#fff7ed_100%)] p-6 sm:p-8">
-                <div className="rounded-[1.5rem] border border-slate-200 bg-white/85 p-5 shadow-[0_18px_48px_rgba(15,23,42,0.06)]">
+                <div className="rounded-[1.25rem] border border-slate-200 bg-white/85 p-5 shadow-[0_18px_48px_rgba(15,23,42,0.06)]">
                   <div className="flex items-center gap-3">
                     <CoachIcon name="spark" />
                     <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
@@ -180,10 +195,10 @@ export default function PropositoPage() {
                 </div>
 
                 <div className="grid gap-5 md:grid-cols-2">
-                  <div className="rounded-[1.5rem] border border-cyan-200 bg-cyan-50/90 p-5 shadow-[0_18px_48px_rgba(8,145,178,0.08)]">
+                  <div className="rounded-[1.25rem] border border-teal-200 bg-teal-50/90 p-5 shadow-[0_18px_48px_rgba(8,145,178,0.08)]">
                     <div className="flex items-center gap-3">
                       <CoachIcon name="target" />
-                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-800">
+                      <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal-800">
                         Misión
                       </p>
                     </div>

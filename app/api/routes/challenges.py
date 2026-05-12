@@ -6,7 +6,8 @@ from sqlmodel import Session, select
 from app.core.db import get_session
 from app.core.deps import require_role
 from app.models.all_models import Challenge, User
-from app.schemas.catalog import ChallengeResponse, ChallengeUpsertRequest
+from app.schemas.catalog import ChallengeFinalizeRankingResponse, ChallengeResponse, ChallengeUpsertRequest
+from app.services.wod_finalization import finalize_challenge_for_coach
 
 
 router = APIRouter()
@@ -50,6 +51,15 @@ def create_challenge(
     session.commit()
     session.refresh(challenge)
     return challenge
+
+
+@router.post("/{challenge_id}/finalize-ranking", response_model=ChallengeFinalizeRankingResponse)
+def finalize_ranking(
+    challenge_id: UUID,
+    _: User = Depends(require_role("coach")),
+    session: Session = Depends(get_session),
+):
+    return finalize_challenge_for_coach(session, challenge_id)
 
 
 @router.put("/{challenge_id}", response_model=ChallengeResponse)

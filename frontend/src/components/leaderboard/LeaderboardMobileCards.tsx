@@ -13,7 +13,7 @@ export function LeaderboardMobileCards({
       {entries.map((entry, index) => {
         const accents = [
           'border-amber-200 bg-[linear-gradient(135deg,#fff7ed,#fef3c7_48%,#ffffff)]',
-          'border-cyan-200 bg-[linear-gradient(135deg,#ecfeff,#dbeafe_52%,#ffffff)]',
+          'border-teal-200 bg-[linear-gradient(135deg,#f0fdfa,#dbeafe_52%,#ffffff)]',
           'border-lime-200 bg-[linear-gradient(135deg,#f7fee7,#ccfbf1_52%,#ffffff)]',
           'border-rose-200 bg-[linear-gradient(135deg,#fff1f2,#ffe4e6_45%,#ffffff)]',
           'border-indigo-200 bg-[linear-gradient(135deg,#eef2ff,#e0e7ff_45%,#ffffff)]',
@@ -23,7 +23,7 @@ export function LeaderboardMobileCards({
         return (
           <article
             key={`${entry.athleteId}-${entry.resultFormat}`}
-            className={`rounded-[1.75rem] border p-5 shadow-[0_20px_52px_rgba(15,23,42,0.1)] ${accent}`}
+            className={`sole-card-lift rounded-[1.5rem] border p-5 shadow-[0_20px_52px_rgba(15,23,42,0.1)] ${accent}`}
           >
             <div className="flex items-start justify-between">
               <div>

@@ -23,12 +23,12 @@ export function TopThreePodium({ entries }: TopThreePodiumProps) {
       item.entry !== undefined,
   );
   const cardStyles = [
-    'border-cyan-200 bg-[linear-gradient(135deg,#ecfeff_0%,#dbeafe_55%,#ffffff_100%)] shadow-[0_24px_70px_rgba(8,145,178,0.18)]',
+    'border-teal-200 bg-[linear-gradient(135deg,#f0fdfa_0%,#dbeafe_55%,#ffffff_100%)] shadow-[0_24px_70px_rgba(8,145,178,0.18)]',
     'border-amber-200 bg-[linear-gradient(135deg,#fff7ed_0%,#fde68a_52%,#ffffff_100%)] shadow-[0_28px_82px_rgba(245,158,11,0.22)]',
     'border-lime-200 bg-[linear-gradient(135deg,#f7fee7_0%,#ccfbf1_55%,#ffffff_100%)] shadow-[0_24px_70px_rgba(20,184,166,0.16)]',
   ];
   const badgeStyles = [
-    'bg-cyan-600 text-white',
+    'bg-teal-600 text-white',
     'bg-amber-500 text-slate-950',
     'bg-lime-500 text-slate-950',
   ];
@@ -41,7 +41,7 @@ export function TopThreePodium({ entries }: TopThreePodiumProps) {
         return (
           <article
             key={`${entry.athleteId}-${entry.resultFormat}`}
-            className={`rounded-[2rem] border p-6 lg:p-7 ${cardStyles[slot]} ${isCenter ? 'lg:col-start-2 lg:-mt-4 lg:pb-10' : ''}`}
+            className={`sole-card-lift rounded-[1.5rem] border p-6 lg:p-7 ${cardStyles[slot]} ${isCenter ? 'lg:col-start-2 lg:-mt-4 lg:pb-10' : ''}`}
           >
             <div
               className={`inline-flex rounded-full px-4 py-2 text-xs font-bold tracking-[0.2em] uppercase ${badgeStyles[slot]}`}

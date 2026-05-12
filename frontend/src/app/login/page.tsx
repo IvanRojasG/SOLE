@@ -24,8 +24,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <section className="sole-auth-shell py-[--section-spacing]">
       <AppContainer>
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="rounded-[2rem] border border-slate-200/90 bg-[linear-gradient(135deg,#ffffff_0%,#eef5ff_58%,#ffffff_100%)] p-6 shadow-[0_26px_80px_rgba(15,23,42,0.09)] sm:p-8">
-            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-[color:var(--color-primary)] shadow-[0_16px_42px_rgba(0,92,255,0.12)]">
+          <div className="sole-hatch rounded-[1.5rem] border border-slate-200/90 bg-[linear-gradient(135deg,#ffffff_0%,#eef5ff_58%,#f0fdfa_100%)] p-6 shadow-[0_26px_80px_rgba(15,23,42,0.09)] sm:p-8">
+            <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-100 bg-slate-950 text-white shadow-[0_16px_42px_rgba(15,23,42,0.18)]">
               <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7" fill="none">
                 <path
                   d="M7 11.5 10.5 15 17 8.5"
@@ -49,12 +49,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               Entra a tu panel
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600">
-              Autenticación real contra el backend FastAPI. Desde aquí el atleta entra a su flujo y
-              el coach a su panel operativo.
+              Ingresa para registrar resultados, revisar atletas y seguir el reto desde un panel
+              claro para cada rol.
             </p>
-            <div className="mt-8 rounded-[1.5rem] border border-cyan-200 bg-[linear-gradient(135deg,#ecfeff,#ffffff)] p-5 shadow-[0_18px_48px_rgba(8,145,178,0.12)]">
+            <div className="mt-8 rounded-[1.25rem] border border-teal-200 bg-[linear-gradient(135deg,#f0fdfa,#ffffff)] p-5 shadow-[0_18px_48px_rgba(8,145,178,0.12)]">
               <div className="flex gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-100 text-cyan-700">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-teal-700">
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none">
                     <path
                       d="M8 12h8M12 8v8"
@@ -70,7 +70,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                   </svg>
                 </div>
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-700">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-700">
                     Acceso seguro
                   </p>
                   <p className="mt-3 text-sm leading-7 text-slate-600">
@@ -81,7 +81,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               </div>
             </div>
           </div>
-          <div className="rounded-[2rem] border border-slate-200/90 bg-white/95 p-6 shadow-[0_26px_80px_rgba(15,23,42,0.09)] sm:p-8">
+          <div className="rounded-[1.5rem] border border-slate-200/90 bg-white/95 p-6 shadow-[0_26px_80px_rgba(15,23,42,0.09)] sm:p-8">
             <AuthForm
               mode="login"
               initialRedirectTo={initialRedirectTo}

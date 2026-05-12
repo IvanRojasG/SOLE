@@ -24,7 +24,7 @@ function SubmitButton({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="submit"
-      className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--color-ink)] transition hover:bg-[color:var(--color-primary-soft)] disabled:cursor-not-allowed disabled:opacity-70"
+      className="rounded-full bg-slate-950 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-white shadow-[0_14px_34px_rgba(15,23,42,0.18)] transition hover:bg-[color:var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-70"
       disabled={pending}
     >
       {pending ? 'Procesando...' : children}
@@ -40,7 +40,7 @@ function ErrorMessage({ state }: { state: AuthActionState }) {
   return (
     <div
       role="alert"
-      className="rounded-2xl border border-[color:var(--color-danger)]/40 bg-[color:var(--color-danger)]/10 px-4 py-3 text-sm text-white"
+      className="rounded-2xl border border-[color:var(--color-danger)]/40 bg-red-50 px-4 py-3 text-sm text-red-700"
     >
       {state.error}
     </div>
@@ -104,7 +104,7 @@ function FieldIcon({ name }: { name: 'mail' | 'lock' | 'user' }) {
 
 function InputIcon({ name }: { name: 'mail' | 'lock' | 'user' }) {
   return (
-    <span className="pointer-events-none absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl bg-blue-50 text-[color:var(--color-primary)]">
+    <span className="sole-auth-input-icon pointer-events-none absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-xl bg-slate-950 text-white">
       <FieldIcon name={name} />
     </span>
   );
@@ -130,7 +130,7 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
       {mode === 'login' && sessionExpired ? (
         <div
           role="status"
-          className="rounded-2xl border border-amber-300/50 bg-amber-300/10 px-4 py-3 text-sm leading-6 text-amber-100"
+          className="rounded-2xl border border-amber-300/70 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-800"
         >
           Tu sesión caducó. Inicia sesión nuevamente para continuar.
         </div>
@@ -149,7 +149,7 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
               type="text"
               required
               minLength={3}
-              className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-16 pr-4 text-slate-950 shadow-[0_10px_26px_rgba(15,23,42,0.04)] placeholder:text-slate-400 transition focus:border-[color:var(--color-primary)]"
               placeholder="Camila Rios"
             />
           </span>
@@ -166,7 +166,7 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
             name="email"
             type="email"
             required
-            className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-16 pr-4 text-slate-950 shadow-[0_10px_26px_rgba(15,23,42,0.04)] placeholder:text-slate-400 transition focus:border-[color:var(--color-primary)]"
             placeholder="tu@solefitness.com"
           />
         </span>
@@ -181,7 +181,7 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
             name="level"
             required
             defaultValue="scaled"
-            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white"
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-950 shadow-[0_10px_26px_rgba(15,23,42,0.04)] transition focus:border-[color:var(--color-primary)]"
           >
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
@@ -202,8 +202,8 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
             type="password"
             required
             minLength={8}
-            className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
-            placeholder="Minimo 8 caracteres"
+            className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-16 pr-4 text-slate-950 shadow-[0_10px_26px_rgba(15,23,42,0.04)] placeholder:text-slate-400 transition focus:border-[color:var(--color-primary)]"
+            placeholder="Mínimo 8 caracteres"
           />
         </span>
       </label>
@@ -228,7 +228,7 @@ export function AuthForm({ mode, initialRedirectTo, nextTarget, sessionExpired }
               type="password"
               required
               minLength={8}
-              className="w-full rounded-2xl border border-white/10 bg-white/5 py-3 pl-16 pr-4 text-white placeholder:text-[color:var(--color-text-muted)]"
+              className="w-full rounded-2xl border border-slate-200 bg-white py-3 pl-16 pr-4 text-slate-950 shadow-[0_10px_26px_rgba(15,23,42,0.04)] placeholder:text-slate-400 transition focus:border-[color:var(--color-primary)]"
               placeholder="Repite tu contraseña"
             />
           </span>

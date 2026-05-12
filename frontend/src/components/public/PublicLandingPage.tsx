@@ -23,11 +23,11 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
 
   return (
     <>
-      <Section className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_54%,#ffffff_100%)] pb-20 pt-10 md:pb-28 md:pt-14">
+      <Section className="overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f3f7fb_54%,#ffffff_100%)] pb-20 pt-10 md:pb-28 md:pt-14">
         <AppContainer className="grid items-center gap-10 lg:grid-cols-[1.02fr_0.98fr] lg:gap-14">
           <div>
-            <div className="inline-flex items-center gap-3 rounded-full border border-sky-100 bg-white px-4 py-2 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
-              <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--color-primary)]" />
+            <div className="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+              <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--color-secondary)]" />
               <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-700">
                 {publicSite.hero.eyebrow}
               </p>
@@ -44,13 +44,13 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
                 href={publicSite.hero.ctaPrimary.href}
-                className="rounded-full bg-[color:var(--color-primary)] px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#0f6bff]"
+                className="rounded-full bg-slate-950 px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white shadow-[0_18px_44px_rgba(15,23,42,0.18)] transition hover:bg-[color:var(--color-primary)]"
               >
                 {publicSite.hero.ctaPrimary.label}
               </Link>
               <Link
                 href={publicSite.hero.ctaSecondary.href}
-                className="rounded-full border border-slate-200 bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-slate-900 transition hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)]"
+                className="rounded-full border border-slate-300 bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-slate-900 transition hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]"
               >
                 {publicSite.hero.ctaSecondary.label}
               </Link>
@@ -62,7 +62,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
       </Section>
 
       <Section className="bg-white py-14 md:py-20">
-        <AppContainer className="grid gap-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
+        <AppContainer className="sole-card-lift grid gap-8 rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_22px_70px_rgba(15,23,42,0.08)] lg:grid-cols-[0.85fr_1.15fr] lg:p-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
               WOD actual
@@ -76,7 +76,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
                   {activeChallenge.summary}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-sky-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-sky-800">
+                  <span className="rounded-full bg-teal-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-teal-800">
                     {activeChallenge.category === 'power_lifting' ? 'Power Lifting' : 'Custom Metcon (Reps)'}
                   </span>
                   <span className="rounded-full bg-slate-100 px-3 py-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-700">
@@ -90,7 +90,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
               </p>
             )}
           </div>
-          <div className="aspect-video overflow-hidden rounded-[1.5rem] border border-slate-200 bg-slate-950">
+          <div className="aspect-video overflow-hidden rounded-[1.25rem] border border-slate-200 bg-slate-950 shadow-[0_20px_60px_rgba(15,23,42,0.14)]">
             {embedUrl ? (
               <iframe
                 src={embedUrl}
@@ -109,7 +109,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
       </Section>
 
       <Section className="bg-white py-14 md:py-20">
-        <AppContainer className="grid gap-10 rounded-[2rem] border border-slate-200 bg-white px-5 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:grid-cols-[0.9fr_1.1fr] md:px-8 md:py-14">
+        <AppContainer className="sole-hatch grid gap-10 rounded-[1.5rem] border border-slate-200 bg-white px-5 py-10 shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:grid-cols-[0.9fr_1.1fr] md:px-8 md:py-14">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
               The Challenge
@@ -136,7 +136,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
             {publicSite.schedule.map((item) => (
               <article
                 key={item.label}
-                className="rounded-[1.5rem] border border-slate-300/80 bg-white/95 p-5 shadow-[0_18px_46px_rgba(15,23,42,0.08)]"
+                className="sole-card-lift rounded-[1.25rem] border border-slate-300/80 bg-white/95 p-5 shadow-[0_18px_46px_rgba(15,23,42,0.08)]"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
                   {item.label}
@@ -162,7 +162,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
 
       <Section className="bg-white py-16 md:py-24">
         <AppContainer>
-          <div className="rounded-[2.25rem] bg-slate-950 px-7 py-10 text-white shadow-[0_28px_90px_rgba(2,6,23,0.24)] md:px-10">
+          <div className="sole-hatch rounded-[1.5rem] bg-slate-950 px-7 py-10 text-white shadow-[0_28px_90px_rgba(2,6,23,0.24)] md:px-10">
             <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[color:var(--color-primary-soft)]">
               Contacto
             </p>

@@ -8,6 +8,7 @@ import { ChallengeManagementGrid } from '@/components/coach/ChallengeManagementG
 import { ActionToast } from '@/components/shared/ActionToast';
 import {
   createChallengeAction,
+  finalizeChallengeRankingAction,
   updateChallengeAction,
 } from '@/services/actions';
 import type { ChallengeManagementItem } from '@/types';
@@ -51,6 +52,24 @@ export function CoachChallengesView({ items }: CoachChallengesViewProps) {
       <ChallengeManagementGrid
         items={localItems}
         onEdit={setSelected}
+        onFinalize={async (item) => {
+          try {
+            const result = await finalizeChallengeRankingAction(item.id);
+            setToast({
+              message: result.message,
+              tone: 'success',
+            });
+            router.refresh();
+          } catch (caught) {
+            setToast({
+              message:
+                caught instanceof Error
+                  ? caught.message
+                  : 'Solo disponible después de la fecha de cierre',
+              tone: 'error',
+            });
+          }
+        }}
         onCreate={() => {
           const draft = createDraftChallenge();
           setSelected(draft);

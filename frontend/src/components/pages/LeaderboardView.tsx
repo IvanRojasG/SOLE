@@ -88,7 +88,7 @@ export function LeaderboardView({
   return (
     <Section className="pt-0">
       <AppContainer className="space-y-6 lg:space-y-8">
-        <div className="flex flex-col gap-4 rounded-[1.75rem] border border-slate-200 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.07)] lg:flex-row lg:items-center lg:justify-between">
+        <div className="sole-hatch flex flex-col gap-4 rounded-[1.5rem] border border-slate-200 bg-white/90 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.07)] lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap gap-2">
             {(['event', 'challenge'] as const).map((mode) => (
               <button
@@ -98,7 +98,7 @@ export function LeaderboardView({
                 className={`rounded-full px-4 py-3 text-xs font-bold tracking-[0.18em] uppercase transition ${
                   rankingMode === mode
                     ? 'bg-slate-950 text-white shadow-[0_14px_34px_rgba(15,23,42,0.2)]'
-                    : 'border border-slate-200 bg-white text-slate-700 hover:border-slate-950'
+                    : 'border border-slate-300 bg-white text-slate-700 hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]'
                 }`}
               >
                 {mode === 'event' ? 'Total evento' : 'WOD individual'}

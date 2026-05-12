@@ -121,21 +121,21 @@ export function CoachWodRegistrationDrawer({
         onClick={onClose}
       />
       <aside
-        className={`fixed top-0 right-0 z-50 flex h-dvh w-[92vw] max-w-xl flex-col overflow-hidden border-l border-white/10 bg-[color:var(--color-surface)] shadow-[var(--shadow-lift)] transition-transform ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 z-50 flex h-dvh w-[92vw] max-w-xl flex-col overflow-hidden border-l border-slate-200 bg-white shadow-[var(--shadow-lift)] transition-transform ${open ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-6">
+        <div className="sole-hatch flex items-start justify-between gap-4 border-b border-slate-200 p-6">
           <div>
-            <p className="text-xs tracking-[0.22em] text-[color:var(--color-primary-soft)] uppercase">
+            <p className="text-xs tracking-[0.22em] text-[color:var(--color-primary)] uppercase">
               Registro validado
             </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">
+            <h2 className="mt-3 text-2xl font-semibold text-slate-950">
               {athlete?.fullName ?? 'Seleccionar atleta'}
             </h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full border border-white/20 bg-white px-3 py-2 text-xs font-bold tracking-[0.18em] text-slate-950 uppercase shadow-[0_12px_28px_rgba(0,0,0,0.18)] transition hover:bg-[color:var(--color-secondary)] hover:text-[color:var(--color-ink)]"
+            className="rounded-full border border-slate-300 bg-slate-950 px-3 py-2 text-xs font-bold tracking-[0.18em] text-white uppercase shadow-[0_12px_28px_rgba(15,23,42,0.18)] transition hover:bg-[color:var(--color-primary)]"
           >
             Cerrar
           </button>
@@ -143,7 +143,7 @@ export function CoachWodRegistrationDrawer({
         <form className="flex flex-1 flex-col overflow-hidden" onSubmit={handleSubmit}>
           <div className="flex-1 overflow-y-auto px-6 py-6">
             {availableChallenges.length === 0 ? (
-              <div className="rounded-[1.5rem] border border-dashed border-white/15 p-5 text-sm text-[color:var(--color-text-muted)]">
+              <div className="rounded-[1.25rem] border border-dashed border-slate-300 bg-slate-50 p-5 text-sm text-slate-600">
                 No hay WODs activos disponibles para registro.
               </div>
             ) : (
@@ -159,7 +159,7 @@ export function CoachWodRegistrationDrawer({
                         setChallengeId(event.target.value);
                         resetResultFields();
                       }}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                     >
                       {availableChallenges.map((challenge) => (
                         <option key={challenge.id} value={challenge.id}>
@@ -176,7 +176,7 @@ export function CoachWodRegistrationDrawer({
                       type="date"
                       value={achievementDate}
                       onChange={(event) => setAchievementDate(event.target.value)}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                     />
                   </label>
                 </div>
@@ -190,7 +190,7 @@ export function CoachWodRegistrationDrawer({
                       onChange={(event) =>
                         setResultFormat(event.target.value as ResultFormat)
                       }
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                     >
                       <option value="scaled">Scaled</option>
                       <option value="rx">RX</option>
@@ -204,7 +204,7 @@ export function CoachWodRegistrationDrawer({
                       <select
                         value={completed ? 'completed' : 'partial'}
                         onChange={(event) => setCompleted(event.target.value === 'completed')}
-                        className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                        className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                       >
                         <option value="completed">Completado</option>
                         <option value="partial">No completado</option>
@@ -227,7 +227,7 @@ export function CoachWodRegistrationDrawer({
                           min={0}
                           value={timeMinutes || ''}
                           onChange={(event) => setTimeMinutes(Number(event.target.value))}
-                          className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                          className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                         />
                       </label>
                       <label className="block">
@@ -240,7 +240,7 @@ export function CoachWodRegistrationDrawer({
                           max={59}
                           value={timeSecondsInput || ''}
                           onChange={(event) => setTimeSecondsInput(Number(event.target.value))}
-                          className="mt-2 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                          className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                         />
                       </label>
                     </div>
@@ -258,7 +258,7 @@ export function CoachWodRegistrationDrawer({
                       min={0}
                       value={repsCompleted || ''}
                       onChange={(event) => setRepsCompleted(Number(event.target.value))}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                     />
                   </label>
                 )}
@@ -272,7 +272,7 @@ export function CoachWodRegistrationDrawer({
                       min={1}
                       value={weightLbs || ''}
                       onChange={(event) => setWeightLbs(Number(event.target.value))}
-                      className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+                      className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-950 outline-none focus:border-[color:var(--color-primary)]"
                     />
                   </label>
                 ) : null}
@@ -284,14 +284,14 @@ export function CoachWodRegistrationDrawer({
               </div>
             )}
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 p-6">
             <p className="text-sm text-[color:var(--color-text-muted)]">
               El resultado quedará aprobado al guardarlo.
             </p>
             <button
               type="submit"
               disabled={isSubmitting || availableChallenges.length === 0}
-              className="rounded-full bg-[color:var(--color-primary)] px-5 py-3 text-xs font-bold tracking-[0.18em] text-[color:var(--color-ink)] uppercase disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full bg-slate-950 px-5 py-3 text-xs font-bold tracking-[0.18em] text-white uppercase transition hover:bg-[color:var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? 'Guardando...' : 'Registrar WOD'}
             </button>

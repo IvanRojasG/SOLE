@@ -293,8 +293,7 @@ export async function submitCoachAchievementAction(payload: {
     ) {
       return {
         ok: false,
-        error:
-          'Ya existe un registro para ese atleta, WOD y fecha.',
+        error: 'Ya existe un registro para ese atleta, WOD y fecha.',
       };
     }
 
@@ -449,6 +448,30 @@ export async function updateChallengeAction(item: ChallengeManagementItem) {
   revalidatePath('/coach/challenges');
   revalidatePath('/challenges');
   return { ok: true };
+}
+
+export async function finalizeChallengeRankingAction(challengeId: string) {
+  if (dataSource === 'mock') {
+    return { ok: true, message: 'Ranking recalculado' };
+  }
+
+  const result = await backendRequest<{
+    message: string;
+    challenge_id: string;
+    cleared: number;
+    ranked: number;
+    is_finalized: boolean;
+  }>(`/challenges/${challengeId}/finalize-ranking`, {
+    method: 'POST',
+    role: 'coach',
+    nextTarget: '/coach/challenges',
+  });
+
+  revalidatePath('/coach/challenges');
+  revalidatePath('/leaderboard');
+  revalidatePath('/athletes');
+  revalidatePath('/athlete/achievements');
+  return { ok: true, message: result.message };
 }
 
 export async function createChallengeAction(payload: ChallengeManagementItem) {
