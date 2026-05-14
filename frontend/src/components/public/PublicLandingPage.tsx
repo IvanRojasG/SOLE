@@ -5,6 +5,7 @@ import { Section } from '@/components/layout/Section';
 import { publicSite } from '@/content/publicSite';
 import type { Challenge } from '@/types';
 
+import { ChallengeScheduleGallery } from './ChallengeScheduleGallery';
 import { MediaCarousel } from './MediaCarousel';
 import { PublicSectionHeading } from './PublicSectionHeading';
 import { VideoTestimonialsGrid } from './VideoTestimonialsGrid';
@@ -126,25 +127,14 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
       </Section>
 
       <Section className="bg-[linear-gradient(180deg,#ffffff,#f7fbff)] py-14 md:py-20">
-        <AppContainer className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+        <AppContainer className="space-y-10">
           <PublicSectionHeading
             eyebrow="Calendario"
             title="Cinco semanas. Un cierre grande."
-            body="La estructura del reto ya queda visible desde la portada para que la propuesta venda claridad antes de entrar al detalle."
+            body="Cada fecha concentra el WOD, el video registrado y una galeria breve para recorrer el reto con claridad."
+            align="center"
           />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {publicSite.schedule.map((item) => (
-              <article
-                key={item.label}
-                className="sole-card-lift rounded-[1.25rem] border border-slate-300/80 bg-white/95 p-5 shadow-[0_18px_46px_rgba(15,23,42,0.08)]"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--color-primary)]">
-                  {item.label}
-                </p>
-                <p className="mt-4 text-xl font-semibold text-slate-950">{item.value}</p>
-              </article>
-            ))}
-          </div>
+          <ChallengeScheduleGallery items={publicSite.schedule} />
         </AppContainer>
       </Section>
 

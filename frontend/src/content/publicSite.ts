@@ -23,12 +23,162 @@ export const publicSite = {
     caption: '5 semanas de workouts increibles',
   },
   schedule: [
-    { label: 'Semana 1', value: '04 al 10 de mayo' },
-    { label: 'Semana 2', value: '11 al 17 de mayo' },
-    { label: 'Semana 3', value: '18 al 24 de mayo' },
-    { label: 'Semana 4', value: '25 al 31 de mayo' },
-    { label: 'Semana 5', value: '01 al 07 de junio' },
-    { label: 'Gran final', value: '12 de junio' },
+    {
+      label: 'Semana 1',
+      value: '04 al 10 de mayo',
+      wodName: 'Mobe Dick',
+      youtubeUrl: 'https://youtu.be/wZJqLqgWP4k',
+      photos: [
+        {
+          src: '/challenge-gallery/semana1/1.png',
+          alt: 'Atleta de SOLE entrenando durante la semana 1 del reto',
+        },
+        {
+          src: '/challenge-gallery/semana1/2.png',
+          alt: 'Comunidad de SOLE compartiendo el primer workout del reto',
+        },
+        {
+          src: '/challenge-gallery/semana1/3.jpg',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/4.png',
+          alt: 'Atleta de SOLE entrenando durante la semana 1 del reto',
+        },
+        {
+          src: '/challenge-gallery/semana1/5.png',
+          alt: 'Comunidad de SOLE compartiendo el primer workout del reto',
+        },
+        {
+          src: '/challenge-gallery/semana1/6.png',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/7.png',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/1.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/2.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/3.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/4.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/5.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/6.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/7.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/8.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/9.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/10.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/11.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/12.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/13.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/14.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+        {
+          src: '/challenge-gallery/semana1/15.mov',
+          alt: 'Atletas preparandose para el WOD de la semana 1',
+        },
+      ],
+    },
+    {
+      label: 'Semana 2',
+      value: '11 al 17 de mayo',
+      wodName: 'Sigma - AMRAP 10',
+      youtubeUrl: 'https://youtu.be/TON56xp6Rw0',
+      photos: [
+        {
+          src: '/challenge-gallery/Coming-Soon-Banner.jpg',
+          alt: 'Proximamente: WOD de la semana 3 del reto Burn the Ships',
+        },
+      ],
+    },
+    {
+      label: 'Semana 3',
+      value: '18 al 24 de mayo',
+      wodName: 'Engine Builder',
+      youtubeUrl: '',
+      photos: [
+        {
+          src: '/challenge-gallery/Coming-Soon-Banner.jpg',
+          alt: 'Proximamente: WOD de la semana 3 del reto Burn the Ships',
+        },
+      ],
+    },
+    {
+      label: 'Semana 4',
+      value: '25 al 31 de mayo',
+      wodName: 'Grip And Grit',
+      youtubeUrl: '',
+      photos: [
+        {
+          src: '/challenge-gallery/Coming-Soon-Banner.jpg',
+          alt: 'Proximamente: WOD de la semana 4 del reto Burn the Ships',
+        },
+      ],
+    },
+    {
+      label: 'Semana 5',
+      value: '01 al 07 de junio',
+      wodName: 'Final Push',
+      youtubeUrl: '',
+      photos: [
+        {
+          src: '/challenge-gallery/Coming-Soon-Banner.jpg',
+          alt: 'Proximamente: WOD de la semana 5 del reto Burn the Ships',
+        },
+      ],
+    },
+    {
+      label: 'Gran final',
+      value: '12 de junio',
+      wodName: 'Top 10 Final',
+      youtubeUrl: '',
+      photos: [
+        {
+          src: '/challenge-gallery/Coming-Soon-Banner.jpg',
+          alt: 'Proximamente: WOD de la Gran Final del reto Burn the Ships',
+        },
+      ],
+    },
   ],
   challengePillars: [
     'Pon a prueba tus habilidades',
