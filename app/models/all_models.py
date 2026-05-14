@@ -119,6 +119,7 @@ class Challenge(SQLModel, table=True):
     start_date: date
     end_date: date
     total_reps: int = Field(default=0)
+    scoring_type: str = Field(default="for_time", max_length=20)
     youtube_url: str = Field(default="", max_length=300)
     is_active: bool = Field(default=True)
 

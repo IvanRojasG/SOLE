@@ -28,6 +28,7 @@ export function AchievementSubmissionForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
   const selectedChallenge = challenges.find((item) => item.id === challengeId);
+  const isAmrapReps = selectedChallenge?.scoringType === 'amrap_reps';
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,13 +39,17 @@ export function AchievementSubmissionForm({
     setIsSubmitting(true);
     try {
       const isPowerLifting = selectedChallenge.category === 'power_lifting';
-      const finalCompleted = isPowerLifting ? false : completed;
-      const finalRepsCompleted = finalCompleted
+      const finalCompleted = isPowerLifting ? false : isAmrapReps ? true : completed;
+      const finalRepsCompleted = finalCompleted && !isAmrapReps
         ? selectedChallenge.totalReps
         : repsCompleted;
       const finalTimeSeconds = timeMinutes * 60 + timeSecondsInput;
-      if (finalCompleted && finalTimeSeconds <= 0) {
+      if (finalCompleted && !isAmrapReps && finalTimeSeconds <= 0) {
         setFormError('Indica un tiempo mayor a 0 segundos.');
+        return;
+      }
+      if ((isAmrapReps || !finalCompleted) && finalRepsCompleted < 0) {
+        setFormError('Indica una cantidad de repeticiones válida.');
         return;
       }
 
@@ -59,7 +64,7 @@ export function AchievementSubmissionForm({
         pointsAwarded: 0,
         completed: finalCompleted,
         resultFormat,
-        timeSeconds: finalCompleted ? finalTimeSeconds : null,
+        timeSeconds: finalCompleted && !isAmrapReps ? finalTimeSeconds : null,
         repsCompleted: finalRepsCompleted,
         weightLbs: isPowerLifting ? weightLbs : null,
         tieBreakOrder: null,
@@ -141,7 +146,7 @@ export function AchievementSubmissionForm({
             <option value="rx">RX</option>
           </select>
         </label>
-        {selectedChallenge?.category === 'custom_metcon_reps' ? (
+        {selectedChallenge?.category === 'custom_metcon_reps' && !isAmrapReps ? (
           <label className="block">
             <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
               Estado
@@ -158,7 +163,7 @@ export function AchievementSubmissionForm({
         ) : null}
       </div>
       <div className="mt-5 grid gap-5 md:grid-cols-2">
-        {selectedChallenge?.category === 'custom_metcon_reps' && completed ? (
+        {selectedChallenge?.category === 'custom_metcon_reps' && completed && !isAmrapReps ? (
           <div className="block">
             <span className="text-xs tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
               Tiempo total

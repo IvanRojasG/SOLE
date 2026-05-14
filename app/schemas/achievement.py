@@ -16,8 +16,6 @@ class AchievementCreate(BaseModel):
 
     @model_validator(mode="after")
     def validate_result(self):
-        if self.completed and self.time_seconds is None:
-            raise ValueError("time_seconds is required when completed is true")
         if not self.completed and self.reps_completed is None:
             raise ValueError("reps_completed is required when completed is false")
         return self
@@ -36,8 +34,6 @@ class AchievementResultUpdate(BaseModel):
 
     @model_validator(mode="after")
     def validate_result(self):
-        if self.completed and self.time_seconds is None:
-            raise ValueError("time_seconds is required when completed is true")
         if not self.completed and self.reps_completed is None:
             raise ValueError("reps_completed is required when completed is false")
         return self
@@ -69,6 +65,8 @@ class AchievementDetailedResponse(BaseModel):
     athlete_name: str
     challenge_id: UUID
     challenge_title: str
+    challenge_category: str
+    challenge_scoring_type: str
     achievement_date: date
     status: str
     created_at: datetime

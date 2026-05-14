@@ -37,6 +37,7 @@ export function CoachChallengesView({ items }: CoachChallengesViewProps) {
     endDate: new Date().toISOString().slice(0, 10),
     youtubeUrl: '',
     totalReps: 0,
+    scoringType: 'for_time',
     isActive: true,
   });
 

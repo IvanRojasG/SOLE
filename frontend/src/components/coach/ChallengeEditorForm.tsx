@@ -82,7 +82,16 @@ export function ChallengeEditorForm({ item, onSave }: ChallengeEditorFormProps) 
               value={state.category}
               onChange={(event) =>
                 setState((current) =>
-                  current ? { ...current, category: event.target.value as ChallengeManagementItem['category'] } : current,
+                  current
+                    ? {
+                        ...current,
+                        category: event.target.value as ChallengeManagementItem['category'],
+                        scoringType:
+                          event.target.value === 'power_lifting'
+                            ? 'for_time'
+                            : current.scoringType,
+                      }
+                    : current,
                 )
               }
               className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
@@ -91,6 +100,31 @@ export function ChallengeEditorForm({ item, onSave }: ChallengeEditorFormProps) 
               <option value="power_lifting">Power Lifting</option>
             </select>
           </label>
+          {state.category === 'custom_metcon_reps' ? (
+            <label className="block">
+              <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
+                Scoring
+              </span>
+              <select
+                value={state.scoringType}
+                onChange={(event) =>
+                  setState((current) =>
+                    current
+                      ? {
+                          ...current,
+                          scoringType: event.target
+                            .value as ChallengeManagementItem['scoringType'],
+                        }
+                      : current,
+                  )
+                }
+                className="mt-3 w-full rounded-2xl border border-white/10 bg-[color:var(--color-surface)] px-4 py-3 text-sm text-white outline-none"
+              >
+                <option value="for_time">For time</option>
+                <option value="amrap_reps">AMRAP / reps</option>
+              </select>
+            </label>
+          ) : null}
           <label className="block">
             <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-text-muted)]">
               Total reps

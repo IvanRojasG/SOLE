@@ -12,6 +12,7 @@ from app.services.wod_finalization import recalculate_challenge_after_result_cha
 WOD_RANK_SOURCE_TYPE = "wod_rank"
 METCON_CATEGORY = "custom_metcon_reps"
 POWER_LIFTING_CATEGORY = "power_lifting"
+AMRAP_REPS_SCORING = "amrap_reps"
 
 
 def _apply_result(achievement: Achievement, payload: AchievementCreate | AchievementResultUpdate) -> None:
@@ -25,10 +26,23 @@ def _apply_result(achievement: Achievement, payload: AchievementCreate | Achieve
 def _ensure_result_is_complete(challenge: Challenge, achievement: Achievement) -> None:
     if achievement.reps_completed is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="WOD result requires reps_completed")
-    if achievement.completed and achievement.time_seconds is None:
+    if (
+        challenge.category == METCON_CATEGORY
+        and challenge.scoring_type != AMRAP_REPS_SCORING
+        and achievement.completed
+        and achievement.time_seconds is None
+    ):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Completed WOD requires time_seconds")
     if challenge.category == POWER_LIFTING_CATEGORY and achievement.weight_lbs is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Power Lifting result requires weight_lbs")
+
+
+def _should_use_total_reps(challenge: Challenge, achievement: Achievement) -> bool:
+    return (
+        challenge.category == METCON_CATEGORY
+        and challenge.scoring_type != AMRAP_REPS_SCORING
+        and achievement.completed
+    )
 
 
 def recalculate_wod_rank_points(session: Session, challenge_id, result_format: str) -> None:
@@ -74,8 +88,9 @@ def submit_achievement(
         achievement_date=payload.achievement_date,
     )
     _apply_result(achievement, payload)
-    if achievement.completed:
+    if _should_use_total_reps(challenge, achievement):
         achievement.reps_completed = challenge.total_reps
+    _ensure_result_is_complete(challenge, achievement)
     session.add(achievement)
     session.commit()
     session.refresh(achievement)
@@ -96,7 +111,7 @@ def approve_achievement(session: Session, achievement_id, payload: AchievementRe
     challenge = session.get(Challenge, achievement.challenge_id)
     if not challenge:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found")
-    if achievement.completed:
+    if _should_use_total_reps(challenge, achievement):
         achievement.reps_completed = challenge.total_reps
     _ensure_result_is_complete(challenge, achievement)
     achievement.status = "approved"
@@ -117,7 +132,7 @@ def update_achievement_result(session: Session, achievement_id, payload: Achieve
     challenge = session.get(Challenge, achievement.challenge_id)
     if not challenge:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Challenge not found")
-    if achievement.completed:
+    if _should_use_total_reps(challenge, achievement):
         achievement.reps_completed = challenge.total_reps
     _ensure_result_is_complete(challenge, achievement)
     achievement.rank_points = None

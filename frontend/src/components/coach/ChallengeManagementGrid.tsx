@@ -114,6 +114,24 @@ export function ChallengeManagementGrid({
                     {item.startDate} · {item.endDate}
                   </p>
                 </div>
+                <div className="rounded-2xl border border-white/10 p-3">
+                  <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                    Scoring
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-white">
+                    {item.scoringType === 'amrap_reps'
+                      ? 'AMRAP / reps'
+                      : 'For time'}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/10 p-3">
+                  <p className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
+                    Total reps
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-white">
+                    {item.totalReps}
+                  </p>
+                </div>
               </div>
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 <button

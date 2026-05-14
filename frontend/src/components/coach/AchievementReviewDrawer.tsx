@@ -54,11 +54,14 @@ export function AchievementReviewDrawer({
     setWeightLbs(item.weightLbs ?? 0);
   }, [item]);
 
+  const isAmrapReps = item?.challengeScoringType === 'amrap_reps';
+
   const getResult = () => ({
-    completed,
+    completed: isAmrapReps ? true : completed,
     resultFormat,
-    timeSeconds: completed ? timeSeconds : null,
-    repsCompleted: completed ? repsCompleted || null : repsCompleted,
+    timeSeconds: completed && !isAmrapReps ? timeSeconds : null,
+    repsCompleted:
+      isAmrapReps || !completed ? repsCompleted : repsCompleted || null,
     weightLbs: weightLbs > 0 ? weightLbs : null,
   });
 
@@ -128,6 +131,7 @@ export function AchievementReviewDrawer({
                         <option value="rx">RX</option>
                       </select>
                     </label>
+                    {!isAmrapReps ? (
                     <label className="block">
                       <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
                         Estado
@@ -143,7 +147,8 @@ export function AchievementReviewDrawer({
                         <option value="partial">No completado</option>
                       </select>
                     </label>
-                    {completed ? (
+                    ) : null}
+                    {completed && !isAmrapReps ? (
                       <label className="block">
                         <span className="text-[11px] tracking-[0.18em] text-[color:var(--color-text-muted)] uppercase">
                           Tiempo total (segundos)

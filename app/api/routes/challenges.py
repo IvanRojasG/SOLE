@@ -12,11 +12,16 @@ from app.services.wod_finalization import finalize_challenge_for_coach
 
 router = APIRouter()
 VALID_CHALLENGE_CATEGORIES = {"custom_metcon_reps", "power_lifting"}
+VALID_SCORING_TYPES = {"for_time", "amrap_reps"}
 
 
 def validate_challenge_payload(payload: ChallengeUpsertRequest) -> None:
     if payload.category not in VALID_CHALLENGE_CATEGORIES:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid challenge category")
+    if payload.scoring_type not in VALID_SCORING_TYPES:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid challenge scoring type")
+    if payload.category == "power_lifting" and payload.scoring_type != "for_time":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Power Lifting requires for_time scoring")
     if payload.end_date < payload.start_date:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Challenge end date cannot be before start date")
 
@@ -44,6 +49,7 @@ def create_challenge(
         start_date=payload.start_date,
         end_date=payload.end_date,
         total_reps=payload.total_reps,
+        scoring_type=payload.scoring_type,
         youtube_url=payload.youtube_url,
         is_active=payload.is_active,
     )
@@ -86,6 +92,7 @@ def update_challenge(
     challenge.start_date = payload.start_date
     challenge.end_date = payload.end_date
     challenge.total_reps = payload.total_reps
+    challenge.scoring_type = payload.scoring_type
     challenge.youtube_url = payload.youtube_url
     challenge.is_active = payload.is_active
     session.add(challenge)

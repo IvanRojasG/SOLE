@@ -6,6 +6,7 @@ export type ChallengeCategory =
   | 'custom_metcon_reps'
   | 'power_lifting';
 
+export type ChallengeScoringType = 'for_time' | 'amrap_reps';
 export type ResultFormat = 'rx' | 'scaled';
 export type RankingResultFormat = ResultFormat | 'mixed';
 
@@ -30,6 +31,7 @@ export type Challenge = {
   endDate: string;
   youtubeUrl: string;
   totalReps: number;
+  scoringType: ChallengeScoringType;
   isActive: boolean;
 };
 
@@ -174,6 +176,8 @@ export type CoachDashboard = {
 
 export type PendingAchievementReview = Achievement & {
   athleteName: string;
+  challengeCategory?: ChallengeCategory;
+  challengeScoringType?: ChallengeScoringType;
   notes: string;
 };
 

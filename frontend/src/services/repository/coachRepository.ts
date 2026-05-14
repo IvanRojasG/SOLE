@@ -110,6 +110,8 @@ async function getPendingAchievementReviewsFromApi(
     athlete_name: string;
     challenge_id: string;
     challenge_title: string;
+    challenge_category?: PendingAchievementReview['challengeCategory'];
+    challenge_scoring_type?: PendingAchievementReview['challengeScoringType'];
     achievement_date: string;
     status: PendingAchievementReview['status'];
     points_awarded: number;
@@ -138,6 +140,8 @@ async function getPendingAchievementReviewsFromApi(
     athleteName: item.athlete_name,
     challengeId: item.challenge_id,
     title: item.challenge_title,
+    challengeCategory: item.challenge_category,
+    challengeScoringType: item.challenge_scoring_type ?? 'for_time',
     status: item.status,
     achievementDate: item.achievement_date,
     pointsAwarded: item.points_awarded,
@@ -165,6 +169,7 @@ async function getChallengeManagementItemsFromApi(
       end_date: string;
       youtube_url: string;
       total_reps: number;
+      scoring_type?: ChallengeManagementItem['scoringType'];
       is_active: boolean;
     }>
   >('/challenges', { role: 'coach', session });
@@ -178,6 +183,7 @@ async function getChallengeManagementItemsFromApi(
     endDate: challenge.end_date,
     youtubeUrl: challenge.youtube_url,
     totalReps: challenge.total_reps,
+    scoringType: challenge.scoring_type ?? 'for_time',
     isActive: challenge.is_active,
   }));
 }

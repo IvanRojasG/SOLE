@@ -84,6 +84,12 @@ def my_achievements_detailed(
             challenge_title=challenges[achievement.challenge_id].title
             if achievement.challenge_id in challenges
             else "Unknown challenge",
+            challenge_category=challenges[achievement.challenge_id].category
+            if achievement.challenge_id in challenges
+            else "",
+            challenge_scoring_type=challenges[achievement.challenge_id].scoring_type
+            if achievement.challenge_id in challenges
+            else "for_time",
             achievement_date=achievement.achievement_date,
             status=achievement.status,
             created_at=achievement.created_at,
@@ -121,6 +127,12 @@ def pending_achievements_detailed(
             challenge_title=challenges[achievement.challenge_id].title
             if achievement.challenge_id in challenges
             else "Unknown challenge",
+            challenge_category=challenges[achievement.challenge_id].category
+            if achievement.challenge_id in challenges
+            else "",
+            challenge_scoring_type=challenges[achievement.challenge_id].scoring_type
+            if achievement.challenge_id in challenges
+            else "for_time",
             achievement_date=achievement.achievement_date,
             status=achievement.status,
             created_at=achievement.created_at,
@@ -160,6 +172,12 @@ def coach_achievements_detailed(
             challenge_title=challenges[achievement.challenge_id].title
             if achievement.challenge_id in challenges
             else "Unknown challenge",
+            challenge_category=challenges[achievement.challenge_id].category
+            if achievement.challenge_id in challenges
+            else "",
+            challenge_scoring_type=challenges[achievement.challenge_id].scoring_type
+            if achievement.challenge_id in challenges
+            else "for_time",
             achievement_date=achievement.achievement_date,
             status=achievement.status,
             created_at=achievement.created_at,

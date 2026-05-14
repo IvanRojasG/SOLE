@@ -14,6 +14,7 @@ async function getChallengesFromApi(): Promise<Challenge[]> {
       end_date: string;
       youtube_url: string;
       total_reps: number;
+      scoring_type?: Challenge['scoringType'];
       is_active: boolean;
     }>
   >('/challenges');
@@ -27,6 +28,7 @@ async function getChallengesFromApi(): Promise<Challenge[]> {
     endDate: challenge.end_date,
     youtubeUrl: challenge.youtube_url,
     totalReps: challenge.total_reps,
+    scoringType: challenge.scoring_type ?? 'for_time',
     isActive: challenge.is_active,
   }));
 }

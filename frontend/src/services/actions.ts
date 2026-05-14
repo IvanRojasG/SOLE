@@ -441,6 +441,7 @@ export async function updateChallengeAction(item: ChallengeManagementItem) {
       end_date: item.endDate,
       youtube_url: item.youtubeUrl,
       total_reps: item.totalReps,
+      scoring_type: item.scoringType,
       is_active: item.isActive,
     },
   });
@@ -488,6 +489,7 @@ export async function createChallengeAction(payload: ChallengeManagementItem) {
     end_date: string;
     youtube_url: string;
     total_reps: number;
+    scoring_type?: ChallengeManagementItem['scoringType'];
     is_active: boolean;
   }>('/challenges', {
     method: 'POST',
@@ -501,6 +503,7 @@ export async function createChallengeAction(payload: ChallengeManagementItem) {
       end_date: payload.endDate,
       youtube_url: payload.youtubeUrl,
       total_reps: payload.totalReps,
+      scoring_type: payload.scoringType,
       is_active: payload.isActive,
     },
   });
@@ -518,6 +521,7 @@ export async function createChallengeAction(payload: ChallengeManagementItem) {
       endDate: created.end_date,
       youtubeUrl: created.youtube_url,
       totalReps: created.total_reps,
+      scoringType: created.scoring_type ?? 'for_time',
       isActive: created.is_active,
     },
   };

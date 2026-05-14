@@ -17,6 +17,7 @@ class ChallengeResponse(BaseModel):
     start_date: date
     end_date: date
     total_reps: int
+    scoring_type: str
     youtube_url: str
     is_active: bool
 
@@ -28,6 +29,7 @@ class ChallengeUpsertRequest(BaseModel):
     start_date: date
     end_date: date
     total_reps: int = Field(ge=0)
+    scoring_type: str = Field(default="for_time", pattern="^(for_time|amrap_reps)$")
     youtube_url: str = Field(default="", max_length=300)
     is_active: bool = True
 

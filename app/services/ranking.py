@@ -9,6 +9,7 @@ from app.models.all_models import Achievement, Athlete, Challenge
 
 
 POWER_LIFTING_CATEGORY = "power_lifting"
+AMRAP_REPS_SCORING = "amrap_reps"
 
 
 def challenge_is_closed(challenge: Challenge, today: date | None = None) -> bool:
@@ -23,6 +24,15 @@ def achievement_result_sort_key(challenge: Challenge, achievement: Achievement) 
             0,
             -(achievement.reps_completed or 0),
             -int(achievement.weight_lbs or Decimal("0")),
+            tie_break_order,
+            str(achievement.athlete_id),
+        )
+
+    if challenge.scoring_type == AMRAP_REPS_SCORING:
+        return (
+            0,
+            -(achievement.reps_completed or 0),
+            0,
             tie_break_order,
             str(achievement.athlete_id),
         )

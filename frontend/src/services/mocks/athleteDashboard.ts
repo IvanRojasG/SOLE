@@ -38,6 +38,7 @@ export const mockAthleteDashboard: AthleteDashboard = {
       endDate: '2026-05-07',
       youtubeUrl: 'https://www.youtube.com/watch?v=8sNchaX9Auc',
       totalReps: 180,
+      scoringType: 'amrap_reps',
       isActive: true,
     },
     {
@@ -49,6 +50,7 @@ export const mockAthleteDashboard: AthleteDashboard = {
       endDate: '2026-05-14',
       youtubeUrl: 'https://www.youtube.com/watch?v=GFUImejEQ2s',
       totalReps: 40,
+      scoringType: 'for_time',
       isActive: true,
     },
   ],
