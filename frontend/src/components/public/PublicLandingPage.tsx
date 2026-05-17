@@ -14,9 +14,62 @@ type PublicLandingPageProps = {
   activeChallenge: Challenge | null;
 };
 
+type TrialClassButtonProps = {
+  className?: string;
+  tone?: 'light' | 'dark';
+};
+
 function getYouTubeEmbedUrl(url: string) {
   const match = url.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/shorts\/|youtu\.be\/)([^&?/]+)/);
   return match ? `https://www.youtube.com/embed/${match[1]}` : '';
+}
+
+function TrialClassIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6" fill="none">
+      <path
+        d="M5 19.5 6.2 16A7.5 7.5 0 1 1 9 18.1L5 19.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+      <path
+        d="M9 10.2c1.2 2.4 2.4 3.6 4.8 4.8l1.2-1.2"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function TrialClassButton({ className = '', tone = 'light' }: TrialClassButtonProps) {
+  const isDark = tone === 'dark';
+
+  return (
+    <a
+      href={publicSite.contact.trialClassCta.href}
+      target="_blank"
+      rel="noreferrer"
+      className={`group inline-flex w-fit items-center justify-center gap-2.5 rounded-full border px-5 py-3 text-center text-[11px] font-bold uppercase tracking-[0.11em] whitespace-nowrap shadow-[0_18px_42px_rgba(37,211,102,0.24)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_54px_rgba(37,211,102,0.32)] sm:text-xs ${
+        isDark
+          ? 'border-[#25D366] bg-[#25D366] text-white hover:bg-[#1ebe5d]'
+          : 'border-[#25D366] bg-[#25D366] text-white hover:bg-[#1ebe5d]'
+      } ${className}`}
+    >
+      <span
+        className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition group-hover:scale-105 ${
+          isDark
+            ? 'bg-white text-[#128C4A]'
+            : 'bg-white/18 text-white ring-1 ring-white/35'
+        }`}
+      >
+        <span className="absolute inset-0 rounded-full bg-white/25 opacity-70 motion-safe:animate-ping" />
+        <TrialClassIcon />
+      </span>
+      <span>{publicSite.contact.trialClassCta.label}</span>
+    </a>
+  );
 }
 
 export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
@@ -42,7 +95,8 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
             <p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 lg:text-lg">
               {publicSite.hero.summary}
             </p>
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+              <TrialClassButton />
               <Link
                 href={publicSite.hero.ctaPrimary.href}
                 className="rounded-full bg-slate-950 px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white shadow-[0_18px_44px_rgba(15,23,42,0.18)] transition hover:bg-[color:var(--color-primary)]"
@@ -163,12 +217,7 @@ export function PublicLandingPage({ activeChallenge }: PublicLandingPageProps) {
                 </h2>
                 <p className="mt-4 text-base leading-8 text-slate-300">{publicSite.contact.body}</p>
               </div>
-              <Link
-                href={publicSite.contact.primaryCta.href}
-                className="rounded-full bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-slate-950 transition hover:bg-slate-100"
-              >
-                {publicSite.contact.primaryCta.label}
-              </Link>
+              <TrialClassButton tone="dark" className="shrink-0" />
             </div>
           </div>
         </AppContainer>

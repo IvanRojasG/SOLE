@@ -228,6 +228,10 @@ export const publicSite = {
     title: 'Contacto',
     body: 'Si quieres activar esta experiencia para el aniversario, la pagina ya queda estructurada para presentar el reto, sumar testimonios y centralizar el siguiente paso comercial o interno.',
     primaryCta: { label: 'Ir a contacto', href: '/contacto' },
+    trialClassCta: {
+      label: 'Agendar clase de prueba',
+      href: 'https://wa.me/50687670860?text=Hola%20SOLE%20Fitness%2C%20quiero%20agendar%20una%20clase%20de%20prueba.',
+    },
   },
   gallery: [
     {
