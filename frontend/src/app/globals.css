@@ -80,13 +80,28 @@ textarea:focus-visible {
 .prequal-reveal {
   opacity: 0;
   transform: translateX(48px) scale(0.98);
-  animation: prequal-reveal 680ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: prequal-reveal 1050ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .prequal-slide {
   opacity: 0;
   transform: translateX(-36px);
-  animation: prequal-slide 560ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: prequal-slide 900ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.prequal-card-lift {
+  transition:
+    translate 220ms ease,
+    scale 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.prequal-card-lift:hover {
+  translate: 0 -4px;
+  scale: 1.01;
+  border-color: color-mix(in srgb, var(--color-primary) 62%, #cbd5e1 38%);
+  box-shadow: 0 34px 90px rgba(15, 23, 42, 0.22);
 }
 
 @keyframes prequal-scan {
