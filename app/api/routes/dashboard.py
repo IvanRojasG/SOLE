@@ -29,6 +29,10 @@ def dashboard(session: Session = Depends(get_session)):
                 points=row[2],
                 result_format=row[3],
                 approved_achievements=row[4],
+                wods_scored=row[5],
+                wods_expected=row[5] + row[6],
+                missing_wods=row[6],
+                is_event_complete=row[6] == 0 and row[5] > 0,
             )
             for row in ranking_rows
         ],

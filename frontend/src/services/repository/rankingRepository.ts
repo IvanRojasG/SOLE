@@ -39,6 +39,9 @@ async function getRankingFromApi(query: RankingQuery): Promise<RankingEntry[]> {
         is_finalized: boolean;
         ranking_view: 'event' | 'challenge';
         wods_scored: number;
+        wods_expected: number;
+        missing_wods: number;
+        is_event_complete: boolean;
       }>
     >(buildRankingPath(query)),
     backendRequest<Array<{ id: string; level: string }>>('/public/athletes'),
@@ -65,6 +68,9 @@ async function getRankingFromApi(query: RankingQuery): Promise<RankingEntry[]> {
       isFinalized: entry.is_finalized,
       rankingView: entry.ranking_view,
       wodsScored: entry.wods_scored,
+      wodsExpected: entry.wods_expected,
+      missingWods: entry.missing_wods,
+      isEventComplete: entry.is_event_complete,
     })),
   );
 }

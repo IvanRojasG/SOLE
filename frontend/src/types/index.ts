@@ -53,6 +53,9 @@ export type RankingEntry = {
   isFinalized?: boolean;
   rankingView?: 'event' | 'challenge';
   wodsScored?: number;
+  wodsExpected?: number;
+  missingWods?: number;
+  isEventComplete?: boolean;
 };
 
 export type Achievement = {

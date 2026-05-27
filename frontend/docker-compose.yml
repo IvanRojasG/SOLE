@@ -7,6 +7,14 @@ services:
       - "3000:3000"
     environment:
       NEXT_PUBLIC_DATA_SOURCE: ${NEXT_PUBLIC_DATA_SOURCE:-mock}
-      BACKEND_API_URL: ${BACKEND_API_URL:-http://host.docker.internal:8000}
+      BACKEND_API_URL: ${BACKEND_API_URL:-http://app:8000}
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - default
+      - sole_backend
+
+networks:
+  sole_backend:
+    external: true
+    name: sole_default

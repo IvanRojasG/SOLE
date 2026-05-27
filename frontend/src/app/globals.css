@@ -69,6 +69,50 @@ textarea:focus-visible {
   transform: translateY(-2px);
 }
 
+.prequal-scan {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  animation: prequal-scan 12s linear infinite;
+}
+
+.prequal-reveal {
+  opacity: 0;
+  transform: translateX(48px) scale(0.98);
+  animation: prequal-reveal 680ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.prequal-slide {
+  opacity: 0;
+  transform: translateX(-36px);
+  animation: prequal-slide 560ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes prequal-scan {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 56px 56px;
+  }
+}
+
+@keyframes prequal-reveal {
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes prequal-slide {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .skip-link {
   position: absolute;
   left: 1rem;

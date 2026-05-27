@@ -23,6 +23,9 @@ class RankingItem(BaseModel):
     is_finalized: bool = False
     ranking_view: str = "event"
     wods_scored: int = 0
+    wods_expected: int = 0
+    missing_wods: int = 0
+    is_event_complete: bool = False
 
 
 class DashboardResponse(BaseModel):

@@ -144,7 +144,7 @@ export function LeaderboardView({
             </h2>
             <p className="mt-2 max-w-2xl text-sm text-slate-600">
               {isEventMode
-                ? 'Menor puntaje acumulado lidera. Se suman todos los WODs finalizados del evento.'
+                ? 'Los atletas con todos los WODs puntuados aparecen primero; entre ellos lidera el menor puntaje acumulado.'
                 : 'Completados primero por menor tiempo; luego parciales por mayor cantidad de reps.'}
               {!isEventMode && (isFinalized ? ' Los puntos ya fueron finalizados.' : ' Los puntos quedan en 0 hasta el cierre del WOD.')}
             </p>

@@ -8,6 +8,7 @@ export const brand = {
     { label: 'Inicio', href: '/' },
     { label: 'Reto', href: '/reto' },
     { label: 'Leaderboard', href: '/leaderboard' },
+    { label: 'Preclasificatorio', href: '/preclasificatorio' },
     { label: 'Proposito', href: '/proposito' },
     { label: 'Impacto', href: '/impacto' },
     { label: 'Testimonios', href: '/testimonios' },

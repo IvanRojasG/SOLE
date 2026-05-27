@@ -21,7 +21,9 @@ export function getScoreLabel(entry: RankingEntry): string {
 
 export function getStatusLabel(entry: RankingEntry): string {
   if (entry.rankingView === 'event') {
-    return `${entry.wodsScored ?? 0} WODs`;
+    const scored = entry.wodsScored ?? 0;
+    const expected = entry.wodsExpected ?? scored;
+    return expected > 0 ? `${scored}/${expected} WODs` : `${scored} WODs`;
   }
   if (entry.completed) {
     return 'Completado';

@@ -2,7 +2,7 @@ from datetime import date
 from decimal import Decimal
 from uuid import UUID
 
-from sqlalchemy import case
+from sqlalchemy import case, literal
 from sqlmodel import Session, func, select
 
 from app.models.all_models import Achievement, Athlete, Challenge
@@ -10,6 +10,18 @@ from app.models.all_models import Achievement, Athlete, Challenge
 
 POWER_LIFTING_CATEGORY = "power_lifting"
 AMRAP_REPS_SCORING = "amrap_reps"
+
+
+def get_expected_event_wods(session: Session) -> int:
+    return int(
+        session.exec(
+            select(func.count(func.distinct(Achievement.challenge_id))).where(
+                Achievement.status == "approved",
+                Achievement.rank_points.is_not(None),
+            )
+        ).one()
+        or 0
+    )
 
 
 def challenge_is_closed(challenge: Challenge, today: date | None = None) -> bool:
@@ -209,41 +221,19 @@ def finalize_challenge_rank_points(session: Session, challenge: Challenge) -> di
 def get_final_points_ranking(session: Session):
     points_sum = func.coalesce(func.sum(Achievement.rank_points), 0)
     approved_count = func.count(Achievement.id)
-    result_format = func.coalesce(Achievement.result_format, "scaled")
-    zero_points_bucket = case((points_sum == 0, 1), else_=0)
-    statement = (
-        select(
-            Athlete.id,
-            Athlete.full_name,
-            points_sum.label("points"),
-            result_format.label("result_format"),
-            approved_count.label("approved_achievements"),
-        )
-        .select_from(Athlete)
-        .outerjoin(
-            Achievement,
-            (Achievement.athlete_id == Athlete.id)
-            & (Achievement.status == "approved")
-            & Achievement.rank_points.is_not(None),
-        )
-        .group_by(Athlete.id, Athlete.full_name, result_format)
-        .order_by(zero_points_bucket.asc(), points_sum.asc(), Athlete.full_name.asc())
-    )
-    return session.exec(statement).all()
-
-
-def get_event_ranking(session: Session):
-    points_sum = func.coalesce(func.sum(Achievement.rank_points), 0)
-    approved_count = func.count(Achievement.id)
     wods_scored = func.count(func.distinct(Achievement.challenge_id))
-    zero_points_bucket = case((points_sum == 0, 1), else_=0)
+    wods_expected = get_expected_event_wods(session)
+    missing_wods = wods_expected - wods_scored
+    zero_points_bucket = case((wods_scored == 0, 1), else_=0)
     statement = (
         select(
             Athlete.id,
             Athlete.full_name,
             points_sum.label("points"),
+            literal("mixed").label("result_format"),
             approved_count.label("approved_achievements"),
             wods_scored.label("wods_scored"),
+            missing_wods.label("missing_wods"),
         )
         .select_from(Athlete)
         .outerjoin(
@@ -253,7 +243,48 @@ def get_event_ranking(session: Session):
             & Achievement.rank_points.is_not(None),
         )
         .group_by(Athlete.id, Athlete.full_name)
-        .order_by(zero_points_bucket.asc(), points_sum.asc(), Athlete.full_name.asc())
+        .order_by(
+            zero_points_bucket.asc(),
+            missing_wods.asc(),
+            wods_scored.desc(),
+            points_sum.asc(),
+            Athlete.full_name.asc(),
+        )
+    )
+    return session.exec(statement).all()
+
+
+def get_event_ranking(session: Session):
+    points_sum = func.coalesce(func.sum(Achievement.rank_points), 0)
+    approved_count = func.count(Achievement.id)
+    wods_scored = func.count(func.distinct(Achievement.challenge_id))
+    wods_expected = get_expected_event_wods(session)
+    missing_wods = wods_expected - wods_scored
+    zero_points_bucket = case((wods_scored == 0, 1), else_=0)
+    statement = (
+        select(
+            Athlete.id,
+            Athlete.full_name,
+            points_sum.label("points"),
+            approved_count.label("approved_achievements"),
+            wods_scored.label("wods_scored"),
+            missing_wods.label("missing_wods"),
+        )
+        .select_from(Athlete)
+        .outerjoin(
+            Achievement,
+            (Achievement.athlete_id == Athlete.id)
+            & (Achievement.status == "approved")
+            & Achievement.rank_points.is_not(None),
+        )
+        .group_by(Athlete.id, Athlete.full_name)
+        .order_by(
+            zero_points_bucket.asc(),
+            missing_wods.asc(),
+            wods_scored.desc(),
+            points_sum.asc(),
+            Athlete.full_name.asc(),
+        )
     )
 
     return [
@@ -272,6 +303,9 @@ def get_event_ranking(session: Session):
             "is_finalized": True,
             "ranking_view": "event",
             "wods_scored": row[4],
+            "wods_expected": wods_expected,
+            "missing_wods": row[5],
+            "is_event_complete": row[5] == 0 and wods_expected > 0,
         }
         for row in session.exec(statement).all()
     ]
