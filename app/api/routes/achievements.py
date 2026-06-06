@@ -33,7 +33,7 @@ def create_achievement(
     athlete: Athlete = Depends(get_current_athlete),
     session: Session = Depends(get_session),
 ):
-    return submit_achievement(session, athlete, payload)
+    return submit_achievement(session, athlete, payload, allow_outside_window=True)
 
 
 @router.post("/coach", response_model=AchievementResponse)

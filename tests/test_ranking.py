@@ -2,9 +2,12 @@ from datetime import date
 import unittest
 from uuid import uuid4
 
+from fastapi import HTTPException
 from sqlmodel import Session, SQLModel, create_engine
 
 from app.models.all_models import Achievement, Athlete, Challenge
+from app.schemas.achievement import AchievementCreate
+from app.services.achievements import submit_achievement
 from app.services.ranking import get_event_ranking
 
 
@@ -35,6 +38,17 @@ def add_challenge(session: Session, title: str) -> Challenge:
     session.commit()
     session.refresh(challenge)
     return challenge
+
+
+def build_achievement_payload(challenge: Challenge, achievement_date: date | None = None) -> AchievementCreate:
+    return AchievementCreate(
+        challenge_id=challenge.id,
+        achievement_date=achievement_date or challenge.end_date,
+        completed=True,
+        result_format="scaled",
+        time_seconds=600,
+        reps_completed=challenge.total_reps,
+    )
 
 
 def add_ranked_result(session: Session, athlete: Athlete, challenge: Challenge, points: int) -> None:
@@ -90,6 +104,77 @@ class EventRankingTest(unittest.TestCase):
         self.assertEqual([row["athlete_name"] for row in ranking[:2]], ["Carla Menor", "Daniel Mayor"])
         self.assertEqual(ranking[0]["points"], 3)
         self.assertIs(ranking[0]["is_event_complete"], True)
+
+
+class AchievementSubmissionWindowTest(unittest.TestCase):
+    def test_athlete_late_submission_can_be_saved_as_pending(self):
+        session = build_session()
+        athlete = add_athlete(session, "Late Athlete")
+        challenge = add_challenge(session, "Closed WOD")
+
+        achievement = submit_achievement(
+            session,
+            athlete,
+            build_achievement_payload(challenge),
+            allow_outside_window=True,
+        )
+
+        self.assertEqual(achievement.status, "submitted")
+        self.assertEqual(achievement.athlete_id, athlete.id)
+        self.assertEqual(achievement.challenge_id, challenge.id)
+
+    def test_athlete_submission_before_start_date_stays_blocked(self):
+        session = build_session()
+        athlete = add_athlete(session, "Early Athlete")
+        challenge = add_challenge(session, "Future WOD")
+        challenge.start_date = date(2999, 1, 1)
+        challenge.end_date = date(2999, 1, 2)
+        session.add(challenge)
+        session.commit()
+
+        with self.assertRaises(HTTPException) as caught:
+            submit_achievement(
+                session,
+                athlete,
+                build_achievement_payload(challenge, achievement_date=challenge.start_date),
+                allow_outside_window=True,
+            )
+
+        self.assertEqual(caught.exception.status_code, 400)
+        self.assertEqual(caught.exception.detail, "Challenge is outside its submission window")
+
+    def test_inactive_challenge_stays_blocked_for_late_submission(self):
+        session = build_session()
+        athlete = add_athlete(session, "Inactive Athlete")
+        challenge = add_challenge(session, "Inactive WOD")
+        challenge.is_active = False
+        session.add(challenge)
+        session.commit()
+
+        with self.assertRaises(HTTPException) as caught:
+            submit_achievement(
+                session,
+                athlete,
+                build_achievement_payload(challenge),
+                allow_outside_window=True,
+            )
+
+        self.assertEqual(caught.exception.status_code, 400)
+        self.assertEqual(caught.exception.detail, "Challenge is not active")
+
+    def test_late_submission_still_rejects_duplicate_same_day(self):
+        session = build_session()
+        athlete = add_athlete(session, "Duplicate Athlete")
+        challenge = add_challenge(session, "Duplicate WOD")
+        payload = build_achievement_payload(challenge)
+
+        submit_achievement(session, athlete, payload, allow_outside_window=True)
+
+        with self.assertRaises(HTTPException) as caught:
+            submit_achievement(session, athlete, payload, allow_outside_window=True)
+
+        self.assertEqual(caught.exception.status_code, 409)
+        self.assertEqual(caught.exception.detail, "Duplicate achievement is not allowed")
 
 
 if __name__ == "__main__":
