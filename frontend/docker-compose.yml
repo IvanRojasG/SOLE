@@ -8,6 +8,7 @@ services:
     environment:
       NEXT_PUBLIC_DATA_SOURCE: ${NEXT_PUBLIC_DATA_SOURCE:-mock}
       BACKEND_API_URL: ${BACKEND_API_URL:-http://app:8000}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:

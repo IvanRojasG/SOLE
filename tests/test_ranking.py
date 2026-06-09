@@ -8,6 +8,7 @@ from sqlmodel import Session, SQLModel, create_engine
 from app.models.all_models import Achievement, Athlete, Challenge
 from app.schemas.achievement import AchievementCreate
 from app.services.achievements import submit_achievement
+from app.services.athlete_scores import get_athlete_scores
 from app.services.ranking import get_event_ranking
 
 
@@ -175,6 +176,100 @@ class AchievementSubmissionWindowTest(unittest.TestCase):
 
         self.assertEqual(caught.exception.status_code, 409)
         self.assertEqual(caught.exception.detail, "Duplicate achievement is not allowed")
+
+
+class AthleteScoresTest(unittest.TestCase):
+    def test_scores_include_all_attempts_and_mark_best_approved_attempt(self):
+        session = build_session()
+        athlete = add_athlete(session, "Multi Attempt")
+        challenge = add_challenge(session, "Repeatable WOD")
+
+        attempts = [
+            Achievement(
+                athlete_id=athlete.id,
+                challenge_id=challenge.id,
+                achievement_date=date(2026, 1, 1),
+                status="approved",
+                completed=True,
+                result_format="scaled",
+                time_seconds=620,
+            ),
+            Achievement(
+                athlete_id=athlete.id,
+                challenge_id=challenge.id,
+                achievement_date=date(2026, 1, 2),
+                status="approved",
+                completed=True,
+                result_format="scaled",
+                time_seconds=580,
+                rank_points=1,
+            ),
+            Achievement(
+                athlete_id=athlete.id,
+                challenge_id=challenge.id,
+                achievement_date=date(2026, 1, 3),
+                status="submitted",
+                completed=True,
+                result_format="scaled",
+                time_seconds=540,
+            ),
+            Achievement(
+                athlete_id=athlete.id,
+                challenge_id=challenge.id,
+                achievement_date=date(2026, 1, 4),
+                status="rejected",
+                completed=True,
+                result_format="scaled",
+                time_seconds=500,
+            ),
+        ]
+        session.add_all(attempts)
+        session.commit()
+
+        scores = get_athlete_scores(session, athlete.id)
+        score_group = scores["scores"][0]
+        marked_attempts = [
+            attempt for attempt in score_group["attempts"] if attempt["counts_for_leaderboard"]
+        ]
+
+        self.assertEqual(len(score_group["attempts"]), 4)
+        self.assertEqual(len(marked_attempts), 1)
+        self.assertEqual(marked_attempts[0]["time_seconds"], 580)
+
+    def test_scores_never_mark_pending_or_rejected_attempts(self):
+        session = build_session()
+        athlete = add_athlete(session, "Pending Only")
+        challenge = add_challenge(session, "Unapproved WOD")
+        session.add_all(
+            [
+                Achievement(
+                    athlete_id=athlete.id,
+                    challenge_id=challenge.id,
+                    achievement_date=date(2026, 1, 1),
+                    status="submitted",
+                    completed=True,
+                    result_format="scaled",
+                    time_seconds=520,
+                ),
+                Achievement(
+                    athlete_id=athlete.id,
+                    challenge_id=challenge.id,
+                    achievement_date=date(2026, 1, 2),
+                    status="rejected",
+                    completed=True,
+                    result_format="scaled",
+                    time_seconds=510,
+                ),
+            ]
+        )
+        session.commit()
+
+        scores = get_athlete_scores(session, athlete.id)
+
+        self.assertEqual(len(scores["scores"][0]["attempts"]), 2)
+        self.assertFalse(
+            any(attempt["counts_for_leaderboard"] for attempt in scores["scores"][0]["attempts"])
+        )
 
 
 if __name__ == "__main__":

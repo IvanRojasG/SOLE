@@ -1,10 +1,13 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, func, select
 
 from app.core.db import get_session
 from app.core.deps import get_current_athlete, require_role
 from app.models.all_models import Achievement, Athlete, User
-from app.schemas.athlete import AthleteListResponse, AthleteMeResponse, AthleteUpdateRequest
+from app.schemas.athlete import AthleteListResponse, AthleteMeResponse, AthleteScoresResponse, AthleteUpdateRequest
+from app.services.athlete_scores import get_athlete_scores
 from app.services.ranking import get_final_points_ranking
 
 
@@ -60,3 +63,12 @@ def list_athletes(
         )
         for athlete in athletes
     ]
+
+
+@router.get("/{athlete_id}/scores", response_model=AthleteScoresResponse)
+def get_scores_for_athlete(
+    athlete_id: UUID,
+    _: User = Depends(require_role("coach")),
+    session: Session = Depends(get_session),
+):
+    return AthleteScoresResponse(**get_athlete_scores(session, athlete_id))

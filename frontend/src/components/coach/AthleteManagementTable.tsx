@@ -5,11 +5,13 @@ import type { Athlete } from '@/types';
 type AthleteManagementTableProps = {
   athletes: Athlete[];
   onRegisterWod?: (athlete: Athlete) => void;
+  onViewScores?: (athlete: Athlete) => void;
 };
 
 export function AthleteManagementTable({
   athletes,
   onRegisterWod,
+  onViewScores,
 }: AthleteManagementTableProps) {
   if (athletes.length === 0) {
     return (
@@ -29,8 +31,6 @@ export function AthleteManagementTable({
               <th className="px-5 py-4">Nivel</th>
               <th className="px-5 py-4">Puntos</th>
               <th className="px-5 py-4">Logros</th>
-              <th className="px-5 py-4">Baseline</th>
-              <th className="px-5 py-4">Enfoque</th>
               <th className="px-5 py-4">Acción</th>
             </tr>
           </thead>
@@ -56,22 +56,23 @@ export function AthleteManagementTable({
                     {athlete.achievementsApproved}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-slate-600">
-                  {athlete.tagline}
-                </td>
                 <td className="px-5 py-4">
-                  <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900">
-                    {athlete.favoriteFocus}
-                  </span>
-                </td>
-                <td className="px-5 py-4">
-                  <button
-                    type="button"
-                    onClick={() => onRegisterWod?.(athlete)}
-                    className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold tracking-[0.14em] text-white uppercase transition hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-ink)]"
-                  >
-                    Registrar WOD
-                  </button>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onViewScores?.(athlete)}
+                      className="rounded-full border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 uppercase transition hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]"
+                    >
+                      Ver scores
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onRegisterWod?.(athlete)}
+                      className="rounded-full bg-slate-950 px-4 py-2 text-xs font-bold text-white uppercase transition hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-ink)]"
+                    >
+                      Registrar WOD
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -97,20 +98,23 @@ export function AthleteManagementTable({
               <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-sm font-semibold text-emerald-900">
                 {athlete.achievementsApproved} logros
               </div>
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
-                {athlete.tagline}
-              </div>
-              <div className="rounded-2xl border border-amber-100 bg-amber-50 p-3 text-sm font-semibold text-amber-900">
-                {athlete.favoriteFocus}
-              </div>
             </div>
-            <button
-              type="button"
-              onClick={() => onRegisterWod?.(athlete)}
-              className="mt-4 w-full rounded-full bg-slate-950 px-4 py-3 text-xs font-bold tracking-[0.16em] text-white uppercase transition hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-ink)]"
-            >
-              Registrar WOD
-            </button>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => onViewScores?.(athlete)}
+                className="w-full rounded-full border border-slate-300 px-4 py-3 text-xs font-bold text-slate-700 uppercase transition hover:border-[color:var(--color-secondary)] hover:text-[color:var(--color-secondary)]"
+              >
+                Ver scores
+              </button>
+              <button
+                type="button"
+                onClick={() => onRegisterWod?.(athlete)}
+                className="w-full rounded-full bg-slate-950 px-4 py-3 text-xs font-bold text-white uppercase transition hover:bg-[color:var(--color-primary)] hover:text-[color:var(--color-ink)]"
+              >
+                Registrar WOD
+              </button>
+            </div>
           </article>
         ))}
       </div>

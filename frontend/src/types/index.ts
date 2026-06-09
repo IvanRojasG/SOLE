@@ -75,6 +75,38 @@ export type Achievement = {
   rankPoints: number | null;
 };
 
+export type AthleteScoreAttempt = {
+  id: string;
+  achievementDate: string;
+  status: AchievementStatus;
+  completed: boolean;
+  resultFormat: ResultFormat;
+  timeSeconds: number | null;
+  repsCompleted: number | null;
+  weightLbs: number | string | null;
+  tieBreakOrder: number | null;
+  rankPoints: number | null;
+  createdAt: string;
+  countsForLeaderboard: boolean;
+};
+
+export type AthleteScoreChallenge = {
+  challengeId: string;
+  challengeTitle: string;
+  challengeCategory: ChallengeCategory;
+  challengeScoringType: ChallengeScoringType;
+  challengeEndDate: string;
+  isFinalized: boolean;
+  attempts: AthleteScoreAttempt[];
+};
+
+export type AthleteScoresDetail = {
+  athleteId: string;
+  athleteName: string;
+  level: AthleteLevel;
+  scores: AthleteScoreChallenge[];
+};
+
 export type DashboardSummary = {
   totalAthletes: number;
   totalChallenges: number;

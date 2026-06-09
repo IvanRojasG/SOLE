@@ -7,6 +7,7 @@ import { dataSource } from '@/lib/config/dataSource';
 import { backendRequest } from '@/services/api/backend';
 import type {
   AthleteBaseline,
+  AthleteScoresDetail,
   BaselineCatalogItem,
   BaselineEntry,
   ChallengeManagementItem,
@@ -311,6 +312,97 @@ export async function submitCoachAchievementAction(payload: {
   revalidatePath('/leaderboard');
   revalidatePath('/athlete/achievements');
   return { ok: true };
+}
+
+export async function getAthleteScoresAction(
+  athleteId: string,
+  fallback?: Pick<AthleteScoresDetail, 'athleteName' | 'level'>,
+): Promise<{ ok: true; scores: AthleteScoresDetail } | { ok: false; error: string }> {
+  if (dataSource === 'mock') {
+    return {
+      ok: true,
+      scores: {
+        athleteId,
+        athleteName: fallback?.athleteName ?? 'Atleta demo',
+        level: fallback?.level ?? 'scaled',
+        scores: [],
+      },
+    };
+  }
+
+  try {
+    const payload = await backendRequest<{
+      athlete_id: string;
+      athlete_name: string;
+      level: AthleteScoresDetail['level'];
+      scores: Array<{
+        challenge_id: string;
+        challenge_title: string;
+        challenge_category: AthleteScoresDetail['scores'][number]['challengeCategory'];
+        challenge_scoring_type: AthleteScoresDetail['scores'][number]['challengeScoringType'];
+        challenge_end_date: string;
+        is_finalized: boolean;
+        attempts: Array<{
+          id: string;
+          achievement_date: string;
+          status: AthleteScoresDetail['scores'][number]['attempts'][number]['status'];
+          completed: boolean;
+          result_format: AthleteScoresDetail['scores'][number]['attempts'][number]['resultFormat'];
+          time_seconds: number | null;
+          reps_completed: number | null;
+          weight_lbs: number | string | null;
+          tie_break_order: number | null;
+          rank_points: number | null;
+          created_at: string;
+          counts_for_leaderboard: boolean;
+        }>;
+      }>;
+    }>(`/athletes/${athleteId}/scores`, {
+      role: 'coach',
+      nextTarget: '/coach/athletes',
+    });
+
+    return {
+      ok: true,
+      scores: {
+        athleteId: payload.athlete_id,
+        athleteName: payload.athlete_name,
+        level: payload.level,
+        scores: payload.scores.map((score) => ({
+          challengeId: score.challenge_id,
+          challengeTitle: score.challenge_title,
+          challengeCategory: score.challenge_category,
+          challengeScoringType: score.challenge_scoring_type,
+          challengeEndDate: score.challenge_end_date,
+          isFinalized: score.is_finalized,
+          attempts: score.attempts.map((attempt) => ({
+            id: attempt.id,
+            achievementDate: attempt.achievement_date,
+            status: attempt.status,
+            completed: attempt.completed,
+            resultFormat: attempt.result_format,
+            timeSeconds: attempt.time_seconds,
+            repsCompleted: attempt.reps_completed,
+            weightLbs: attempt.weight_lbs,
+            tieBreakOrder: attempt.tie_break_order,
+            rankPoints: attempt.rank_points,
+            createdAt: attempt.created_at,
+            countsForLeaderboard: attempt.counts_for_leaderboard,
+          })),
+        })),
+      },
+    };
+  } catch (caught) {
+    unstable_rethrow(caught);
+
+    return {
+      ok: false,
+      error:
+        caught instanceof Error
+          ? caught.message
+          : 'No se pudieron cargar los scores del atleta.',
+    };
+  }
 }
 
 export async function approveAchievementAction(

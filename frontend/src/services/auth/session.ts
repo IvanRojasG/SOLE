@@ -28,7 +28,7 @@ function cookieConfig() {
   return {
     httpOnly: true,
     sameSite: 'lax' as const,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.AUTH_COOKIE_SECURE === 'true',
     path: '/',
     maxAge: 60 * 60 * 8,
   };

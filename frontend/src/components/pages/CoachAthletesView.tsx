@@ -3,10 +3,11 @@
 import { useDeferredValue, useMemo, useState } from 'react';
 
 import { AthleteManagementTable } from '@/components/coach/AthleteManagementTable';
+import { AthleteScoresDrawer } from '@/components/coach/AthleteScoresDrawer';
 import { CoachWodRegistrationDrawer } from '@/components/coach/CoachWodRegistrationDrawer';
 import { ActionToast } from '@/components/shared/ActionToast';
-import { submitCoachAchievementAction } from '@/services/actions';
-import type { Athlete, Challenge } from '@/types';
+import { getAthleteScoresAction, submitCoachAchievementAction } from '@/services/actions';
+import type { Athlete, AthleteScoresDetail, Challenge } from '@/types';
 
 type CoachAthletesViewProps = {
   athletes: Athlete[];
@@ -16,6 +17,12 @@ type CoachAthletesViewProps = {
 export function CoachAthletesView({ athletes, challenges }: CoachAthletesViewProps) {
   const [query, setQuery] = useState('');
   const [selectedAthlete, setSelectedAthlete] = useState<Athlete | null>(null);
+  const [scoresAthlete, setScoresAthlete] = useState<Athlete | null>(null);
+  const [scoresDetail, setScoresDetail] = useState<AthleteScoresDetail | null>(
+    null,
+  );
+  const [scoresLoading, setScoresLoading] = useState(false);
+  const [scoresError, setScoresError] = useState<string | null>(null);
   const [toast, setToast] = useState<{
     message: string;
     tone: 'success' | 'error';
@@ -35,6 +42,24 @@ export function CoachAthletesView({ athletes, challenges }: CoachAthletesViewPro
         .includes(normalizedQuery),
     );
   }, [athletes, deferredQuery]);
+
+  async function loadAthleteScores(athlete: Athlete) {
+    setScoresAthlete(athlete);
+    setScoresDetail(null);
+    setScoresError(null);
+    setScoresLoading(true);
+
+    const result = await getAthleteScoresAction(athlete.id, {
+      athleteName: athlete.fullName,
+      level: athlete.level,
+    });
+    if (result.ok) {
+      setScoresDetail(result.scores);
+    } else {
+      setScoresError(result.error);
+    }
+    setScoresLoading(false);
+  }
 
   return (
     <div className="space-y-6">
@@ -73,8 +98,21 @@ export function CoachAthletesView({ athletes, challenges }: CoachAthletesViewPro
         <AthleteManagementTable
           athletes={filteredAthletes}
           onRegisterWod={setSelectedAthlete}
+          onViewScores={loadAthleteScores}
         />
       )}
+      <AthleteScoresDrawer
+        athlete={scoresAthlete}
+        scores={scoresDetail}
+        loading={scoresLoading}
+        error={scoresError}
+        open={scoresAthlete !== null}
+        onClose={() => {
+          setScoresAthlete(null);
+          setScoresDetail(null);
+          setScoresError(null);
+        }}
+      />
       <CoachWodRegistrationDrawer
         athlete={selectedAthlete}
         challenges={challenges}
@@ -87,6 +125,9 @@ export function CoachAthletesView({ athletes, challenges }: CoachAthletesViewPro
               message: 'WOD registrado y aprobado correctamente.',
               tone: 'success',
             });
+            if (scoresAthlete?.id === payload.athleteId) {
+              await loadAthleteScores(scoresAthlete);
+            }
             return result;
           }
           setToast({
