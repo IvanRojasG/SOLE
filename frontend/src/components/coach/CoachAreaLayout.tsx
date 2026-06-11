@@ -9,6 +9,7 @@ const coachNavigation = [
   { href: '/coach/achievements', label: 'Logros' },
   { href: '/coach/challenges', label: 'Retos' },
   { href: '/coach/baseline', label: 'Baseline' },
+  { href: '/coach/reports/classifier-wods', label: 'Reporte WODs' },
   { href: '/account/password', label: 'Password' },
 ] as const;
 
@@ -28,7 +29,7 @@ export function CoachAreaLayout({
   return (
     <div className="sole-dashboard-shell py-[--section-spacing]">
       <AppContainer className="space-y-8">
-        <div className="sole-hatch rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)]">
+        <div className="sole-hatch rounded-[1.5rem] border border-slate-200/80 bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] print:hidden">
           <div className="flex flex-col gap-5">
             <div>
               <p className="text-xs font-semibold tracking-[0.24em] text-[color:var(--color-primary)] uppercase">
@@ -43,7 +44,7 @@ export function CoachAreaLayout({
             </div>
           </div>
         </div>
-        <nav className="flex gap-3 overflow-x-auto pb-2">
+        <nav className="flex gap-3 overflow-x-auto pb-2 print:hidden">
           {coachNavigation.map((item) => (
             <Link
               key={item.href}

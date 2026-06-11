@@ -107,6 +107,30 @@ export type AthleteScoresDetail = {
   scores: AthleteScoreChallenge[];
 };
 
+export type ClassifierWodReportRow = {
+  athleteId: string;
+  athleteName: string;
+  athleteLevel: AthleteLevel;
+  challengeId: string;
+  challengeTitle: string;
+  challengeEndDate: string;
+  resultFormat: ResultFormat;
+  scoreLabel: string;
+  completed: boolean;
+  timeSeconds: number | null;
+  repsCompleted: number | null;
+  weightLbs: number | string | null;
+  tieBreakOrder: number | null;
+  rankPoints: number;
+  achievementDate: string;
+};
+
+export type ClassifierWodReport = {
+  generatedAt: string;
+  totalRows: number;
+  rows: ClassifierWodReportRow[];
+};
+
 export type DashboardSummary = {
   totalAthletes: number;
   totalChallenges: number;

@@ -10,6 +10,7 @@ from app.schemas.achievement import AchievementCreate
 from app.services.achievements import submit_achievement
 from app.services.athlete_scores import get_athlete_scores
 from app.services.ranking import get_event_ranking
+from app.services.reports import get_classifier_wod_report
 
 
 def build_session():
@@ -270,6 +271,66 @@ class AthleteScoresTest(unittest.TestCase):
         self.assertFalse(
             any(attempt["counts_for_leaderboard"] for attempt in scores["scores"][0]["attempts"])
         )
+
+
+class ClassifierWodReportTest(unittest.TestCase):
+    def test_report_only_includes_approved_ranked_results(self):
+        session = build_session()
+        athlete = add_athlete(session, "Reporte Atleta")
+        challenge = add_challenge(session, "Reporte WOD")
+        other_challenge = add_challenge(session, "Pendiente WOD")
+        session.add_all(
+            [
+                Achievement(
+                    athlete_id=athlete.id,
+                    challenge_id=challenge.id,
+                    achievement_date=challenge.end_date,
+                    status="approved",
+                    completed=True,
+                    result_format="rx",
+                    time_seconds=480,
+                    rank_points=2,
+                ),
+                Achievement(
+                    athlete_id=athlete.id,
+                    challenge_id=challenge.id,
+                    achievement_date=date(2026, 1, 1),
+                    status="submitted",
+                    completed=True,
+                    result_format="rx",
+                    time_seconds=470,
+                    rank_points=None,
+                ),
+                Achievement(
+                    athlete_id=athlete.id,
+                    challenge_id=other_challenge.id,
+                    achievement_date=other_challenge.end_date,
+                    status="approved",
+                    completed=True,
+                    result_format="scaled",
+                    time_seconds=510,
+                    rank_points=None,
+                ),
+            ]
+        )
+        session.commit()
+
+        report = get_classifier_wod_report(session)
+
+        self.assertEqual(report["total_rows"], 1)
+        self.assertEqual(report["rows"][0]["athlete_name"], "Reporte Atleta")
+        self.assertEqual(report["rows"][0]["challenge_title"], "Reporte WOD")
+        self.assertEqual(report["rows"][0]["result_format"], "rx")
+        self.assertEqual(report["rows"][0]["score_label"], "8:00")
+
+    def test_report_omits_athletes_without_classifier_wods(self):
+        session = build_session()
+        add_athlete(session, "Sin WOD")
+
+        report = get_classifier_wod_report(session)
+
+        self.assertEqual(report["total_rows"], 0)
+        self.assertEqual(report["rows"], [])
 
 
 if __name__ == "__main__":

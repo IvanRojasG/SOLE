@@ -20,7 +20,7 @@ type RequestOptions = {
   nextTarget?: string;
 };
 
-function getBackendUrl() {
+export function getBackendUrl() {
   const url = process.env.BACKEND_API_URL ?? 'http://localhost:8000';
   return url.replace(/\/$/, '');
 }
@@ -81,6 +81,44 @@ export async function backendRequest<T>(path: string, options: RequestOptions = 
   }
 
   return parseJsonResponse<T>(response, path);
+}
+
+export async function backendFileRequest(
+  path: string,
+  options: Pick<RequestOptions, 'role' | 'session' | 'nextTarget'> = {},
+): Promise<Response> {
+  const headers: Record<string, string> = {};
+
+  if (options.role) {
+    const session = options.session ?? (await getSession());
+
+    if (!session) {
+      redirect(loginPath(options.nextTarget));
+    }
+
+    if (session.user.role !== options.role) {
+      throw new Error(`Forbidden session role for ${path}`);
+    }
+
+    headers.Authorization = `Bearer ${session.accessToken}`;
+  }
+
+  const response = await fetch(`${getBackendUrl()}${path}`, {
+    method: 'GET',
+    headers,
+    cache: 'no-store',
+  });
+
+  if (options.role && response.status === 401) {
+    await redirectToExpiredSession(options.nextTarget);
+  }
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(`Backend request failed for ${path}: ${detail}`);
+  }
+
+  return response;
 }
 
 export async function loginWithCredentials(credentials: {

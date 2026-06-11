@@ -10,6 +10,7 @@ from app.api.routes import (
     dashboard,
     public,
     ranking,
+    reports,
 )
 
 
@@ -23,3 +24,4 @@ api_router.include_router(catalogs.router, prefix="/catalogs", tags=["catalogs"]
 api_router.include_router(public.router, prefix="/public", tags=["public"])
 api_router.include_router(ranking.router, prefix="/ranking", tags=["ranking"])
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
+api_router.include_router(reports.router, prefix="/reports", tags=["reports"])
