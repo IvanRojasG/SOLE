@@ -1,0 +1,35 @@
+{
+  "brand": {
+    "name": "THE STANDARD",
+    "publisher": "SOLE Fitness",
+    "navy": "#1E3554",
+    "navy_deep": "#122238",
+    "gold": "#D7A441",
+    "cream": "#F5F2EB",
+    "ink": "#202733",
+    "muted": "#687181",
+    "whatsapp": "#25D366"
+  },
+  "edition": {
+    "number": "003",
+    "date": "AGOSTO 2026",
+    "subject": "El poder de aparecer",
+    "preheader": "No necesitas hacerlo perfecto. Necesitas estar presente.",
+    "next_subject": "La paciencia también se entrena"
+  },
+  "urls": {
+    "hero_image": "https://TU-DOMINIO.com/the-standard/003/hero-editorial.jpg",
+    "web_version": "https://TU-DOMINIO.com/the-standard/003",
+    "instagram": "https://instagram.com/maubruno9",
+    "website": "https://TU-DOMINIO.com",
+    "whatsapp_number": "506XXXXXXXX",
+    "whatsapp_message": "Hola SOLE, leí The Standard y quiero agendar mi clase de prueba."
+  },
+  "mailchimp": {
+    "archive_url": "*|ARCHIVE|*",
+    "unsubscribe_url": "*|UNSUB|*",
+    "update_profile_url": "*|UPDATE_PROFILE|*",
+    "current_year": "*|CURRENT_YEAR|*",
+    "list_address": "*|HTML:LIST_ADDRESS_HTML|*"
+  }
+}
