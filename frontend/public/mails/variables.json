@@ -29,7 +29,7 @@
     "archive_url": "*|ARCHIVE|*",
     "unsubscribe_url": "*|UNSUB|*",
     "update_profile_url": "*|UPDATE_PROFILE|*",
-    "current_year": "*|CURRENT_YEAR|*",
+    "current_year": "*|2026|*",
     "list_address": "*|HTML:LIST_ADDRESS_HTML|*"
   }
 }
